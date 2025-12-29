@@ -1,8 +1,23 @@
 export interface PlayerConfig {
-  x: number;
-  y: number;
   id: string;
   socketId: string;
+  x: number;
+  y: number;
+}
+
+export interface PlayerInput {
+  id: string;
+  x: number;
+  y: number;
+  direction: Direction | null | undefined;
+  directions: Direction[];
+  state: StateName;
+  nextState: StateName;
+}
+
+export interface StateResolution {
+  state: StateName;
+  needsUpdate: boolean;
 }
 
 export enum Direction {

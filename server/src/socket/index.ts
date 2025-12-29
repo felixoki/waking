@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
 import { PlayerStore } from "../stores/PlayerStore.js";
 import { tryCatch } from "../utils/tryCatch.js";
+import { PlayerInput } from "../types.js";
 
 type SocketEvent = {
   event: string;
@@ -21,6 +22,11 @@ export function registerHandlers(
     {
       event: "disconnect",
       handler: () => handlers.player.delete(socket, stores.players),
+    },
+    {
+      event: "player:input",
+      handler: (data: PlayerInput) =>
+        handlers.player.input(data, socket, stores.players),
     },
   ];
 

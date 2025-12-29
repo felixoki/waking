@@ -23,4 +23,10 @@ export class PlayerStore {
   getAll(): PlayerConfig[] {
     return Array.from(this.players.values());
   }
+
+  getBySocketId(id: string): PlayerConfig | undefined {
+    return Array.from(this.players.values()).find(
+      (player) => player.socketId === id
+    );
+  }
 }

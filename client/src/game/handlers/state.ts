@@ -1,13 +1,31 @@
-import { StateName } from "@server/types";
+import { Direction, PlayerInput, StateName } from "@server/types";
 
 export const state = {
-  resolve: () => {
-    // Conditional map for state resolutions
-    // const selectors = [];
+  resolve: (
+    input: PlayerInput,
+    prev: { state: StateName; direction: Direction }
+  ) => {
+    const selectors = [
+      {
+        condition: () => input.direction,
+        state: () => StateName.WALKING,
+      },
+      {
+        condition: () => true,
+        state: () => StateName.IDLE,
+      },
+    ];
+
+    const selector = selectors.find((s) => s.condition());
+
+    const changed = {
+      state: selector?.state() !== prev.state,
+      direction: !!input.direction && input.direction !== prev.direction,
+    };
 
     return {
-      state: StateName.IDLE,
-      needsUpdate: false,
+      state: selector!.state(),
+      needsUpdate: !changed.state && changed.direction,
     };
   },
 };

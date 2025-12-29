@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import SocketManager from "../managers/Socket";
 import { PlayerManager } from "../managers/Player";
+import { PlayerConfig, PlayerInput } from "@server/types";
 
 export default class Village extends Phaser.Scene {
   public socketManager = SocketManager;
@@ -18,10 +19,14 @@ export default class Village extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
-    this.load.spritesheet("player-walking", "assets/sprites/player_walking.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
+    this.load.spritesheet(
+      "player-walking",
+      "assets/sprites/player_walking.png",
+      {
+        frameWidth: 64,
+        frameHeight: 64,
+      }
+    );
   }
 
   create() {
@@ -33,19 +38,29 @@ export default class Village extends Phaser.Scene {
     this._registerEvents();
   }
 
+  update() {
+    this.playerManager.update();
+  }
+
   private _registerEvents() {
-    this.socketManager.on("player:create:local", (data) => {
-      console.log(`You joined: ${data.id}`);
+    this.socketManager.on("player:create:local", (data: PlayerConfig) => {
       this.playerManager.add(data, true);
     });
 
-    this.socketManager.on("player:create", (data) => {
-      console.log(`Player joined: ${data.id}`);
+    this.socketManager.on("player:create", (data: PlayerConfig) => {
       this.playerManager.add(data, false);
     });
 
-    this.socketManager.on("player:left", (data) => {
-      console.log(`Player left: ${data.id}`);
+    this.socketManager.on("player:left", (data: { id: string }) => {
+      this.playerManager.remove(data.id);
+    });
+
+    this.socketManager.on("player:input", (data: PlayerInput) => {
+      this.playerManager.updateOther(data);
+    });
+
+    this.game.events.on("player:input", (data: PlayerInput) => {
+      this.socketManager.emit("player:input", data);
     });
   }
 }
