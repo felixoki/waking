@@ -12,6 +12,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
   public id: string;
   public direction: Direction;
   public directions: Direction[];
+  public isLocked: boolean = false;
 
   public components = new Map<ComponentName, Component>();
   public states?: Map<StateName, State>;

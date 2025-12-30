@@ -12,6 +12,7 @@ export class InputManager {
     SHIFT: Key;
     SPACE: Key;
   };
+  private target?: string;
 
   constructor(scene: Scene) {
     this.keys = scene.input.keyboard!.addKeys({
@@ -50,5 +51,19 @@ export class InputManager {
 
   isRunning(): boolean {
     return this.keys.SHIFT.isDown;
+  }
+
+  isJumping(): boolean {
+    return Phaser.Input.Keyboard.JustDown(this.keys.SPACE);
+  }
+
+  setTarget(target: string) {
+    this.target = target;
+  }
+
+  getTarget(): string | undefined {
+    const t = this.target;
+    this.target = undefined;
+    return t;
   }
 }

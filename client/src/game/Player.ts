@@ -46,7 +46,7 @@ export class Player extends Entity {
   update(remoteInput?: PlayerInput): void {
     const input = remoteInput || this._getInput();
 
-    if (!input) return;
+    if (!input || this.isLocked) return;
 
     const prev = {
       state: this.state,
@@ -58,9 +58,7 @@ export class Player extends Entity {
     this.directions = input.directions;
 
     const { state, needsUpdate } = handlers.state.resolve(input, prev);
-
     if (state !== this.state) this.transitionTo(state);
-
     if (needsUpdate) this.states?.get(this.state)?.update(this);
 
     if (this.isControllable) this.scene.game.events.emit("player:input", input);
@@ -70,6 +68,8 @@ export class Player extends Entity {
     const direction = this.inputManager?.getDirection();
     const directions = this.inputManager?.getDirections();
     const isRunning = this.inputManager?.isRunning();
+    const isJumping = this.inputManager?.isJumping();
+    const target = this.inputManager?.getTarget();
 
     return {
       id: this.id,
@@ -78,8 +78,9 @@ export class Player extends Entity {
       direction: direction,
       directions: directions || [],
       isRunning: isRunning || false,
+      isJumping: isJumping || false,
+      target: target,
       state: this.state,
-      nextState: this.state, // return from InputManager
     };
   }
 

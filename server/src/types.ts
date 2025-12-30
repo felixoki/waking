@@ -12,8 +12,9 @@ export interface PlayerInput {
   direction: Direction | null | undefined;
   directions: Direction[];
   isRunning: boolean;
+  isJumping: boolean;
+  target?: string;
   state: StateName;
-  nextState: StateName;
 }
 
 export interface StateResolution {

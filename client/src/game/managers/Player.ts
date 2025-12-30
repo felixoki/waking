@@ -5,6 +5,8 @@ import { Idle } from "../state/Idle";
 import { Walking } from "../state/Walking";
 import { Scene } from "../scenes/Scene";
 import { Running } from "../state/Running";
+import { Casting } from "../state/Casting";
+import { Jumping } from "../state/Jumping";
 
 export class PlayerManager {
   private scene: Scene;
@@ -36,6 +38,8 @@ export class PlayerManager {
         [StateName.IDLE, new Idle()],
         [StateName.WALKING, new Walking()],
         [StateName.RUNNING, new Running()],
+        [StateName.JUMPING, new Jumping()],
+        [StateName.CASTING, new Casting()],
       ]),
       config.socketId,
       isLocal

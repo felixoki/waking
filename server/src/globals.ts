@@ -5,3 +5,9 @@ export const CLIENT_URL = 'http://localhost:3000';
 
 export const SPEED_WALKING = 200;
 export const SPEED_RUNNING = 300;
+export const SPEED_JUMPING = 250;
+
+export const HEIGHT_JUMPING = 40;
+
+export const DURATION_CASTING = 800;
+export const DURATION_JUMPING = 800;

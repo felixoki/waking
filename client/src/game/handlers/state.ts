@@ -7,6 +7,16 @@ export const state = {
   ) => {
     const selectors = [
       {
+        condition: () => input.target,
+        state: () => StateName.CASTING,
+        needsUpdate: false,
+      },
+      {
+        condition: () => input.isJumping,
+        state: () => StateName.JUMPING,
+        needsUpdate: false,
+      },
+      {
         condition: () => input.direction,
         state: () => (input.isRunning ? StateName.RUNNING : StateName.WALKING),
         needsUpdate: true,

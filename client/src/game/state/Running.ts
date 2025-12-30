@@ -29,8 +29,6 @@ export class Running implements State {
   }
 
   exit(entity: Entity): void {
-    if (!entity.body) return;
-
     entity.body.setVelocity(0, 0);
   }
 }

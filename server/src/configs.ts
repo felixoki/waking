@@ -31,12 +31,12 @@ export const ANIMATIONS: Record<
       repeat: -1,
     },
     [StateName.JUMPING]: {
-      frameCount: 6,
-      frameRate: 12,
+      frameCount: 8,
+      frameRate: 10,
       repeat: 0,
     },
     [StateName.CASTING]: {
-      frameCount: 5,
+      frameCount: 8,
       frameRate: 10,
       repeat: 0,
     },
