@@ -68,4 +68,14 @@ export class PlayerManager {
       this.others.delete(id);
     }
   }
+
+  destroy(): void {
+    if (this.player) {
+      this.player.destroy();
+      this.player = undefined;
+    }
+
+    for (const player of this.others.values()) player.destroy();
+    this.others.clear();
+  }
 }

@@ -8,7 +8,7 @@ export class Scene extends Phaser.Scene {
   public playerManager!: PlayerManager;
   public socketManager = SocketManager;
 
-  create() {
+  create(): void {
     this.physicsManager = new PhsyicsManager(this);
     this.playerManager = new PlayerManager(this);
 
@@ -18,11 +18,11 @@ export class Scene extends Phaser.Scene {
     this._registerEvents();
   }
 
-  update() {
+  update(): void {
     this.playerManager.update();
   }
 
-  private _registerEvents() {
+  private _registerEvents(): void {
     this.socketManager.on("player:create:local", (data: PlayerConfig) => {
       this.playerManager.add(data, true);
     });
@@ -48,5 +48,20 @@ export class Scene extends Phaser.Scene {
     this.game.events.on("player:input", (data: PlayerInput) => {
       this.socketManager.emit("player:input", data);
     });
+
+    this.game.events.once("destroy", this.shutdown, this);
+  }
+
+  shutdown(): void {
+    this.socketManager.off("player:create:local");
+    this.socketManager.off("player:create:others");
+    this.socketManager.off("player:create");
+    this.socketManager.off("player:left");
+    this.socketManager.off("player:input");
+
+    this.game.events.off("player:input");
+
+    this.playerManager.destroy();
+    this.socketManager.disconnect();
   }
 }

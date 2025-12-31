@@ -45,6 +45,14 @@ export class SocketManager {
   emit(event: string, ...args: any[]): void {
     this.socket?.emit(event, ...args);
   }
+
+  disconnect(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+      this.isConnected = false;
+    }
+  }
 }
 
 export default SocketManager.getInstance();

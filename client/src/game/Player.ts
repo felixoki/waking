@@ -58,8 +58,19 @@ export class Player extends Entity {
     this.directions = input.directions;
 
     const { state, needsUpdate } = handlers.state.resolve(input, prev);
+
     if (state !== this.state) this.transitionTo(state);
     if (needsUpdate) this.states?.get(this.state)?.update(this);
+
+    /**
+     * Do proper interpolation in the future
+     */
+    if (remoteInput) {
+      const x = Phaser.Math.Linear(this.x, input.x, 0.2);
+      const y = Phaser.Math.Linear(this.y, input.y, 0.2);
+
+      this.setPosition(x, y);
+    }
 
     if (this.isControllable) this.scene.game.events.emit("player:input", input);
   }
