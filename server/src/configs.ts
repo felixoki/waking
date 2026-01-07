@@ -72,8 +72,22 @@ export const MAPS: Record<MapName, MapConfig> = {
   [MapName.VILLAGE]: {
     id: MapName.VILLAGE,
     json: "village.json",
-  }
-}
+    spritesheets: [
+      {
+        key: "village_home",
+        file: "village_home.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      { key: "player-idle", file: "player_idle.png" },
+      { key: "player-walking", file: "player_walking.png" },
+      { key: "player-running", file: "player_running.png" },
+      { key: "player-jumping", file: "player_jumping.png" },
+      { key: "player-casting", file: "player_casting.png" },
+    ],
+  },
+};
 
 /**
  * Entity Definitions
@@ -113,7 +127,7 @@ export const DEFINITIONS: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.TEXTURE,
         config: {
-          spritesheet: "player_home",
+          spritesheet: "village_home",
           tileSize: 16,
           tiles: [
             { row: 1, start: 1, end: 10 },

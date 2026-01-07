@@ -68,20 +68,27 @@
 
 - Add casting at coordinates ✅
 
+#### 6.1.2026
+
+- Download spritesheets ✅
+
+#### 7.1.2026
+
+- Implement pre loader ✅
+- Introduce camera ✅
+
 
 #### Next up
 
 - Build first village section in Tiled editor
-- Add toolbar, spell types and projectile configs
 - Add inventory and pickable component
-- Implement pre loader
-- Emit damage events from server
+- Add toolbar, spell types and projectile configs
+- Emit damage and pick up events from server
 - Switch host on disconnect
 - Build player house in Tiled editor
 - Add map transitions
-- Throttle network updates with change detection
+- Throttle network updates / change detection
 - Improve interpolation
-- Introduce camera
 
 ## Devlog
 
@@ -95,7 +102,7 @@ I kept thinking about other games able to combine these two styles like Valheim 
 
 I got into programming video games by watching Drew Conley on YouTube. The first ever video specifically was about 2D sprite animations and movement using but only CSS. It was done by transforming an absolute positioned `div` inside its relative parent. The animation was done using `background-position` and `background-size`. Doing something like this with CSS only amazed me (as a CSS fanatic), but I quickly learned doing 2D games without a canvas has a quite low ceiling.
 
-Next I discovered LPC sprites. 
+While I followed the next few tutorials I soon discovered LPC sprites. Originally created for the Liberated Pixel Cup in 2012 they are maintained and extended to this day. Their diversity is incredible, it really is an indie dream come true. The first thing I built was a character editor, making use of the hundreds of options for bodies, heads, clothing and armour.
 
 #### What Is The Game About
 

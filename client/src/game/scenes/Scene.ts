@@ -49,6 +49,9 @@ export class Scene extends Phaser.Scene {
      */
     this.socketManager.on("player:create:local", (data: PlayerConfig) => {
       this.playerManager.add(data, true);
+
+      const player = this.playerManager.player!;
+      this.cameras.main.startFollow(player, false);
     });
 
     this.socketManager.on("player:create:others", (data: PlayerConfig[]) => {

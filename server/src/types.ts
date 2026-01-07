@@ -56,10 +56,19 @@ export enum MapName {
 export interface MapConfig {
   id: MapName;
   json: string;
+  spritesheets: Spritesheet[];
+}
+
+export interface Spritesheet {
+  key: string;
+  file: string;
+  frameWidth?: number;
+  frameHeight?: number;
+  asTileset?: boolean;
 }
 
 /**
- * Common
+ * Input
  */
 export interface Input {
   id: string;
@@ -73,6 +82,9 @@ export interface Input {
   state: StateName;
 }
 
+/**
+ * Behaviors
+ */
 export enum BehaviorName {
   PATROL = "patrol",
 }
@@ -82,6 +94,9 @@ export interface BehaviorInput {
   targetY: number;
 }
 
+/**
+ * State
+ */
 export enum StateName {
   IDLE = "idle",
   WALKING = "walking",
@@ -96,6 +111,9 @@ export interface StateResolution {
   needsUpdate: boolean;
 }
 
+/**
+ * Direction
+ */
 export enum Direction {
   DOWN = "down",
   UP = "up",
@@ -110,6 +128,9 @@ export const DirectionVectors: Record<Direction, { x: number; y: number }> = {
   [Direction.RIGHT]: { x: 1, y: 0 },
 };
 
+/**
+ * Animations
+ */
 export interface AnimationConfig {
   frameCount: number;
   frameRate: number;
@@ -135,9 +156,6 @@ export type ComponentConfig =
   | { name: ComponentName.POINTABLE }
   | { name: ComponentName.TEXTURE; config: TextureConfig; key: string };
 
-/**
- * Components
- */
 export interface BodyConfig {
   width: number;
   height: number;
