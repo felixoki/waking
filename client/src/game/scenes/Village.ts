@@ -2,6 +2,7 @@ import { MapName } from "@server/types";
 import { Scene } from "./Scene";
 import { MapFactory } from "../factory/Map";
 import { Preloader } from "../loaders/Preloader";
+import { TileManager } from "../managers/Tile";
 
 export default class Village extends Scene {
   constructor() {
@@ -16,6 +17,7 @@ export default class Village extends Scene {
     super.create();
 
     const map = MapFactory.create(this, MapName.VILLAGE);
+    this.tileManager = new TileManager(map);
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.setZoom(2);

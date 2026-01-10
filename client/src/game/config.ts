@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Village from "./scenes/Village";
+import { OutlinePipeline } from "./pipelines/Outline";
 
 export const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -13,9 +14,15 @@ export const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
-  backgroundColor: "f3f3f3",
+  backgroundColor: "4f63aa",
   pixelArt: true,
   fps: {
     target: 60,
   },
+  callbacks: {
+    postBoot: (game) => {
+      const renderer = game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+      renderer.pipelines.addPostPipeline('outline', OutlinePipeline);
+    }
+  }
 };

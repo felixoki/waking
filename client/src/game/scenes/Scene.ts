@@ -9,11 +9,13 @@ import {
 } from "@server/types";
 import { PhsyicsManager } from "../managers/Physics";
 import { EntityManager } from "../managers/Entity";
+import { TileManager } from "../managers/Tile";
 
 export class Scene extends Phaser.Scene {
   public physicsManager!: PhsyicsManager;
   public playerManager!: PlayerManager;
   public entityManager!: EntityManager;
+  public tileManager!: TileManager;
   public socketManager = SocketManager;
 
   create(): void {
@@ -39,9 +41,10 @@ export class Scene extends Phaser.Scene {
     });
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
     this.playerManager.update();
     this.entityManager.update();
+    this.tileManager.update(delta);
   }
 
   private _registerEvents(): void {
@@ -119,5 +122,6 @@ export class Scene extends Phaser.Scene {
 
     this.playerManager.destroy();
     this.socketManager.disconnect();
+    this.tileManager.destroy();
   }
 }

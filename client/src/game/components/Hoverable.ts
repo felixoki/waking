@@ -1,6 +1,7 @@
 import { ComponentName } from "@server/types";
 import { Component } from "./Component";
 import { Entity } from "../Entity";
+import { OutlinePipeline } from "../pipelines/Outline";
 
 export class HoverableComponent extends Component {
   private entity: Entity;
@@ -19,21 +20,24 @@ export class HoverableComponent extends Component {
   }
 
   update(): void {}
-  detach(): void {}
+
+  detach(): void {
+    this.entity.off("pointerover", this._hover, this);
+    this.entity.off("pointerout", this._unhover, this);
+  }
 
   private _hover(): void {
-    const offset = 2;
-    const color = 0xffffff;
-    const decay = 0.02;
-    const power = 1;
+    this.entity.setPostPipeline("outline");
 
-    this.entity.preFX?.addShadow(0, -offset, decay, power, color);
-    this.entity.preFX?.addShadow(0, offset, decay, power, color);
-    this.entity.preFX?.addShadow(-offset, 0, decay, power, color);
-    this.entity.preFX?.addShadow(offset, 0, decay, power, color);
+    const pipelines = this.entity.postPipelines;
+
+    if (pipelines && pipelines.length) {
+      const pipeline = pipelines[pipelines.length - 1];
+      (pipeline as OutlinePipeline).thickness = 1;
+    }
   }
 
   private _unhover(): void {
-    this.entity.preFX?.clear();
+    this.entity.resetPostPipeline();
   }
 }
