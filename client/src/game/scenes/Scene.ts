@@ -14,19 +14,21 @@ import { EntityManager } from "../managers/Entity";
 import { TileManager } from "../managers/Tile";
 import EventBus from "../EventBus";
 import { handlers } from "../handlers";
+import { CameraManager } from "../managers/Camera";
 
 export class Scene extends Phaser.Scene {
   public physicsManager!: PhsyicsManager;
   public playerManager!: PlayerManager;
   public entityManager!: EntityManager;
   public tileManager!: TileManager;
+  public cameraManager!: CameraManager;
   public socketManager = SocketManager;
 
   create(): void {
     this.physicsManager = new PhsyicsManager(this);
     this.playerManager = new PlayerManager(this);
     this.entityManager = new EntityManager(this);
-
+    this.cameraManager = new CameraManager(this);
     this.socketManager.init();
     this.socketManager.emit("player:create");
 
@@ -36,7 +38,7 @@ export class Scene extends Phaser.Scene {
      * We should register this from within the player
      */
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      const target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      const target = this.cameraManager.getWorldPoint(pointer.x, pointer.y);
 
       this.playerManager.player?.inputManager?.setTarget({
         x: target.x,
@@ -50,28 +52,7 @@ export class Scene extends Phaser.Scene {
     this.entityManager.update();
     this.tileManager.update(delta);
 
-    /**
-     * Calculate entity screen positions relative to centered player
-     */
-    const camera = this.cameras.main;
-    const entities = [
-      Array.from(this.entityManager.entities.values()),
-      Array.from(this.playerManager.others.values()),
-    ].flat();
-    const player = this.playerManager.player;
-
-    if (!player) return;
-
-    const data = entities
-      .filter((entity) => entity.active)
-      .map((entity) => ({
-        id: entity.id,
-        x: camera.centerX + (entity.x - player.x) * camera.zoom,
-        y: camera.centerY + (entity.y - player.y) * camera.zoom,
-        health: entity.health,
-      }));
-
-    EventBus.emit("entities:update", data);
+    this._updateInterface();
   }
 
   private _registerEvents(): void {
@@ -162,7 +143,23 @@ export class Scene extends Phaser.Scene {
     this.game.events.once("destroy", this.shutdown, this);
   }
 
+  /**
+   * This should be interfaceManager.update() later on
+   */
+  private _updateInterface(): void {
+    const entities = [
+      ...this.entityManager.entities.values(),
+      ...this.playerManager.others.values(),
+    ];
+    const player = this.playerManager.player;
+
+    const data = this.cameraManager.getInterfaceData(entities, player!);
+    EventBus.emit("entities:update", data);
+  }
+
   shutdown(): void {
+    this.input.off("pointerdown");
+
     this.socketManager.off("player:create:local");
     this.socketManager.off("player:create:others");
     this.socketManager.off("player:create");

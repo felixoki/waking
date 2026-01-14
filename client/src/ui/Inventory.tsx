@@ -20,12 +20,18 @@ export function Inventory() {
   }, []);
 
   return (
-    <ul className="fixed top-0 right-0 flex">
-      {items.map((item, i) => (
-        <li key={i} className="rounded border p-2 m-1 bg-white">
-          {item?.name} {item?.quantity}
-        </li>
-      ))}
-    </ul>
+    <>
+      <h3>Inventory</h3>
+      <ul>
+        {items.map((item, i) => (
+          <li
+            key={i}
+            className="border border-slate-200 rounded p-2 my-2 text-xs"
+          >
+            {item?.name} {item?.quantity}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

@@ -30,10 +30,7 @@ export class PickableComponent extends Component {
       ComponentName.INVENTORY
     );
 
-    if (!inventory?.add(this.entity.name)) {
-      console.log("Cannot pick up", this.entity.name);
-      return;
-    }
+    if (!inventory?.add(this.entity.name)) return;
 
     this.entity.scene.game.events.emit("entity:pickup", {
       id: this.entity.id,

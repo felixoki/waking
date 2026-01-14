@@ -60,6 +60,8 @@ export const combat = {
   },
 
   knockback: (entity: Entity, knockback: { x: number; y: number }) => {
+    if (!entity.body.immovable) return;
+
     entity.body.setVelocity(
       entity.body.velocity.x + knockback.x,
       entity.body.velocity.y + knockback.y

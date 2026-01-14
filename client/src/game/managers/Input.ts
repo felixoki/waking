@@ -1,11 +1,13 @@
-import { Direction } from "@server/types";
+import { Direction, HotbarDirection } from "@server/types";
 import { Scene } from "../scenes/Scene";
 
 type Key = Phaser.Input.Keyboard.Key;
 
 export class InputManager {
   private keys: {
+    Q: Key;
     W: Key;
+    E: Key;
     A: Key;
     S: Key;
     D: Key;
@@ -16,7 +18,9 @@ export class InputManager {
 
   constructor(scene: Scene) {
     this.keys = scene.input.keyboard!.addKeys({
+      Q: Phaser.Input.Keyboard.KeyCodes.Q,
       W: Phaser.Input.Keyboard.KeyCodes.W,
+      E: Phaser.Input.Keyboard.KeyCodes.E,
       A: Phaser.Input.Keyboard.KeyCodes.A,
       S: Phaser.Input.Keyboard.KeyCodes.S,
       D: Phaser.Input.Keyboard.KeyCodes.D,
@@ -47,6 +51,16 @@ export class InputManager {
     if (this.keys.D.isDown) directions.push(Direction.RIGHT);
 
     return directions;
+  }
+
+  getNavigation(): HotbarDirection.PREV | HotbarDirection.NEXT | null {
+    if (Phaser.Input.Keyboard.JustDown(this.keys.Q))
+      return HotbarDirection.PREV;
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.E))
+      return HotbarDirection.NEXT;
+
+    return null;
   }
 
   isRunning(): boolean {

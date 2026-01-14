@@ -64,7 +64,6 @@ export interface EntityDestroy {
 /**
  * Damage
  */
-
 export interface Hit {
   name: SpellName;
   attackerId: string;
@@ -80,7 +79,6 @@ export interface Hurt {
 /**
  * Maps
  */
-
 export enum MapName {
   VILLAGE = "village",
 }
@@ -112,8 +110,26 @@ export interface Input {
   isJumping: boolean;
   target?: { x: number; y: number };
   state: StateName;
+  equipped: HotbarSlot | null | undefined;
 }
 
+/**
+ * Hotbar
+ */
+export enum HotbarSlotType {
+  SPELL = "spell",
+  ENTITY = "entity",
+}
+
+export interface HotbarSlot {
+  type: HotbarSlotType;
+  name: SpellName | EntityName;
+}
+
+export enum HotbarDirection {
+  PREV = "prev",
+  NEXT = "next",
+}
 /**
  * Behaviors
  */
@@ -172,9 +188,9 @@ export interface AnimationConfig {
 /**
  * Spells
  */
-
 export enum SpellName {
   SHARD = "shard",
+  FIRESTORM = "firestorm",
 }
 
 export interface SpellConfig {
@@ -204,7 +220,6 @@ export interface ParticleConfig {
 /**
  * Components
  */
-
 export enum ComponentName {
   ANIMATION = "animation",
   BEHAVIOR_QUEUE = "behaviorQueue",
@@ -214,6 +229,7 @@ export enum ComponentName {
   INVENTORY = "inventory",
   PICKABLE = "pickable",
   HOVERABLE = "hoverable",
+  HOTBAR = "hotbar",
 }
 
 export type ComponentConfig =
@@ -224,7 +240,8 @@ export type ComponentConfig =
   | { name: ComponentName.TEXTURE; config: TextureConfig; key: string }
   | { name: ComponentName.INVENTORY }
   | { name: ComponentName.PICKABLE }
-  | { name: ComponentName.HOVERABLE };
+  | { name: ComponentName.HOVERABLE }
+  | { name: ComponentName.HOTBAR };
 
 export interface BodyConfig {
   width: number;
@@ -232,6 +249,7 @@ export interface BodyConfig {
   offsetX: number;
   offsetY: number;
   pushable?: boolean;
+  immovable?: boolean;
 }
 
 export interface TextureConfig {
@@ -249,7 +267,6 @@ export interface InventoryItem {
 /**
  * Tiled
  */
-
 export interface TiledMap {
   width: number;
   height: number;

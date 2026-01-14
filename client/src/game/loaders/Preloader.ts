@@ -17,8 +17,14 @@ export class Preloader {
     graphics.generateTexture("particles", 16, 16);
     graphics.destroy();
 
+    /**
+     * Tilemap
+     */
     scene.load.tilemapTiledJSON(config.id, `assets/maps/${config.json}`);
 
+    /**
+     * Tilesets and spritesheets
+     */
     config.spritesheets.forEach((spritesheet) => {
       scene.load.spritesheet(
         spritesheet.key,

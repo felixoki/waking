@@ -25,7 +25,7 @@ export class InventoryComponent extends Component {
       if (existing !== -1) {
         this.items[existing]!.quantity += quantity;
 
-        this.notify();
+        this.emit();
         return true;
       }
     }
@@ -39,14 +39,14 @@ export class InventoryComponent extends Component {
         stackable: def.metadata.stackable || false,
       };
 
-      this.notify();
+      this.emit();
       return true;
     }
 
     return false;
   }
 
-  notify(): void {
+  emit(): void {
     EventBus.emit("inventory:update", [...this.items]);
   }
 }

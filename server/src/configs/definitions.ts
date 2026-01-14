@@ -59,7 +59,12 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
       },
       {
         name: ComponentName.BODY,
-        config: { width: 64, height: 64, offsetX: 0, offsetY: 0 },
+        config: {
+          width: 64,
+          height: 64,
+          offsetX: 0,
+          offsetY: 0,
+        },
       },
     ],
     states: [],
@@ -177,7 +182,12 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
       },
       {
         name: ComponentName.BODY,
-        config: { width: 16, height: 24, offsetX: 24, offsetY: 48 },
+        config: {
+          width: 16,
+          height: 24,
+          offsetX: 24,
+          offsetY: 48,
+        },
       },
     ],
     states: [],
@@ -203,7 +213,12 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
       },
       {
         name: ComponentName.BODY,
-        config: { width: 16, height: 24, offsetX: 24, offsetY: 32 },
+        config: {
+          width: 16,
+          height: 24,
+          offsetX: 24,
+          offsetY: 32,
+        },
       },
     ],
     states: [],

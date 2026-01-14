@@ -1,4 +1,9 @@
-import { Direction, Input, StateName } from "@server/types";
+import {
+  Direction,
+  HotbarSlotType,
+  Input,
+  StateName,
+} from "@server/types";
 
 export const state = {
   resolve: (
@@ -7,7 +12,8 @@ export const state = {
   ) => {
     const selectors = [
       {
-        condition: () => input.target,
+        condition: () =>
+          input.target && input.equipped?.type === HotbarSlotType.SPELL,
         state: () => StateName.CASTING,
         needsUpdate: false,
       },

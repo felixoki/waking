@@ -1,4 +1,12 @@
-import { Direction, Input, StateName, EntityName } from "@server/types";
+import {
+  Direction,
+  Input,
+  StateName,
+  EntityName,
+  HotbarSlotType,
+  SpellName,
+  ComponentName,
+} from "@server/types";
 import { AnimationComponent } from "./components/Animation";
 import { Entity } from "./Entity";
 import { InputManager } from "./managers/Input";
@@ -8,6 +16,7 @@ import { State } from "./state/State";
 import { Scene } from "./scenes/Scene";
 import { BodyComponent } from "./components/Body";
 import { InventoryComponent } from "./components/Inventory";
+import { HotbarComponent } from "./components/Hotbar";
 
 export class Player extends Entity {
   public socketId: string;
@@ -66,9 +75,23 @@ export class Player extends Entity {
       })
     );
     this.addComponent(new InventoryComponent());
+    this.addComponent(
+      new HotbarComponent(this, [
+        { type: HotbarSlotType.SPELL, name: SpellName.SHARD },
+        { type: HotbarSlotType.SPELL, name: SpellName.FIRESTORM },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ])
+    );
   }
 
   update(remoteInput?: Input): void {
+    for (const component of this.components.values()) component.update();
+
     const input = remoteInput || this._getInput();
 
     if (!input || this.isLocked) return;
@@ -84,6 +107,11 @@ export class Player extends Entity {
     this.directions = input.directions;
 
     const { state, needsUpdate } = handlers.state.resolve(input, prev);
+
+    if (remoteInput) {
+      const hotbar = this.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+      hotbar?.set(input.equipped);
+    }
 
     if (state !== this.state) this.transitionTo(state);
     if (needsUpdate) this.states?.get(this.state)?.update(this);
@@ -113,6 +141,9 @@ export class Player extends Entity {
     const isJumping = this.inputManager?.isJumping();
     const target = this.inputManager?.getTarget();
 
+    const hotbar = this.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+    const equipped = hotbar?.get();
+
     return {
       id: this.id,
       x: this.x,
@@ -123,6 +154,7 @@ export class Player extends Entity {
       isJumping: isJumping || false,
       target: target,
       state: this.state,
+      equipped: equipped,
     };
   }
 }

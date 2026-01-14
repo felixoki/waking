@@ -56,6 +56,10 @@ export class Entity extends Phaser.GameObjects.Sprite {
   }
 
   update(): void {
+    /**
+     * We should update all components here
+     * We should not return the input from update but get it separately
+     */
     const behavior = this.getComponent<BehaviorQueue>(
       ComponentName.BEHAVIOR_QUEUE
     );

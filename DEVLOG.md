@@ -103,16 +103,24 @@
 - Add ui inventory ✅
 - Add ui health bars ✅
 
+#### 13.1.2026
+
+- Add toolbar component ✅
+
+#### 14.1.2026
+
+- Add equipped to input ✅
+- Add camera class ✅
+
 #### Next up
 
-- Add ui toolbar
-- Switch host on disconnect
+- Add damageable component
 - Build player house in Tiled editor
 - Add map transitions
 - Throttle network updates / change detection
+- Switch host on disconnect
 - Improve interpolation
-- Add camera class
-- Add immovable and indestructible entities
+- Add party manager
 
 ## Devlog
 

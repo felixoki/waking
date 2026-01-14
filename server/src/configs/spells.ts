@@ -22,4 +22,25 @@ export const spells: Record<SpellName, SpellConfig> = {
       blendMode: "ADD",
     },
   },
+  [SpellName.FIRESTORM]: {
+    name: SpellName.FIRESTORM,
+    damage: 30,
+    knockback: 100,
+    speed: 200,
+    hitbox: {
+      width: 60,
+      height: 60,
+    },
+    particles: {
+      tint: [0xff0000, 0xff6600, 0xffaa00],
+      alpha: { start: 0.8, end: 0 },
+      scale: { start: 0.6, end: 0.2 },
+      speedY: { min: -30, max: 30 },
+      speedX: { min: -30, max: 30 },
+      lifespan: 400,
+      frequency: 15,
+      quantity: 2,
+      blendMode: "ADD",
+    },
+  },
 };

@@ -5,6 +5,8 @@ import { AnimationComponent } from "../components/Animation";
 import { DURATION_CASTING } from "@server/globals";
 import { handlers } from "../handlers";
 import { Projectile } from "../Projectile";
+import { Player } from "../Player";
+import { HotbarComponent } from "../components/Hotbar";
 
 export class Casting implements State {
   private timer: Phaser.Time.TimerEvent | null = null;
@@ -28,6 +30,11 @@ export class Casting implements State {
       entity.target!
     );
 
+    const hotbar = (entity as Player).getComponent<HotbarComponent>(
+      ComponentName.HOTBAR
+    );
+    const equipped = hotbar?.get();
+
     new Projectile(
       entity.scene,
       entity.x + direction.x * 20,
@@ -35,7 +42,7 @@ export class Casting implements State {
       entity.id,
       400,
       direction,
-      SpellName.SHARD
+      equipped?.name as SpellName
     );
   }
 

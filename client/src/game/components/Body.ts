@@ -19,6 +19,7 @@ export class BodyComponent extends Component {
     this.entity.body.setSize(this.config.width, this.config.height);
     this.entity.body.setOffset(this.config.offsetX, this.config.offsetY);
     this.entity.body.pushable = this.config.pushable || false;
+    this.entity.body.setImmovable(this.config.immovable || false);
   }
 
   update(): void {}
