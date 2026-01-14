@@ -18,7 +18,7 @@ export const entity = {
       y: randomInt(0, 400),
       id: randomUUID(),
       map: MapName.VILLAGE,
-      name: EntityName.HOUSE1,
+      name: EntityName.ORC1,
       health: 100,
     };
 

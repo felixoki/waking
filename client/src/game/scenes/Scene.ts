@@ -31,6 +31,7 @@ export class Scene extends Phaser.Scene {
     this.cameraManager = new CameraManager(this);
     this.socketManager.init();
     this.socketManager.emit("player:create");
+    this.socketManager.emit("entity:create");
 
     this._registerEvents();
 

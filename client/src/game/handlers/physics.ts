@@ -1,3 +1,5 @@
+import { ComponentName } from "@server/types";
+import { DamageableComponent } from "../components/Damageable";
 import { Entity } from "../Entity";
 import { Hitbox } from "../Hitbox";
 
@@ -13,6 +15,11 @@ export const physics = {
 
     if (hitbox.ownerId === entity.id || hitbox.hits.has(entity.id) || !isHost)
       return;
+
+    const damageable = entity.getComponent<DamageableComponent>(
+      ComponentName.DAMAGEABLE
+    );
+    if (!damageable) return;
 
     hitbox.hits.add(entity.id);
 

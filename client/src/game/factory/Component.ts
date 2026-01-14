@@ -15,6 +15,7 @@ import { TextureComponent } from "../components/Texture";
 import { PickableComponent } from "../components/Pickable";
 import { InventoryComponent } from "../components/Inventory";
 import { HoverableComponent } from "../components/Hoverable";
+import { DamageableComponent } from "../components/Damageable";
 
 export class ComponentFactory {
   static create(
@@ -47,8 +48,10 @@ export class ComponentFactory {
           `${entity.name}_texture`
         ),
         [ComponentName.PICKABLE]: new PickableComponent(entity),
-        [ComponentName.INVENTORY]: new InventoryComponent(entity),
+        [ComponentName.INVENTORY]: new InventoryComponent(),
         [ComponentName.HOVERABLE]: new HoverableComponent(entity),
+        [ComponentName.HOTBAR]: null!,
+        [ComponentName.DAMAGEABLE]: new DamageableComponent(),
       };
 
       if (map[config.name]) components.set(config.name, map[config.name]);

@@ -45,6 +45,10 @@ export const maps: Record<MapName, MapConfig> = {
       { key: "player-running", file: "player_running.png" },
       { key: "player-jumping", file: "player_jumping.png" },
       { key: "player-casting", file: "player_casting.png" },
+      { key: "orc1-idle", file: "orc1_idle_with_shadow.png" },
+      { key: "orc1-walking", file: "orc1_walking_with_shadow.png" },
+      { key: "orc1-running", file: "orc1_running_with_shadow.png" },
+      { key: "orc1-slashing", file: "orc1_slashing_with_shadow.png" },
     ],
   },
 };

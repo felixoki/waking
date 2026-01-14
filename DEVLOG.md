@@ -111,16 +111,17 @@
 
 - Add equipped to input ✅
 - Add camera class ✅
+- Add damageable component ✅
 
 #### Next up
 
-- Add damageable component
 - Build player house in Tiled editor
 - Add map transitions
-- Throttle network updates / change detection
-- Switch host on disconnect
-- Improve interpolation
+- Add throttling network updates and change detection
+- Add host switching on disconnect
+- Update interpolation system
 - Add party manager
+- Add interface manager
 
 ## Devlog
 

@@ -25,6 +25,7 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
         },
       },
       { name: ComponentName.BEHAVIOR_QUEUE },
+      { name: ComponentName.DAMAGEABLE },
     ],
     states: [
       StateName.IDLE,

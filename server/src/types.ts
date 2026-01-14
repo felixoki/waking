@@ -230,6 +230,7 @@ export enum ComponentName {
   PICKABLE = "pickable",
   HOVERABLE = "hoverable",
   HOTBAR = "hotbar",
+  DAMAGEABLE = "damageable",
 }
 
 export type ComponentConfig =
@@ -241,7 +242,8 @@ export type ComponentConfig =
   | { name: ComponentName.INVENTORY }
   | { name: ComponentName.PICKABLE }
   | { name: ComponentName.HOVERABLE }
-  | { name: ComponentName.HOTBAR };
+  | { name: ComponentName.HOTBAR }
+  | { name: ComponentName.DAMAGEABLE }
 
 export interface BodyConfig {
   width: number;
