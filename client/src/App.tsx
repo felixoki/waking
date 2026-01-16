@@ -1,15 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { config } from "./game/config";
 import Phaser from "phaser";
 import { Inventory } from "./ui/Inventory";
 import { Entities } from "./ui/Entities";
 import { Hotbar } from "./ui/Hotbar";
+import { Menu } from "./ui/Menu";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
+  const [inGame, setInGame] = useState(false);
 
   useEffect(() => {
-    if (game.current) return;
+    if (game.current || !inGame) return;
 
     game.current = new Phaser.Game(config);
 
@@ -17,7 +19,9 @@ function App() {
       game.current?.destroy(true);
       game.current = null;
     };
-  }, []);
+  }, [inGame]);
+
+  if (!inGame) return <Menu ready={() => setInGame(true)} />;
 
   return (
     <>

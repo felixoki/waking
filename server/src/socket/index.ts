@@ -1,9 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
-import { PlayerStore } from "../stores/Player.js";
 import { tryCatch } from "../utils/tryCatch.js";
 import { Input, Hit, MapName } from "../types.js";
-import { EntityStore } from "../stores/Entity.js";
+import { InstanceManager } from "../managers/Instance.js";
 
 type SocketEvent = {
   event: string;
@@ -13,50 +12,62 @@ type SocketEvent = {
 export function registerHandlers(
   _io: Server,
   socket: Socket,
-  stores: { players: PlayerStore; entities: EntityStore }
+  instances: InstanceManager
 ) {
   const events: SocketEvent[] = [
+    /**
+     * Game
+     */
+    {
+      event: "game:create",
+      handler: () => handlers.game.create(socket, instances),
+    },
+    {
+      event: "game:join",
+      handler: (data: { instanceId: string }) =>
+        handlers.game.join(socket, instances, data.instanceId),
+    },
+    {
+      event: "game:list",
+      handler: () => handlers.game.list(socket, instances),
+    },
     /**
      * Player
      */
     {
       event: "player:create",
-      handler: () =>
-        handlers.player.create(socket, stores.players, stores.entities),
+      handler: () => handlers.player.create(socket, instances),
     },
     {
       event: "disconnect",
-      handler: () => handlers.player.delete(socket, stores.players),
+      handler: () => handlers.player.delete(socket, instances),
     },
     {
       event: "player:input",
-      handler: (data: Input) =>
-        handlers.player.input(data, socket, stores.players),
+      handler: (data: Input) => handlers.player.input(data, socket, instances),
     },
     {
       event: "player:transition",
       handler: (map: MapName) =>
-        handlers.player.transition(map, socket, stores.players),
+        handlers.player.transition(map, socket, instances),
     },
     /**
      * Entity
      */
     {
       event: "entity:create",
-      handler: () =>
-        handlers.entity.create(socket, stores.entities, stores.players),
+      handler: () => handlers.entity.create(socket, instances),
     },
     {
       event: "entity:pickup",
-      handler: (data) => handlers.entity.pickup(data, socket, stores.entities),
+      handler: (data) => handlers.entity.pickup(data, socket, instances),
     },
     /**
      * Shared
      */
     {
       event: "hit",
-      handler: (data: Hit) =>
-        handlers.combat.hit(data, socket, stores.entities, stores.players),
+      handler: (data: Hit) => handlers.combat.hit(data, socket, instances),
     },
   ];
 

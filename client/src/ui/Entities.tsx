@@ -28,7 +28,7 @@ export function Entities() {
       {entities.map((e) => (
         <span
           key={e.id}
-          className="absolute text-sm text-white"
+          className="pointer-events-none absolute text-sm text-white"
           style={{ left: e.x, top: e.y }}
         >
           {e.health}

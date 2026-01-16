@@ -5,6 +5,7 @@ export class SocketManager {
   private static instance: SocketManager;
   private socket: Socket | null = null;
   private isConnected: boolean = false;
+  private gameId: string | null = null;
 
   private constructor() {}
 
@@ -27,6 +28,14 @@ export class SocketManager {
     });
 
     return this.socket;
+  }
+
+  getGameId(): string | null {
+    return this.gameId;
+  }
+
+  setGameId(id: string): void {
+    this.gameId = id;
   }
 
   on(event: string, callback: (...args: any[]) => void): void {

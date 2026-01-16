@@ -34,7 +34,6 @@ export class Scene extends Phaser.Scene {
     this.entityManager = new EntityManager(this);
     this.cameraManager = new CameraManager(this);
 
-    this.socketManager.init();
     this.socketManager.emit("player:create");
 
     this._registerEvents();
@@ -66,7 +65,7 @@ export class Scene extends Phaser.Scene {
      */
     this.socketManager.on("player:create:local", (data: PlayerConfig) => {
       this.playerManager.add(data, true);
-      
+
       const player = this.playerManager.player!;
       const existing = this.registry.get("player");
 
@@ -134,6 +133,10 @@ export class Scene extends Phaser.Scene {
 
       this.scene.stop();
       this.scene.start(data);
+    });
+
+    this.socketManager.on("player:error", (data: { message: string }) => {
+      console.error(`Player error: ${data.message}`);
     });
 
     this.game.events.on("player:input", (data: Input) => {
@@ -204,6 +207,9 @@ export class Scene extends Phaser.Scene {
   private _unregisterEvents(): void {
     this.input.off("pointerdown");
 
+    this.socketManager.off("game:create");
+    this.socketManager.off("game:join");
+
     this.socketManager.off("player:create:local");
     this.socketManager.off("player:create:others");
     this.socketManager.off("player:create");
@@ -211,6 +217,7 @@ export class Scene extends Phaser.Scene {
     this.socketManager.off("player:input");
     this.socketManager.off("player:hurt");
     this.socketManager.off("player:transition");
+    this.socketManager.off("player:error");
 
     this.socketManager.off("entity:create");
     this.socketManager.off("entity:create:all");
@@ -219,6 +226,7 @@ export class Scene extends Phaser.Scene {
 
     this.game.events.off("player:input");
     this.game.events.off("player:transition");
+
     this.game.events.off("entity:pickup");
 
     this.game.events.off("hit");

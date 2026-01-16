@@ -121,11 +121,12 @@
 
 - Use registry to pass player between scenes ✅
 - Add transition component ✅
+- Add instance manager ✅
+- Add game start menu ✅
 
 
 #### Next up
 
-- Add instance manager
 - Add hitbox generation to spell config
 - Build herbalist house in Tiled editor
 - Add world animation component
