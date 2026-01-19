@@ -131,16 +131,16 @@
 #### 19.1.2026
 
 - Add hitbox generation to spell config ✅
+- Add interactable component ✅
+- Add vendor component ✅
+- Add resources store to server ✅
 
 
 #### Next up
 
-- Add interactable component
-- Add vendor component
 - Improve shader usage
 - Add effects, spell resistances and weaknesses
 - Add spell impact preview
-- Add countinghouse to server
 - Build herbalist house in Tiled editor
 - Add world animation component
 - Add host switching on disconnect

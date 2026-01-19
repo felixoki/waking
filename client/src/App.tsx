@@ -5,6 +5,7 @@ import { Inventory } from "./ui/Inventory";
 import { Entities } from "./ui/Entities";
 import { Hotbar } from "./ui/Hotbar";
 import { Menu } from "./ui/Menu";
+import { Interaction } from "./ui/Interaction";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -30,6 +31,7 @@ function App() {
       <div className="fixed top-0 left-256 flex flex-col gap-4 p-4">
         <Inventory />
         <Hotbar />
+        <Interaction />
       </div>
     </div>
   );

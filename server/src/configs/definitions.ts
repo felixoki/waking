@@ -14,6 +14,14 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     directions: [],
     components: [
       { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.INTERACTABLE },
+      {
+        name: ComponentName.VENDOR,
+        config: {
+          accepts: [EntityName.FLYAMINATA1, EntityName.BASKETFERN],
+        },
+      },
       { name: ComponentName.ANIMATION },
       {
         name: ComponentName.BODY,
@@ -25,8 +33,6 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
           pushable: false,
         },
       },
-      { name: ComponentName.BEHAVIOR_QUEUE },
-      { name: ComponentName.DAMAGEABLE },
     ],
     states: [
       StateName.IDLE,
@@ -67,7 +73,7 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
           offsetX: 0,
           offsetY: 0,
         },
-      }
+      },
     ],
     states: [],
     behaviors: [],
@@ -107,7 +113,7 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
           offsetX: 16,
           offsetY: 64,
         },
-      }
+      },
     ],
     states: [],
     behaviors: [],

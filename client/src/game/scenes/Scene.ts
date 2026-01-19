@@ -177,6 +177,16 @@ export class Scene extends Phaser.Scene {
       this.socketManager.emit("entity:pickup", data);
     });
 
+    this.game.events.on("entity:interact", (data: string) => {
+      /**
+       * Should we tell the server about this too?
+       */
+      const entity = this.entityManager.get(data);
+      if (!entity) return;
+
+      handlers.interaction.start(entity);
+    });
+
     /**
      * Shared
      */
@@ -228,6 +238,7 @@ export class Scene extends Phaser.Scene {
     this.game.events.off("player:transition");
 
     this.game.events.off("entity:pickup");
+    this.game.events.off("entity:interact");
 
     this.game.events.off("hit");
   }

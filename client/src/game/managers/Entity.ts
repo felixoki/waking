@@ -12,6 +12,10 @@ export class EntityManager {
     this.scene = scene;
   }
 
+  get(id: string): Entity | undefined {
+    return this.entities.get(id);
+  }
+
   /**
    * Entities can receive exclusive updates from the server
    */

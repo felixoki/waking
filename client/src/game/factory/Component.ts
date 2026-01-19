@@ -4,6 +4,7 @@ import {
   ComponentName,
   TextureConfig,
   TransitionConfig,
+  VendorConfig,
 } from "@server/types";
 import { Entity } from "../Entity";
 import { Component } from "../components/Component";
@@ -18,11 +19,13 @@ import { InventoryComponent } from "../components/Inventory";
 import { HoverableComponent } from "../components/Hoverable";
 import { DamageableComponent } from "../components/Damageable";
 import { TransitionComponent } from "../components/Transition";
+import { InteractableComponent } from "../components/Interactable";
+import { VendorComponent } from "../components/Vendor";
 
 export class ComponentFactory {
   static create(
     cfgs: ComponentConfig[],
-    entity: Entity
+    entity: Entity,
   ): Map<ComponentName, Component> {
     const components = new Map<ComponentName, Component>();
 
@@ -31,12 +34,12 @@ export class ComponentFactory {
         [ComponentName.ANIMATION]: new AnimationComponent(
           entity,
           configs.animations[entity.name] ?? {},
-          false
+          false,
         ),
         [ComponentName.BEHAVIOR_QUEUE]: new BehaviorQueue(entity),
         [ComponentName.BODY]: new BodyComponent(
           entity,
-          (config as { name: ComponentName.BODY; config: BodyConfig }).config
+          (config as { name: ComponentName.BODY; config: BodyConfig }).config,
         ),
         [ComponentName.POINTABLE]: new PointableComponent(entity),
         [ComponentName.TEXTURE]: new TextureComponent(
@@ -47,7 +50,7 @@ export class ComponentFactory {
               config: TextureConfig;
             }
           ).config,
-          `${entity.name}_texture`
+          `${entity.name}_texture`,
         ),
         [ComponentName.PICKABLE]: new PickableComponent(entity),
         [ComponentName.INVENTORY]: new InventoryComponent(),
@@ -61,7 +64,13 @@ export class ComponentFactory {
               name: ComponentName.TRANSITION;
               config: TransitionConfig;
             }
-          ).config
+          ).config,
+        ),
+        [ComponentName.INTERACTABLE]: new InteractableComponent(entity),
+        [ComponentName.VENDOR]: new VendorComponent(
+          entity,
+          (config as { name: ComponentName.VENDOR; config: VendorConfig })
+            .config,
         ),
       };
 

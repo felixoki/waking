@@ -2,6 +2,7 @@ import { configs } from "./configs";
 import { MapLoader } from "./loaders/Map";
 import { EntityStore } from "./stores/Entity";
 import { PlayerStore } from "./stores/Player";
+import { ResourceStore } from "./stores/Resource";
 import { MapName } from "./types";
 
 export class Instance {
@@ -9,6 +10,7 @@ export class Instance {
   public readonly host: string;
   public readonly players: PlayerStore;
   public readonly entities: EntityStore;
+  public readonly resources: ResourceStore;
 
   constructor(id: string, host: string) {
     this.id = id;
@@ -16,6 +18,7 @@ export class Instance {
     
     this.players = new PlayerStore();
     this.entities = new EntityStore();
+    this.resources = new ResourceStore();
 
     const loader = new MapLoader();
 

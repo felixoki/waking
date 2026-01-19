@@ -1940,6 +1940,17 @@
           "width": 1,
           "x": 528,
           "y": 560
+        },
+        {
+          "height": 1,
+          "id": 9,
+          "name": "Orc1",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 1,
+          "x": 300,
+          "y": 300
         }
       ],
       "opacity": 1,

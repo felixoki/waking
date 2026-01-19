@@ -62,6 +62,13 @@ export interface EntityDestroy {
 }
 
 /**
+ * Vendors
+ */
+export interface VendorConfig {
+  accepts: EntityName[];
+}
+
+/**
  * Damage
  */
 export interface Hit {
@@ -250,6 +257,8 @@ export enum ComponentName {
   HOTBAR = "hotbar",
   DAMAGEABLE = "damageable",
   TRANSITION = "transition",
+  INTERACTABLE = "interactable",
+  VENDOR = "vendor",
 }
 
 export type ComponentConfig =
@@ -263,7 +272,9 @@ export type ComponentConfig =
   | { name: ComponentName.HOVERABLE }
   | { name: ComponentName.HOTBAR }
   | { name: ComponentName.DAMAGEABLE }
-  | { name: ComponentName.TRANSITION; config: TransitionConfig };
+  | { name: ComponentName.TRANSITION; config: TransitionConfig }
+  | { name: ComponentName.INTERACTABLE }
+  | { name: ComponentName.VENDOR; config: VendorConfig };
 
 export interface BodyConfig {
   width: number;
