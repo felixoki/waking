@@ -1,17 +1,23 @@
+import { MapName } from "@server/types";
+import { Preloader } from "../loaders/Preloader";
 import { Scene } from "./Scene";
+import { MapFactory } from "../factory/Map";
+import { TileManager } from "../managers/Tile";
 
 export class HerbalistScene extends Scene {
   constructor() {
     super("herbalist");
   }
 
+  preload() {
+    Preloader.load(this, MapName.HERBALIST);
+  }
+
   create() {
     super.create();
 
-    /**
-     * We will replace this with a proper map later
-     */
-    this.add.rectangle(0, 0, 800, 600, 0x8b4513).setOrigin(0);
-    this.cameraManager.setZoom(2);
+    const map = MapFactory.create(this, MapName.HERBALIST);
+    this.tileManager = new TileManager(map);
+    this.cameraManager.setZoom(3);
   }
 }

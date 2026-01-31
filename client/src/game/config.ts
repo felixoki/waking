@@ -17,7 +17,7 @@ export const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
-  backgroundColor: "4f63aa",
+  backgroundColor: "302929",
   pixelArt: true,
   fps: {
     target: 60,

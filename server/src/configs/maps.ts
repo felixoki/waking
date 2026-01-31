@@ -27,6 +27,13 @@ export const maps: Record<MapName, MapConfig> = {
         asTileset: true,
       },
       {
+        key: "village_farm_ground_grass",
+        file: "village_farm_ground_grass.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
         key: "ground_grass",
         file: "ground_grass.png",
         frameWidth: 16,
@@ -34,8 +41,22 @@ export const maps: Record<MapName, MapConfig> = {
         asTileset: true,
       },
       {
+        key: "ground_grass_details",
+        file: "ground_grass_details.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
         key: "water_coasts",
         file: "water_coasts.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "road_stone",
+        file: "road_stone.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
@@ -51,4 +72,36 @@ export const maps: Record<MapName, MapConfig> = {
       { key: "orc1-slashing", file: "orc1_slashing_with_shadow.png" },
     ],
   },
+  [MapName.HERBALIST]:{
+    id: MapName.HERBALIST,
+    json: "herbalist.json",
+    spritesheets: [
+      {
+        key: "village_herbalist_boiler",
+        file: "village_herbalist_boiler.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_herbalist_interior",
+        file: "village_herbalist_interior.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_herbalist_walls_floor",
+        file: "village_herbalist_walls_floor.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      { key: "player-idle", file: "player_idle.png" },
+      { key: "player-walking", file: "player_walking.png" },
+      { key: "player-running", file: "player_running.png" },
+      { key: "player-jumping", file: "player_jumping.png" },
+      { key: "player-casting", file: "player_casting.png" },
+    ]
+  }
 };
