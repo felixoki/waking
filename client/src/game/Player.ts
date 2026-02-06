@@ -136,7 +136,7 @@ export class Player extends Entity {
     this.setDepth(1000 + this.y);
   }
 
-  private _getInput(): Input {
+  protected _getInput(): Input {
     const direction = this.inputManager?.getDirection();
     const directions = this.inputManager?.getDirections();
     const isRunning = this.inputManager?.isRunning();

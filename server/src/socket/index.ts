@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
 import { tryCatch } from "../utils/tryCatch.js";
-import { Input, Hit, EntityPickup, Item, Transition } from "../types.js";
+import { Input, Hit, EntityPickup, Item, Transition, Spot } from "../types.js";
 import { InstanceManager } from "../managers/Instance.js";
 
 type SocketEvent = {
@@ -59,17 +59,26 @@ export function registerHandlers(
       handler: () => handlers.entity.create(socket, instances),
     },
     {
+      event: "entity:input",
+      handler: (data: Partial<Input>) =>
+        handlers.entity.input(data, socket, instances),
+    },
+    {
       event: "entity:pickup",
       handler: (data: EntityPickup) =>
         handlers.entity.pickup(data, socket, instances),
+    },
+    {
+      event: "entity:spotted:player",
+      handler: (data: Spot) =>
+        console.log(`Entity ${data.entityId} spotted player ${data.playerId}`),
     },
     /**
      * Items
      */
     {
       event: "item:collect",
-      handler: (data: Item) =>
-        handlers.item.collect(data, socket, instances),
+      handler: (data: Item) => handlers.item.collect(data, socket, instances),
     },
     /**
      * Shared

@@ -42,4 +42,37 @@ export class EntityManager {
     this.entities.forEach((entity) => entity.destroy());
     this.entities.clear();
   }
+
+  getStatic(
+    width: number,
+    height: number,
+  ): Array<{ x: number; y: number; width: number; height: number }> {
+    return Array.from(this.entities.values()).flatMap((entity) => {
+      const body = entity.body;
+      if (
+        !entity.body ||
+        !this.scene.physicsManager.groups.entities.contains(entity)
+      )
+        return [];
+
+      const left = body.x;
+      const top = body.y;
+      const right = body.x + body.width;
+      const bottom = body.y + body.height;
+
+      const startX = Math.floor(left / width);
+      const startY = Math.floor(top / height);
+      const endX = Math.ceil(right / width);
+      const endY = Math.ceil(bottom / height);
+
+      return [
+        {
+          x: startX,
+          y: startY,
+          width: endX - startX,
+          height: endY - startY,
+        },
+      ];
+    });
+  }
 }

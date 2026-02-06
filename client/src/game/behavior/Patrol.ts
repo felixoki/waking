@@ -1,40 +1,177 @@
-import { BehaviorName, Direction, Input } from "@server/types";
+import { BehaviorName, Input } from "@server/types";
 import { Behavior } from "./Behavior";
 import { Entity } from "../Entity";
+import { handlers } from "../handlers";
+
+interface Waypoint {
+  x: number;
+  y: number;
+}
+
+interface Scan {
+  last: number;
+  interval: number;
+}
+
+interface Idle {
+  time: number;
+  duration: number;
+}
 
 export class Patrol extends Behavior {
-  private start: number = 0;
-  private direction: Direction = Direction.RIGHT;
+  private spawn: Waypoint = { x: 0, y: 0 };
+  private radius: number;
+  private path: Waypoint[] = [];
+  private target: Waypoint | null = null;
+  private scan: Scan = { last: 0, interval: 500 };
+  private idle: Idle = { time: 0, duration: 2000 };
 
   public name = BehaviorName.PATROL;
 
-  constructor(repeat: boolean = true) {
+  constructor(radius: number, repeat: boolean) {
     super();
 
+    this.radius = radius;
     this.repeat = repeat;
   }
 
+  /**
+   * We need to add stuck detection later on
+   */
   update(entity: Entity): Partial<Input> {
-    if (this.start === 0) this.start = entity.x;
+    if (this.spawn.x === 0) this.spawn = { x: entity.x, y: entity.y };
 
-    const distance = Math.abs(entity.x - this.start);
+    const now = Date.now();
 
-    if (distance >= 400) {
-      this.direction =
-        this.direction === Direction.RIGHT ? Direction.LEFT : Direction.RIGHT;
-      this.start = entity.x;
+    if (now - this.scan.last > this.scan.interval) {
+      this.scan.last = now;
+
+      const players = [
+        ...entity.scene.playerManager.others.values(),
+        entity.scene.playerManager.player,
+      ];
+
+      for (const player of players) {
+        if (
+          handlers.vision.canSee(
+            entity.scene,
+            entity,
+            player!,
+            /**
+             * We should introduce a patrol config
+             */
+            400,
+            Math.PI / 3,
+            7,
+          )
+        ) {
+          entity.scene.game.events.emit("entity:spotted:player", {
+            entityId: entity.id,
+            playerId: player!.id,
+          });
+
+          return {
+            direction: entity.direction,
+            directions: [],
+            isRunning: false,
+          };
+        }
+      }
+    }
+
+    if (this.idle.time > 0) {
+      this.idle.time -= entity.scene.game.loop.delta;
+
+      return {};
+    }
+
+    if (!this.target && !this.path.length) this.target = this._getRandomPoint();
+
+    if (this.target && !this.path.length) {
+      const scene = entity.scene;
+
+      const grid = handlers.path.mergeObstacles(
+        scene.tileManager.getCollisionGrid(),
+        scene.entityManager.getStatic(
+          scene.tileManager.map.tileWidth,
+          scene.tileManager.map.tileHeight,
+        ),
+      );
+
+      const start = {
+        x: Math.floor(entity.x / scene.tileManager.map.tileWidth),
+        y: Math.floor(entity.y / scene.tileManager.map.tileHeight),
+      };
+
+      const end = {
+        x: Math.floor(this.target.x / scene.tileManager.map.tileWidth),
+        y: Math.floor(this.target.y / scene.tileManager.map.tileHeight),
+      };
+
+      this.path =
+        handlers.path.find(grid, start, end, scene.tileManager.map) || [];
+
+      if (!this.path.length) this.target = null;
+    }
+
+    if (this.path.length) {
+      const next = this.path[0];
+      const distance = Phaser.Math.Distance.Between(
+        entity.x,
+        entity.y,
+        next.x,
+        next.y,
+      );
+
+      if (distance < 8) {
+        this.path.shift();
+
+        if (!this.path.length) {
+          this.target = null;
+          this.idle.time = this.idle.duration;
+
+          return {};
+        }
+      }
+
+      if (this.path.length) {
+        const angle = Phaser.Math.Angle.Between(
+          entity.x,
+          entity.y,
+          next.x,
+          next.y,
+        );
+        const direction = handlers.direction.fromAngle(angle);
+
+        return {
+          direction,
+          directions: [direction],
+          isRunning: false,
+        };
+      }
     }
 
     return {
-      direction: this.direction,
-      directions: [this.direction],
+      direction: entity.direction,
+      directions: [],
       isRunning: false,
-      isJumping: false,
-    }
+    };
   }
 
   reset(): void {
-    this.start = 0;
-    this.direction = Direction.RIGHT;
+    this.path = [];
+    this.target = null;
+    this.scan.last = 0;
+    this.idle.time = 0;
+  }
+
+  private _getRandomPoint(): Waypoint {
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * this.radius;
+
+    return {
+      x: this.spawn.x + Math.cos(angle) * distance,
+      y: this.spawn.y + Math.sin(angle) * distance,
+    };
   }
 }

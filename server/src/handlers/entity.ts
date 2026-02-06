@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityName, EntityPickup, MapName } from "../types";
+import { EntityName, EntityPickup, Input, MapName } from "../types";
 import { randomInt, randomUUID } from "crypto";
 import { InstanceManager } from "../managers/Instance";
 
@@ -26,6 +26,19 @@ export const entity = {
       .to(`game:${instance.id}:${entity.map}`)
       .emit("entity:create", entity);
     socket.emit("entity:create", entity);
+  },
+
+  input: (data: Partial<Input>, socket: Socket, instances: InstanceManager) => {
+    const instance = instances.getBySocketId(socket.id);
+    if (!instance) return;
+
+    const entity = instance.entities.get(data.id!);
+    if (!entity) return;
+
+    entity.x = data.x ?? entity.x;
+    entity.y = data.y ?? entity.y;
+
+    socket.to(`game:${instance.id}:${entity.map}`).emit("entity:input", data);
   },
 
   pickup: (data: EntityPickup, socket: Socket, instances: InstanceManager) => {

@@ -1,5 +1,7 @@
 ## Issues
 
+### Done
+
 #### 23.12.2025
 
 - Set up initial client and server logic ✅
@@ -164,6 +166,7 @@
 - Add spawns to maps ✅
 
 #### 4.2.2026
+
 - Add renders boolean to map factory ✅
 - Add dynamic keys for detail layers ✅
 - Refactor physics and combat handlers ✅
@@ -175,38 +178,123 @@
 - Add interface manager ✅
 - Add herbalist ✅
 
-#### Backlog
+#### 5.2.2025
 
-##### High priority
+- Task planning ✅
 
-- Add pathfinding
-- Add dialogue system
-- Communicate interactions to the server
-- Lock entities during interaction
+#### 6.2.2025
 
-##### Medium priority
+- Add pathfinding ✅
+- Add raycasting ✅
+- Update patrol component ✅
 
-- Add depth sorting system
-- Add world animation component
-- Add effects, resistances and weaknesses
-- Add mana usage
-- Add particle texture for sharp effects
-- Improve illuminate shader
-- Add spell impact preview
-- Add throttling network updates and change detection
-- Update interpolation system
-- Add party manager
+### Next up
 
-##### Ideas
+- Dialog system ⭐
+    - Add dialog trees
+    - Lock entities during interaction
 
-- Aim assist spell
+- Procedural forest generation ⭐
+    - Add attack behavior
+    - Add party management
+    - Add map creation
+    - Add ambience manager
+    - Add foggy forest shader
 
-## Roadmap
+- Save files ⭐
+    - Add database
+    - Add autosaves
+    - Add manual saves
+    - Add save file loading
 
-```mermaid
-timeline
-    title Roadmap 2026
-    February : Forest procedural generation
-             : Boss fight system
-    March    : First playthrough demo ⭐
-```
+- Party management ⭐
+
+- General
+    - Update tile collision layer
+
+### Backlog
+
+- Spells ⭐
+    - Aim assist
+    - Catch animal
+    - Water fountain
+    - Improve illuminate shader
+    - Add mana usage
+    - Add particle texture for sharp effects
+    - Add spell impact preview
+
+- Effects ⭐
+    - Add wet effect
+    - Add resistances and weaknesses
+
+- Farming ⭐
+    - Add plantable component
+
+- Animal keeping ⭐
+
+- Market district ⭐
+
+- Tavern ⭐
+
+- Villager needs ⭐
+    - Add resource venison meat (dropped by deer)
+
+- Blacksmith ⭐
+    - Add resource iron (dropped by orcs)
+    - Add resource horn (dropped by oxes)
+    - Venison fat (dropped by deer)
+    - Add crafting system
+    - Add lantern
+
+- Harbor district ⭐
+
+- Sewerage ⭐
+    - Add blood ghost cultists
+
+- Game sounds ⭐
+    - Add music and ambience
+
+- Refactoring and improvement
+    - Improve depth sorting system
+    - Add world animation component
+    - Add throttling network updates and change detection
+    - Update interpolation system
+
+## Procedural generation configs
+
+### Forest
+
+#### Non-aggro animals
+
+- Fox (Fox pelt)
+- Rabbit (Rabbit meat)
+- Deer (Venison fat, venison meat, deer hide)
+- Ox (Ox meat, Ox horn)
+
+#### Aggro animals
+
+- Rat (Rat meat)
+- Boar (Boar meat)
+
+#### Aggro entities
+
+- Goblin1 (Rat meat)
+- Goblin2 (Rat meat)
+- Orc1 (Iron)
+
+#### Boss
+
+- Shadow wanderer
+
+#### Plants
+
+- Sunflower
+- Carrot
+- Mugwort
+- Blue lotus
+- Daffodil
+- Snowdrop
+- White ways
+- Bearded tooth fungus
+- Valerian root
+- Clary sage

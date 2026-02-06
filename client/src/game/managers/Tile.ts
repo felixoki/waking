@@ -14,8 +14,12 @@ export class TileManager {
   private animations = new Map<number, Animation>();
 
   constructor(private tilemap: Phaser.Tilemaps.Tilemap) {
-    this.getAnimations();
-    this.findTiles();
+    this._getAnimations();
+    this._findTiles();
+  }
+
+  get map(): Phaser.Tilemaps.Tilemap {
+    return this.tilemap;
   }
 
   update(delta: number): void {
@@ -28,7 +32,7 @@ export class TileManager {
 
         const frameGid = anim.frames[anim.currentFrame];
         anim.positions.forEach(({ layer, x, y }) =>
-          layer.putTileAt(frameGid, x, y)
+          layer.putTileAt(frameGid, x, y),
         );
       }
     });
@@ -38,33 +42,31 @@ export class TileManager {
     this.animations.clear();
   }
 
-  private getAnimations(): void {
+  private _getAnimations(): void {
     this.tilemap.tilesets.forEach((tileset) => {
       if (!tileset.tileData) return;
 
-      Object.entries(tileset.tileData).forEach(
-        ([id, data]: [string, any]) => {
-          if (!data.animation?.length) return;
+      Object.entries(tileset.tileData).forEach(([id, data]: [string, any]) => {
+        if (!data.animation?.length) return;
 
-          const baseGid = tileset.firstgid + parseInt(id);
-          const frames = data.animation.map(
-            (f: any) => tileset.firstgid + f.tileid
-          );
-          const durations = data.animation.map((f: any) => f.duration);
+        const baseGid = tileset.firstgid + parseInt(id);
+        const frames = data.animation.map(
+          (f: any) => tileset.firstgid + f.tileid,
+        );
+        const durations = data.animation.map((f: any) => f.duration);
 
-          this.animations.set(baseGid, {
-            frames,
-            durations,
-            currentFrame: 0,
-            elapsedTime: 0,
-            positions: [],
-          });
-        }
-      );
+        this.animations.set(baseGid, {
+          frames,
+          durations,
+          currentFrame: 0,
+          elapsedTime: 0,
+          positions: [],
+        });
+      });
     });
   }
 
-  private findTiles(): void {
+  private _findTiles(): void {
     this.tilemap.layers.forEach((data) => {
       const layer = data.tilemapLayer;
       if (!layer) return;
@@ -78,5 +80,19 @@ export class TileManager {
         });
       });
     });
+  }
+
+  getCollisionGrid(): number[][] {
+    const { width, height } = this.tilemap;
+
+    return Array.from({ length: height }, (_, y) =>
+      Array.from({ length: width }, (_, x) => {
+        const collides = this.tilemap.layers.some((layer) => {
+          const tile = this.tilemap.getTileAt(x, y, true, layer.name);
+          return tile?.collides;
+        });
+        return collides ? 1 : 0;
+      }),
+    );
   }
 }

@@ -13,23 +13,16 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     direction: Direction.DOWN,
     directions: [],
     components: [
-      { name: ComponentName.POINTABLE },
-      { name: ComponentName.HOVERABLE },
-      { name: ComponentName.INTERACTABLE },
-      {
-        name: ComponentName.COLLECTOR,
-        config: {
-          accepts: [EntityName.FLYAMINATA1, EntityName.BASKETFERN],
-        },
-      },
       { name: ComponentName.ANIMATION },
+      { name: ComponentName.DAMAGEABLE },
+      { name: ComponentName.BEHAVIOR_QUEUE },
       {
         name: ComponentName.BODY,
         config: {
-          width: 16,
-          height: 32,
-          offsetX: 24,
-          offsetY: 12,
+          width: 8,
+          height: 12,
+          offsetX: 28,
+          offsetY: 24,
           pushable: false,
         },
       },

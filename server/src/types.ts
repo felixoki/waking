@@ -108,6 +108,11 @@ export interface Hurt {
   knockback: { x: number; y: number };
 }
 
+export interface Spot {
+  entityId: string;
+  playerId: string;
+}
+
 /**
  * Maps
  */

@@ -5,7 +5,7 @@ import { Patrol } from "../behavior/Patrol";
 export class BehaviorFactory {
   static create(names: BehaviorName[]): Behavior[] {
     const map: Record<BehaviorName, Behavior> = {
-      [BehaviorName.PATROL]: new Patrol(),
+      [BehaviorName.PATROL]: new Patrol(150, true),
     };
 
     const behaviors: Behavior[] = [];

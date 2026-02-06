@@ -1,4 +1,4 @@
-import { ComponentName, Direction, StateName } from "@server/types";
+import { ComponentName, Direction, Input, StateName } from "@server/types";
 import { State } from "./state/State";
 import { Component } from "./components/Component";
 import { EntityName } from "@server/types";
@@ -54,15 +54,8 @@ export class Entity extends Phaser.GameObjects.Sprite {
     this.setDepth(1000 + this.y);
   }
 
-  update(): void {
-    /**
-     * We should update all components here
-     * We should not return the input from update but get it separately
-     */
-    const behavior = this.getComponent<BehaviorQueue>(
-      ComponentName.BEHAVIOR_QUEUE,
-    );
-    const input = behavior?.update();
+  update(remoteInput?: Partial<Input>): void {
+    const input = remoteInput || this._getInput();
 
     if (!input || this.isLocked) return;
 
@@ -82,9 +75,38 @@ export class Entity extends Phaser.GameObjects.Sprite {
     if (needsUpdate) this.states?.get(this.state)?.update(this);
 
     /**
+     * Do proper interpolation in the future
+     */
+    if (remoteInput) {
+      const x = Phaser.Math.Linear(this.x, input.x!, 0.2);
+      const y = Phaser.Math.Linear(this.y, input.y!, 0.2);
+
+      this.setPosition(x, y);
+    }
+
+    const isHost = this.scene.playerManager.player?.isHost;
+    if (isHost && input) this.scene.game.events.emit("entity:input", input);
+
+    /**
      * We will need to implement a proper depth sorting system
      */
     this.setDepth(1000 + this.y);
+  }
+
+  protected _getInput(): Partial<Input> | null {
+    const isHost = this.scene.playerManager.player?.isHost;
+
+    if (!isHost) return null;
+
+    const behavior = this.getComponent<BehaviorQueue>(
+      ComponentName.BEHAVIOR_QUEUE,
+    );
+
+    const input = behavior?.update();
+
+    if (!input) return null;
+
+    return { ...input, id: this.id, x: this.x, y: this.y };
   }
 
   destroy(fromScene?: boolean): void {

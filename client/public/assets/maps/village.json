@@ -6692,6 +6692,17 @@
           "width": 1,
           "x": 96,
           "y": 592
+        },
+        {
+          "height": 1,
+          "id": 427,
+          "name": "Orc1",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 1,
+          "x": 160,
+          "y": 720
         }
       ],
       "opacity": 1,
@@ -6702,7 +6713,7 @@
     }
   ],
   "nextlayerid": 22,
-  "nextobjectid": 427,
+  "nextobjectid": 428,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

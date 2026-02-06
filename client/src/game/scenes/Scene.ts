@@ -12,6 +12,7 @@ import {
   ComponentName,
   Item,
   Transition,
+  Spot,
 } from "@server/types";
 import { PhsyicsManager } from "../managers/Physics";
 import { EntityManager } from "../managers/Entity";
@@ -38,7 +39,7 @@ export class Scene extends Phaser.Scene {
     this.entityManager = new EntityManager(this);
     this.cameraManager = new CameraManager(this);
     this.interfaceManager = new InterfaceManager(this);
-    
+
     this.socketManager.emit("player:create");
     this._registerEvents();
   }
@@ -169,6 +170,13 @@ export class Scene extends Phaser.Scene {
       this.entityManager.remove(data.id);
     });
 
+    this.socketManager.on("entity:input", (data: Partial<Input>) => {
+      const entity = this.entityManager.get(data.id!);
+      if (!entity) return;
+
+      entity.update(data);
+    });
+
     this.socketManager.on("entity:hurt", (data: Hurt) => {
       const entity = this.entityManager.entities.get(data.id);
 
@@ -176,6 +184,10 @@ export class Scene extends Phaser.Scene {
 
       handlers.combat.hurt(entity, data.health);
       handlers.combat.knockback(entity, data.knockback);
+    });
+
+    this.game.events.on("entity:input", (data: Partial<Input>) => {
+      this.socketManager.emit("entity:input", data);
     });
 
     this.game.events.on("entity:pickup", (data: EntityPickup) => {
@@ -190,6 +202,10 @@ export class Scene extends Phaser.Scene {
       if (!entity) return;
 
       handlers.interaction.start(entity);
+    });
+
+    this.game.events.on("entity:spotted:player", (data: Spot) => {
+      this.socketManager.emit("entity:spotted:player", data);
     });
 
     /**
@@ -238,13 +254,16 @@ export class Scene extends Phaser.Scene {
     this.socketManager.off("entity:create");
     this.socketManager.off("entity:create:all");
     this.socketManager.off("entity:destroy");
+    this.socketManager.off("entity:input");
     this.socketManager.off("entity:hurt");
 
     this.game.events.off("player:input");
     this.game.events.off("player:transition");
 
+    this.game.events.off("entity:input");
     this.game.events.off("entity:pickup");
     this.game.events.off("entity:interact");
+    this.game.events.off("entity:spotted:player");
 
     this.socketManager.off("item:remove");
     EventBus.off("item:collect");
