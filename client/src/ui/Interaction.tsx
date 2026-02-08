@@ -35,27 +35,24 @@ export const Interaction = () => {
 
   return (
     <div>
-      <h3 className="text-white mb-3">Interaction: {data.id}</h3>
+      <h3 className="text-white mb-2">Interaction with {data.id}</h3>
       {data.collects && (
-        <div>
-          <h4 className="text-white mb-3">Collects:</h4>
-          <ul className="flex flex-wrap gap-1">
-            {data.collects.map((item, i) => (
-              <li key={i} className="flex flex-col gap-1">
-                <div className="flex items-center justify-center border border-slate-500 rounded-lg text-xs text-white w-16 aspect-square">
-                  {item?.quantity}{" "}
-                  {definitions[item?.name]?.metadata?.displayName}
-                </div>
-                <button
-                  className="p-0.5 bg-blue-500 text-white rounded"
-                  onClick={() => give(item)}
-                >
-                  Give
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="flex flex-wrap gap-1">
+          {data.collects.map((item, i) => (
+            <li key={i} className="flex flex-col gap-1">
+              <div className="flex items-center justify-center rounded-lg text-xs w-16 aspect-square bg-gray-200">
+                {item?.quantity}{" "}
+                {definitions[item?.name]?.metadata?.displayName}
+              </div>
+              <button
+                className="p-0.5 bg-blue-500 text-white rounded"
+                onClick={() => give(item)}
+              >
+                Give
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

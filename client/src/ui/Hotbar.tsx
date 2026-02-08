@@ -26,13 +26,12 @@ export function Hotbar() {
 
   return (
     <>
-      <h3 className="text-white mb-3">Hotbar</h3>
       <ul className="flex flex-wrap gap-1">
         {slots.map((slot, i) => (
           <li
             key={i}
-            className={`flex items-center justify-center border rounded-lg aspect-square w-16 text-white text-xs ${
-              i === active ? "border-blue-600" : "border-slate-500"
+            className={`flex items-center justify-center rounded-lg text-xs w-16 aspect-square bg-gray-200 break-all text-center ${
+              i === active ? "text-blue-600" : ""
             }`}
           >
             {slot?.name}

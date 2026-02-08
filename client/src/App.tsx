@@ -28,9 +28,9 @@ function App() {
     <div>
       <div id="game"></div>
       <Entities />
-      <div className="fixed top-0 left-256 flex flex-col gap-4 p-4">
-        <Inventory />
+      <div className="fixed top-0 left-0 flex flex-col gap-4 p-4">
         <Hotbar />
+        <Inventory />
         <Interaction />
       </div>
     </div>

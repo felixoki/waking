@@ -9,8 +9,12 @@ import { PipelineName } from "@server/types";
 export const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: "game",
-  width: 1024,
-  height: 1024,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
   scene: [MainScene, VillageScene, HerbalistScene],
   physics: {
     default: "arcade",
