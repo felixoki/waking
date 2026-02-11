@@ -9,8 +9,8 @@ import { handlers } from "./handlers";
 export class Entity extends Phaser.GameObjects.Sprite {
   public id: string;
   public map!: MapName;
-  public direction: Direction;
-  public directions: Direction[];
+  public facing: Direction;
+  public moving: Direction[];
   public isLocked: boolean = false;
   public health: number = 100;
   public target?: { x: number; y: number };
@@ -31,8 +31,8 @@ export class Entity extends Phaser.GameObjects.Sprite {
     id: string,
     name: EntityName,
     health: number,
-    direction: Direction,
-    directions: Direction[],
+    facing: Direction,
+    moving: Direction[],
     states?: Map<StateName, State>,
   ) {
     super(scene, x, y, texture);
@@ -41,8 +41,8 @@ export class Entity extends Phaser.GameObjects.Sprite {
     this.setName(name);
     this.health = health;
 
-    this.direction = direction;
-    this.directions = directions;
+    this.facing = facing;
+    this.moving = moving;
     this.states = states;
 
     this._init();
@@ -64,15 +64,15 @@ export class Entity extends Phaser.GameObjects.Sprite {
 
     const prev = {
       state: this.state,
-      direction: this.direction,
-      directionCount: this.directions.length,
+      facing: this.facing,
+      movingCount: this.moving.length,
     };
 
     const prepared = { ...input, id: this.id, x: this.x, y: this.y };
     const { state, needsUpdate } = handlers.state.resolve(prepared, prev);
 
-    if (input.direction) this.setDirection(input.direction);
-    if (input.directions) this.directions = input.directions;
+    if (input.facing) this.setFacing(input.facing);
+    if (input.moving) this.moving = input.moving;
 
     if (state !== this.state) this.transitionTo(state);
     if (needsUpdate) this.states?.get(this.state)?.update(this);
@@ -160,7 +160,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
   /**
    * Helpers
    */
-  setDirection(direction: Direction | null | undefined): void {
-    this.direction = direction || this.direction;
+  setFacing(facing: Direction | null | undefined): void {
+    this.facing = facing || this.facing;
   }
 }

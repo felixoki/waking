@@ -1,5 +1,6 @@
 import { Direction, HotbarDirection } from "@server/types";
 import { Scene } from "../scenes/Scene";
+import { handlers } from "../handlers";
 
 type Key = Phaser.Input.Keyboard.Key;
 
@@ -16,6 +17,7 @@ export class InputManager {
     SHIFT: Key;
     SPACE: Key;
   };
+  private pointer: { x: number; y: number } = { x: 0, y: 0 };
   private target?: { x: number; y: number };
 
   constructor(scene: Scene) {
@@ -35,28 +37,34 @@ export class InputManager {
     this.registerPointerEvents();
   }
 
-  getDirection(): Direction | null {
-    const pressed = [
-      { key: this.keys.W, dir: Direction.UP },
-      { key: this.keys.S, dir: Direction.DOWN },
-      { key: this.keys.A, dir: Direction.LEFT },
-      { key: this.keys.D, dir: Direction.RIGHT },
-    ]
-      .filter((k) => k.key.isDown)
-      .sort((a, b) => b.key.timeDown - a.key.timeDown);
-
-    return pressed[0]?.dir || null;
+  update(): void {
+    if (this.scene.input.activePointer) {
+      const pointer = this.scene.input.activePointer;
+      const point = this.scene.cameraManager.getWorldPoint(
+        pointer.x,
+        pointer.y,
+      );
+      this.pointer = { x: point.x, y: point.y };
+    }
   }
 
-  getDirections(): Direction[] {
-    const directions: Direction[] = [];
+  getFacing(x: number, y: number): Direction {
+    const dx = this.pointer.x - x;
+    const dy = this.pointer.y - y;
+    const angle = Math.atan2(dy, dx);
+    
+    return handlers.direction.fromAngle(angle);
+  }
 
-    if (this.keys.W.isDown) directions.push(Direction.UP);
-    if (this.keys.S.isDown) directions.push(Direction.DOWN);
-    if (this.keys.A.isDown) directions.push(Direction.LEFT);
-    if (this.keys.D.isDown) directions.push(Direction.RIGHT);
+  getMoving(): Direction[] {
+    const moving: Direction[] = [];
 
-    return directions;
+    if (this.keys.W.isDown) moving.push(Direction.UP);
+    if (this.keys.S.isDown) moving.push(Direction.DOWN);
+    if (this.keys.A.isDown) moving.push(Direction.LEFT);
+    if (this.keys.D.isDown) moving.push(Direction.RIGHT);
+
+    return moving;
   }
 
   getNavigation(): HotbarDirection.PREV | HotbarDirection.NEXT | null {

@@ -1,12 +1,18 @@
 import { Socket } from "socket.io";
-import { EntityConfig, Hit, PlayerConfig, SpellConfig } from "../types";
-import { InstanceManager } from "../managers/Instance";
+import {
+  EntityConfig,
+  Hit,
+  PlayerConfig,
+  SpellConfig,
+  WeaponConfig,
+} from "../types";
+import { Game } from "../Game";
 
 export const combat = {
   getKnockback: (
     target: PlayerConfig | EntityConfig,
     attacker: PlayerConfig | EntityConfig,
-    config: SpellConfig
+    config: SpellConfig | WeaponConfig,
   ) => {
     const dx = target.x - attacker.x;
     const dy = target.y - attacker.y;
@@ -19,12 +25,9 @@ export const combat = {
     return { x, y };
   },
 
-  hit: (data: Hit, socket: Socket, instances: InstanceManager) => {
-    const instance = instances.getBySocketId(socket.id);
-    if (!instance) return;
-
-    const players = instance.players;
-    const entities = instance.entities;
+  hit: (data: Hit, socket: Socket, game: Game) => {
+    const players = game.players;
+    const entities = game.entities;
 
     const attacker =
       players.get(data.attackerId) || entities.get(data.attackerId);
@@ -54,7 +57,7 @@ export const combat = {
 
     const emit = entity ? "entity:hurt" : "player:hurt";
 
-    socket.to(`game:${instance.id}:${target.map}`).emit(emit, event);
+    socket.to(`map:${target.map}`).emit(emit, event);
     socket.emit(emit, event);
   },
 };

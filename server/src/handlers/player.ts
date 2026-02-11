@@ -1,17 +1,13 @@
 import { Server, Socket } from "socket.io";
 import { randomUUID } from "crypto";
-import { Direction, Input, MapName, Transition } from "../types.js";
-import { InstanceManager } from "../managers/Instance.js";
+import { Direction, Input, MapName, Transition } from "../types/index.js";
 import { configs } from "../configs/index.js";
+import { Game } from "../Game.js";
 
 export const player = {
-  create: (socket: Socket, instances: InstanceManager) => {
-    const instance = instances.getBySocketId(socket.id);
-
-    if (!instance) return;
-
-    const players = instance.players;
-    const entities = instance.entities;
+  create: (socket: Socket, game: Game) => {
+    const players = game.players;
+    const entities = game.entities;
 
     let player = players.getBySocketId(socket.id);
 
@@ -22,7 +18,7 @@ export const player = {
       player = {
         x: map.spawn.x,
         y: map.spawn.y,
-        direction: Direction.DOWN,
+        facing: Direction.DOWN,
         id: randomUUID(),
         socketId: socket.id,
         map: map.id,
@@ -31,7 +27,7 @@ export const player = {
       };
 
       players.add(player.id, player);
-      socket.join(`game:${instance.id}:${player.map}`);
+      socket.join(`map:${player.map}`);
     }
 
     const others = players
@@ -42,94 +38,72 @@ export const player = {
     socket.emit("player:create:others", others);
     socket.emit("entity:create:all", entities.getAll());
 
-    socket
-      .to(`game:${instance.id}:${player.map}`)
-      .emit("player:create", player);
+    socket.to(`map:${player.map}`).emit("player:create", player);
   },
 
-  delete: (io: Server, socket: Socket, instances: InstanceManager) => {
-    const instance = instances.getBySocketId(socket.id);
-    if (!instance) return;
-
-    const player = instance.players.getBySocketId(socket.id);
+  delete: (io: Server, socket: Socket, game: Game) => {
+    const player = game.players.getBySocketId(socket.id);
     if (!player) return;
 
     const isHost = player.isHost;
-
-    instance.players.remove(player.id);
-    instances.removeConnection(socket.id);
-
-    const others = instance.players.getAll();
+    game.players.remove(player.id);
+    const others = game.players.getAll();
 
     if (isHost && others.length) {
       const host = others[0];
-      instance.players.update(host.id, { ...host, isHost: true });
+      game.players.update(host.id, { ...host, isHost: true });
 
       const hostSocket = io.sockets.sockets.get(host.socketId);
       hostSocket?.emit("player:host:transfer");
     }
 
-    if (!others.length) instances.remove(instance.id);
-
     socket.broadcast.emit("player:left", { id: player.id });
   },
 
-  input: (data: Input, socket: Socket, instances: InstanceManager) => {
-    const instance = instances.getBySocketId(socket.id);
-    if (!instance) return;
-
-    const player = instance.players.get(data.id);
+  input: (data: Input, socket: Socket, game: Game) => {
+    const player = game.players.getBySocketId(socket.id);
     if (!player) return;
 
-    instance.players.update(data.id, {
+    game.players.update(data.id, {
       ...player,
       ...{
         x: data.x,
         y: data.y,
         state: data.state,
-        ...(data.direction && { direction: data.direction }),
+        ...(data.facing && { facing: data.facing }),
         isRunning: data.isRunning,
       },
     });
     socket.broadcast.emit("player:input", data);
   },
 
-  transition: (
-    data: Transition,
-    socket: Socket,
-    instances: InstanceManager,
-  ) => {
-    const instance = instances.getBySocketId(socket.id);
-    if (!instance) return;
-
-    const player = instance.players.getBySocketId(socket.id);
+  transition: (data: Transition, socket: Socket, game: Game) => {
+    const player = game.players.getBySocketId(socket.id);
     if (!player) return;
 
     const prev = player.map;
     const next = data.to;
 
-    instance.players.update(player.id, {
+    game.players.update(player.id, {
       ...player,
       map: next,
       x: data.x,
       y: data.y,
     });
 
-    socket.leave(`game:${instance.id}:${prev}`);
-    socket.join(`game:${instance.id}:${next}`);
+    socket.leave(`map:${prev}`);
+    socket.join(`map:${next}`);
 
-    socket
-      .to(`game:${instance.id}:${prev}`)
-      .emit("player:left", { id: player.id });
+    socket.to(`map:${prev}`).emit("player:left", { id: player.id });
 
-    const updated = instance.players.get(player.id);
-    const others = instance.players
+    const updated = game.players.get(player.id);
+    const others = game.players
       .getByMap(next)
       .filter((p) => p.id !== player.id);
 
     socket.emit("player:transition", updated);
     socket.emit("player:create:others", others);
 
-    socket.to(`game:${instance.id}:${next}`).emit("player:create", updated);
+    socket.to(`map:${next}`).emit("player:create", updated);
   },
 };

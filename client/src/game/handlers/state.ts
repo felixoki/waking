@@ -8,7 +8,7 @@ import {
 export const state = {
   resolve: (
     input: Partial<Input>,
-    prev: { state: StateName; direction: Direction; directionCount: number }
+    prev: { state: StateName; facing: Direction; movingCount: number }
   ) => {
     const selectors = [
       {
@@ -28,7 +28,7 @@ export const state = {
         needsUpdate: false,
       },
       {
-        condition: () => input.direction,
+        condition: () => input.moving?.length,
         state: () => (input.isRunning ? StateName.RUNNING : StateName.WALKING),
         needsUpdate: true,
       },
@@ -42,14 +42,14 @@ export const state = {
 
     const changed = {
       state: selector?.state() !== prev.state,
-      direction: !!input.direction && input.direction !== prev.direction,
-      directionCount: input.directions?.length !== prev.directionCount,
+      facing: !!input.facing && input.facing !== prev.facing,
+      movingCount: input.moving?.length !== prev.movingCount,
     };
 
     return {
       state: selector!.state(),
       needsUpdate:
-        !changed.state && (changed.direction || changed.directionCount),
+        !changed.state && (changed.facing || changed.movingCount),
     };
   },
 };

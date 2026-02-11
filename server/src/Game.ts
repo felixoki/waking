@@ -4,35 +4,39 @@ import { EntityStore } from "./stores/Entity";
 import { PlayerStore } from "./stores/Player";
 import { ItemsStore } from "./stores/Items";
 import { MapName } from "./types";
+import { EconomyManager } from "./managers/Economy";
 
-export class Instance {
-  public readonly id: string;
-  public readonly host: string;
+export class Game {
   public readonly players: PlayerStore;
   public readonly entities: EntityStore;
   public readonly items: ItemsStore;
+  public economy: EconomyManager;
 
-  constructor(id: string, host: string) {
-    this.id = id;
-    this.host = host;
-
+  constructor() {
     this.players = new PlayerStore();
     this.entities = new EntityStore();
     this.items = new ItemsStore();
+    this.economy = new EconomyManager(this.items);
 
+    this.load();
+  }
+
+  load() {
     const loader = new MapLoader();
 
     const village = loader.load(configs.maps.village.json);
-    const villageEntities = loader.parseEntities(MapName.VILLAGE, village);
+    const ve = loader.parseEntities(MapName.VILLAGE, village);
 
     const herbalist = loader.load(configs.maps.herbalist_house.json);
-    const herbalistEntities = loader.parseEntities(
-      MapName.HERBALIST_HOUSE,
-      herbalist,
-    );
+    const he = loader.parseEntities(MapName.HERBALIST_HOUSE, herbalist);
 
-    [...villageEntities, ...herbalistEntities].forEach((e) =>
-      this.entities.add(e.id, e),
-    );
+    [...ve, ...he].forEach((e) => this.entities.add(e.id, e));
+  }
+
+  /**
+   * We have to implement an update loop
+   */
+  update() {
+    this.economy.update();
   }
 }

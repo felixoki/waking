@@ -7,11 +7,12 @@ import {
   MapName,
   StateName,
 } from "../types";
+import { NodeId } from "../types/dialogue";
 
 export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.ORC1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       { name: ComponentName.ANIMATION },
       { name: ComponentName.DAMAGEABLE },
@@ -36,8 +37,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [BehaviorName.PATROL],
   },
   [EntityName.HOUSE1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -72,8 +73,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.HERBALIST_HOUSE]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -119,8 +120,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.HERBALIST_EXIT]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TRANSITION,
@@ -139,8 +140,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.HERBALIST]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       { name: ComponentName.POINTABLE },
       { name: ComponentName.HOVERABLE },
@@ -165,10 +166,13 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     ],
     states: [StateName.IDLE, StateName.WALKING],
     behaviors: [],
+    dialogue: {
+      [NodeId.GREETING]: { ref: NodeId.GREETING },
+    },
   },
   [EntityName.WINDMILL]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -198,8 +202,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.BARN]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -225,8 +229,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.HENHOUSE]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -251,8 +255,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.HOUSE2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -281,8 +285,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.WELL]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -306,8 +310,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.TREE1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -338,8 +342,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.TREE2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -369,8 +373,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.TREE4]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -401,8 +405,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.TREE5]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -433,8 +437,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.APPLETREE2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -464,8 +468,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.STUMP1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -488,8 +492,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.STUMP2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -512,8 +516,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.BUSH1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -542,8 +546,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.BUSH2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -571,8 +575,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.BUSH3]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -601,8 +605,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.BUSH4]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -630,8 +634,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.REED1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -660,8 +664,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.REED2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -690,8 +694,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.REED3]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -723,8 +727,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCK1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -749,8 +753,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCK2]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -774,8 +778,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCK3]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -799,8 +803,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCK4]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -825,8 +829,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCK8]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -849,8 +853,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCKS1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -879,8 +883,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCKS3]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -908,8 +912,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCKS5]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -937,8 +941,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.ROCKS6]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -966,8 +970,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     behaviors: [],
   },
   [EntityName.FLYAMINATA1]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,
@@ -1002,8 +1006,8 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     },
   },
   [EntityName.BASKETFERN]: {
-    direction: Direction.DOWN,
-    directions: [],
+    facing: Direction.DOWN,
+    moving: [],
     components: [
       {
         name: ComponentName.TEXTURE,

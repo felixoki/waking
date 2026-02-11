@@ -20,7 +20,7 @@ export class Jumping implements State {
     const anim = entity.getComponent<AnimationComponent>(
       ComponentName.ANIMATION
     );
-    anim?.play(this.name, entity.direction);
+    anim?.play(this.name, entity.facing);
 
     handlers.move.getVelocity(entity, SPEED_JUMPING);
 

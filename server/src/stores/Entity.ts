@@ -1,13 +1,13 @@
-import { MapName, PlayerConfig } from "../types";
+import { EntityConfig, MapName } from "../types";
 
 export class EntityStore {
-  private entities: Map<string, any> = new Map();
+  private entities: Map<string, EntityConfig> = new Map();
 
-  add(id: string, config: any): void {
+  add(id: string, config: EntityConfig): void {
     this.entities.set(id, config);
   }
 
-  get(id: string): any | undefined {
+  get(id: string): EntityConfig | undefined {
     return this.entities.get(id);
   }
 
@@ -15,16 +15,16 @@ export class EntityStore {
     this.entities.delete(id);
   }
 
-  update(id: string, updates: Partial<any>): void {
+  update(id: string, updates: Partial<EntityConfig>): void {
     const entity = this.entities.get(id);
     if (entity) Object.assign(entity, updates);
   }
 
-  getAll(): any[] {
+  getAll(): EntityConfig[] {
     return [...this.entities.values()];
   }
 
-  getByMap(map: MapName): PlayerConfig[] {
+  getByMap(map: MapName): EntityConfig[] {
     return [...this.entities.values()].filter((entity) => entity.map === map);
   }
 }

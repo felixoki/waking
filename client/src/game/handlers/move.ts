@@ -5,10 +5,10 @@ export const move = {
   getVelocity: (entity: Entity, speed: number) => {
     if (!entity.body) return;
 
-    const directions = entity.directions;
+    const moving = entity.moving;
     const vector = new Phaser.Math.Vector2(0, 0);
 
-    directions.forEach((direction) => {
+    moving.forEach((direction) => {
       const dv = DirectionVectors[direction];
       vector.x += dv.x;
       vector.y += dv.y;

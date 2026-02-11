@@ -33,8 +33,8 @@ export class Player extends Entity {
     id: string,
     name: EntityName,
     health: number,
-    direction: Direction,
-    directions: Direction[],
+    facing: Direction,
+    moving: Direction[],
     states: Map<StateName, State>,
     socketId: string,
     isHost: boolean,
@@ -48,8 +48,8 @@ export class Player extends Entity {
       id,
       name,
       health,
-      direction,
-      directions,
+      facing,
+      moving,
       states,
     );
 
@@ -94,19 +94,21 @@ export class Player extends Entity {
   update(remoteInput?: Input): void {
     this.components.forEach((component) => component.update());
 
+    this.inputManager?.update();
+
     const input = remoteInput || this._getInput();
 
     if (!input || this.isLocked) return;
 
     const prev = {
       state: this.state,
-      direction: this.direction,
-      directionCount: this.directions.length,
+      facing: this.facing,
+      movingCount: this.moving.length,
     };
 
     this.target = input.target;
-    this.setDirection(input.direction);
-    this.directions = input.directions;
+    this.setFacing(input.facing);
+    this.moving = input.moving;
 
     const { state, needsUpdate } = handlers.state.resolve(input, prev);
 
@@ -137,8 +139,8 @@ export class Player extends Entity {
   }
 
   protected _getInput(): Input {
-    const direction = this.inputManager?.getDirection();
-    const directions = this.inputManager?.getDirections();
+    const facing = this.inputManager?.getFacing(this.x, this.y);
+    const moving = this.inputManager?.getMoving();
     const isRunning = this.inputManager?.isRunning();
     const isJumping = this.inputManager?.isJumping();
     const isRolling = this.inputManager?.isRolling();
@@ -151,8 +153,8 @@ export class Player extends Entity {
       id: this.id,
       x: this.x,
       y: this.y,
-      direction: direction,
-      directions: directions || [],
+      facing: facing,
+      moving: moving || [],
       isRunning: isRunning || false,
       isJumping: isJumping || false,
       isRolling: isRolling || false,

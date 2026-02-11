@@ -1,4 +1,4 @@
-import { MapName, PlayerConfig } from "../types.js";
+import { MapName, PlayerConfig } from "../types/index.js";
 
 export class PlayerStore {
   private players: Map<string, PlayerConfig> = new Map();

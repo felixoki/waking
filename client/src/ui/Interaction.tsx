@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
 import { Item } from "@server/types";
 import { definitions } from "@server/configs/definitions";
+import { DialogueChoice, DialogueText } from "@server/types/dialogue";
 
 interface Interaction {
   id: string;
   collects?: Item[];
+  text: DialogueText;
+  choices: DialogueChoice[];
 }
 
 export const Interaction = () => {
@@ -35,7 +38,14 @@ export const Interaction = () => {
 
   return (
     <div>
-      <h3 className="text-white mb-2">Interaction with {data.id}</h3>
+      <div className="rounded-lg text-xs bg-gray-200 p-3">
+        <p className="mb-2">{data.text as string}</p>
+        <ul>
+          {data.choices.map((choice) => (
+            <li>{choice.text as string}</li>
+          ))}
+        </ul>
+      </div>
       {data.collects && (
         <ul className="flex flex-wrap gap-1">
           {data.collects.map((item, i) => (

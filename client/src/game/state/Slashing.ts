@@ -19,14 +19,14 @@ export class Slashing implements State {
     const anim = entity.getComponent<AnimationComponent>(
       ComponentName.ANIMATION,
     );
-    anim?.play(this.name, entity.direction);
+    anim?.play(this.name, entity.facing);
 
     this.timer = entity.scene.time.delayedCall(DURATION_SLASHING, () => {
       this.exit(entity);
     });
 
     const offset = handlers.direction.getDirectionalOffset(
-      entity.direction,
+      entity.facing,
       16,
     );
     const config = weapons[WeaponName.SLASH];

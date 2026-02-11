@@ -21,6 +21,7 @@ export class ItemsStore {
     if (current <= quantity) return false;
 
     const remaining = current - quantity;
+    
     if (current === 0) {
       this.items.delete(name);
       return true;

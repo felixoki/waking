@@ -20,7 +20,7 @@ export class Casting implements State {
     const anim = entity.getComponent<AnimationComponent>(
       ComponentName.ANIMATION,
     );
-    anim?.play(this.name, entity.direction);
+    anim?.play(this.name, entity.facing);
 
     const hotbar = (entity as Player).getComponent<HotbarComponent>(
       ComponentName.HOTBAR,

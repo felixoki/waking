@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { registerHandlers } from "./socket/index.js";
 import { CLIENT_URL, SERVER_PORT } from "./globals.js";
-import { InstanceManager } from "./managers/Instance.js";
+import { Game } from "./Game.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,10 +32,10 @@ const io = new Server(server, {
   },
 });
 
-const instances = new InstanceManager();
+const game = new Game();
 
 io.on("connection", (socket) => {
-  registerHandlers(io, socket, instances);
+  registerHandlers(io, socket, game);
 });
 
 server.listen(SERVER_PORT, () => {

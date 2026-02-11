@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { fileURLToPath } from "url";
-import { EntityConfig, EntityName, MapName, TiledMap } from "../types.js";
+import { EntityConfig, EntityName, MapName, TiledMap } from "../types/index.js";
 import { randomUUID } from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);

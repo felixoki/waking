@@ -1,91 +1,83 @@
 import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
 import { tryCatch } from "../utils/tryCatch.js";
-import { Input, Hit, EntityPickup, Item, Transition, Spot } from "../types.js";
-import { InstanceManager } from "../managers/Instance.js";
+import {
+  Input,
+  Hit,
+  EntityPickup,
+  Item,
+  Transition,
+  Spot,
+} from "../types/index.js";
+import { Game } from "../Game.js";
+import { NodeId } from "../types/dialogue.js";
 
 type SocketEvent = {
   event: string;
   handler: (...args: any[]) => void | Promise<void>;
 };
 
-export function registerHandlers(
-  io: Server,
-  socket: Socket,
-  instances: InstanceManager,
-) {
+export function registerHandlers(io: Server, socket: Socket, game: Game) {
   const events: SocketEvent[] = [
-    /**
-     * Game
-     */
-    {
-      event: "game:create",
-      handler: () => handlers.game.create(socket, instances),
-    },
-    {
-      event: "game:join",
-      handler: (data: { instanceId: string }) =>
-        handlers.game.join(socket, instances, data.instanceId),
-    },
-    {
-      event: "game:list",
-      handler: () => handlers.game.list(socket, instances),
-    },
     /**
      * Player
      */
     {
       event: "player:create",
-      handler: () => handlers.player.create(socket, instances),
+      handler: () => handlers.player.create(socket, game),
     },
     {
       event: "disconnect",
-      handler: () => handlers.player.delete(io, socket, instances),
+      handler: () => handlers.player.delete(io, socket, game),
     },
     {
       event: "player:input",
-      handler: (data: Input) => handlers.player.input(data, socket, instances),
+      handler: (data: Input) => handlers.player.input(data, socket, game),
     },
     {
       event: "player:transition",
       handler: (data: Transition) =>
-        handlers.player.transition(data, socket, instances),
+        handlers.player.transition(data, socket, game),
     },
     /**
      * Entity
      */
     {
       event: "entity:create",
-      handler: () => handlers.entity.create(socket, instances),
+      handler: () => handlers.entity.create(socket, game),
     },
     {
       event: "entity:input",
       handler: (data: Partial<Input>) =>
-        handlers.entity.input(data, socket, instances),
+        handlers.entity.input(data, socket, game),
     },
     {
       event: "entity:pickup",
       handler: (data: EntityPickup) =>
-        handlers.entity.pickup(data, socket, instances),
+        handlers.entity.pickup(data, socket, game),
     },
     {
       event: "entity:spotted:player",
       handler: (data: Spot) =>
         console.log(`Entity ${data.entityId} spotted player ${data.playerId}`),
     },
+    {
+      event: "entity:interact",
+      handler: (data: { entityId: string, nodeId: NodeId }) => handlers.dialogue.interact(data.entityId, socket, game, data.nodeId),
+    },
     /**
      * Items
      */
     {
       event: "item:collect",
-      handler: (data: Item) => handlers.item.collect(data, socket, instances),
+      handler: (data: Item) => handlers.item.collect(data, socket, game),
     },
     /**
      * Shared
      */
     {
       event: "hit",
-      handler: (data: Hit) => handlers.combat.hit(data, socket, instances),
+      handler: (data: Hit) => handlers.combat.hit(data, socket, game),
     },
   ];
 

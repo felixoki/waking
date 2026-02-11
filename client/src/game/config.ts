@@ -23,7 +23,11 @@ export const config: Phaser.Types.Core.GameConfig = {
     },
   },
   backgroundColor: "302929",
-  pixelArt: true,
+  render: {
+    pixelArt: true,
+    roundPixels: true,
+    antialias: false,
+  },
   fps: {
     target: 60,
   },

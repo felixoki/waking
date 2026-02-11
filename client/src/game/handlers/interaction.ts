@@ -3,9 +3,10 @@ import { CollectorComponent } from "../components/Collector";
 import { Entity } from "../Entity";
 import EventBus from "../EventBus";
 import { InventoryComponent } from "../components/Inventory";
+import { DialogueResponse } from "@server/types/dialogue";
 
 export const interaction = {
-  start(entity: Entity) {
+  start(entity: Entity, data: DialogueResponse) {
     const collector = entity.getComponent<CollectorComponent>(
       ComponentName.COLLECTOR,
     );
@@ -22,6 +23,8 @@ export const interaction = {
       ...(collector && {
         collects: items,
       }),
+      text: data.text,
+      choices: data.choices,
     });
   },
 };

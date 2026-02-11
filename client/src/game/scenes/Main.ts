@@ -19,6 +19,7 @@ import EventBus from "../EventBus";
 import { handlers } from "../handlers";
 import { InventoryComponent } from "../components/Inventory";
 import { HotbarComponent } from "../components/Hotbar";
+import { DialogueResponse, NodeId } from "@server/types/dialogue";
 
 export class MainScene extends Phaser.Scene {
   public playerManager!: PlayerManager;
@@ -147,10 +148,6 @@ export class MainScene extends Phaser.Scene {
       });
     });
 
-    this.socketManager.on("player:error", (data: { message: string }) => {
-      console.error(`Player error: ${data.message}`);
-    });
-
     this.socketManager.on("player:host:transfer", () => {
       const player = this.playerManager.player;
       if (!player) return;
@@ -201,6 +198,16 @@ export class MainScene extends Phaser.Scene {
       handlers.combat.knockback(entity, data.knockback);
     });
 
+    this.socketManager.on(
+      "entity:interact:response",
+      (data: DialogueResponse) => {
+        const entity = this.entityManager.entities.get(data.entityId);
+        if (!entity) return;
+
+        handlers.interaction.start(entity, data);
+      },
+    );
+
     this.game.events.on("entity:input", (data: Partial<Input>) => {
       this.socketManager.emit("entity:input", data);
     });
@@ -210,10 +217,10 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.game.events.on("entity:interact", (data: string) => {
-      const entity = this.entityManager.get(data);
-      if (!entity) return;
-
-      handlers.interaction.start(entity);
+      this.socketManager.emit("entity:interact", {
+        entityId: data,
+        nodeId: NodeId.GREETING,
+      });
     });
 
     this.game.events.on("entity:spotted:player", (data: Spot) => {

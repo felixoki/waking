@@ -27,8 +27,8 @@ export class Factory {
       definition.id,
       definition.name,
       definition.health,
-      definition.direction,
-      definition.directions,
+      definition.facing,
+      definition.moving,
       states,
     );
 

@@ -12,14 +12,14 @@ export class Idle implements State {
     const anim = entity.getComponent<AnimationComponent>(
       ComponentName.ANIMATION
     );
-    anim?.play(this.name, entity.direction);
+    anim?.play(this.name, entity.facing);
   }
 
   update(entity: Entity): void {
     const anim = entity.getComponent<AnimationComponent>(
       ComponentName.ANIMATION
     );
-    anim?.play(this.name, entity.direction);
+    anim?.play(this.name, entity.facing);
   }
 
   exit(_entity: Entity): void {}

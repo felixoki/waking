@@ -47,7 +47,7 @@ export class PlayerManager {
       config.id,
       EntityName.PLAYER,
       config.health,
-      config.direction!,
+      config.facing!,
       [],
       new Map([
         [StateName.IDLE, new Idle()],

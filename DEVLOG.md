@@ -188,11 +188,28 @@
 - Add raycasting ✅
 - Update patrol component ✅
 
+#### 8.2.2025
+
+- Update map transitions ✅
+- Add fullsize mode ✅
+
+#### 10.2.2025
+- Add dialog trees ✅
+- Remove instance management ✅
+- Split types ✅
+- Make direction pointer based ✅
+
+
 ### Next up
 
-- Dialog system ⭐
-    - Add dialog trees
+- Dialogue system ⭐
+    - Add dialogue component
+    - Add dialogue server roundtrip
     - Lock entities during interaction
+
+- Villager needs ⭐
+    - Add economy manager
+    - Add resource venison meat (dropped by deer)
 
 - Procedural forest generation ⭐
     - Add attack behavior
@@ -235,9 +252,6 @@
 - Market district ⭐
 
 - Tavern ⭐
-
-- Villager needs ⭐
-    - Add resource venison meat (dropped by deer)
 
 - Blacksmith ⭐
     - Add resource iron (dropped by orcs)

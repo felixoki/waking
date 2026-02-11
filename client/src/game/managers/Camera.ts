@@ -10,7 +10,6 @@ export class CameraManager {
 
   follow(target: Entity): void {
     this.camera.startFollow(target, false);
-    this.camera.roundPixels = true;
   }
 
   setZoom(zoom: number): void {

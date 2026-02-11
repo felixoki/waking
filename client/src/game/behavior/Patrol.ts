@@ -70,8 +70,8 @@ export class Patrol extends Behavior {
           });
 
           return {
-            direction: entity.direction,
-            directions: [],
+            facing: entity.facing,
+            moving: [],
             isRunning: false,
           };
         }
@@ -146,16 +146,16 @@ export class Patrol extends Behavior {
         const direction = handlers.direction.fromAngle(angle);
 
         return {
-          direction,
-          directions: [direction],
+          facing: direction,
+          moving: [direction],
           isRunning: false,
         };
       }
     }
 
     return {
-      direction: entity.direction,
-      directions: [],
+      facing: entity.facing,
+      moving: [],
       isRunning: false,
     };
   }
