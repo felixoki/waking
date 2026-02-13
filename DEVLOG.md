@@ -204,16 +204,18 @@
 - Split types ✅
 - Make direction pointer based ✅
 
+#### 12.2.2025
+
+- Update tile collision layer ✅
+
+#### 13.2.2025
+- Add dialogue component ✅
+- Add dialogue server roundtrip ✅
+- Separate dialogue and collect ✅
+- Add server ticks ✅
+
+
 ### Next up
-
-- Dialogue system ⭐
-  - Add dialogue component
-  - Add dialogue server roundtrip
-  - Separate dialogue and collect
-  - Lock entities during interaction
-
-- Economy ⭐
-  - Add server ticks
 
 - Procedural forest generation ⭐
   - Add attack behavior
@@ -232,6 +234,8 @@
 
 - General
   - Update tile collision layer
+  - Add stay and amble behavior
+  - Lock entities during interaction
 
 ### Backlog
 

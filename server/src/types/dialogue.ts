@@ -7,6 +7,7 @@ export enum Mood {
 
 export enum NodeId {
   GREETING = "greeting",
+  STORY = "story",
 }
 
 export enum ChoiceId {
@@ -17,6 +18,7 @@ export type DialogueText = string | string[] | Record<Mood, string | string[]>;
 
 export interface DialogueReference {
   ref: NodeId | ChoiceId;
+  individual?: DialogueChoice[];
 }
 
 export interface DialogueChoice {
@@ -25,8 +27,14 @@ export interface DialogueChoice {
   effects?: DialogueEffect[];
 }
 
+export enum DialogueEffectName {
+  CONVERSATION_END = "conversation:end",
+  COLLECTION_START = "collection:start",
+  COLLECTION_END = "collection:end",
+}
+
 export interface DialogueEffect {
-  type: "conversation:end";
+  name: DialogueEffectName;
   params?: Record<string, any>;
 }
 

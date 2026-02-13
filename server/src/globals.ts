@@ -10,7 +10,8 @@ export const SPEED_ROLLING = 120;
 
 export const HEIGHT_JUMPING = 40;
 
-export const DAY_MS = 30 * 60 * 1000;
+export const DAY = 30 * 60 * 1000;
+export const TICK_RATE = 1000 / 60;
 
 export const DURATION_CASTING = 800;
 export const DURATION_JUMPING = 800;

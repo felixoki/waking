@@ -1,5 +1,5 @@
-import { needs } from "../configs/needs";
-import { DAY_MS } from "../globals";
+import { configs } from "../configs";
+import { DAY } from "../globals";
 import { ItemsStore } from "../stores/Items";
 import { NeedConfig, NeedName } from "../types";
 
@@ -13,7 +13,7 @@ export class EconomyManager {
   }
 
   private _init() {
-    needs.forEach((config) => {
+    configs.needs.forEach((config) => {
       this.needs.set(config.name, config);
     });
   }
@@ -23,7 +23,7 @@ export class EconomyManager {
     const elapsed = now - this.updated;
     this.updated = now;
 
-    const days = elapsed / DAY_MS;
+    const days = elapsed / DAY;
 
     this.needs.forEach((need) => {
       const available = this.getSupply(need);

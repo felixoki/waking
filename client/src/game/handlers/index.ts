@@ -1,6 +1,6 @@
 import { combat } from "./combat";
 import { direction } from "./direction";
-import { interaction } from "./interaction";
+import { dialogue } from "./dialogue";
 import { move } from "./move";
 import { path } from "./path";
 import { physics } from "./physics";
@@ -8,6 +8,7 @@ import { spells } from "./spells";
 import { state } from "./state";
 import { vision } from "./vision";
 import { weapons } from "./weapons";
+import { collection } from "./collection";
 
 export const handlers = {
   state,
@@ -17,7 +18,8 @@ export const handlers = {
   combat,
   spells,
   weapons,
-  interaction,
+  dialogue,
+  collection,
   vision,
-  path
+  path,
 };

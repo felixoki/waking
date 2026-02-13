@@ -1,15 +1,19 @@
 import {
   ChoiceId,
   DialogueChoice,
+  DialogueEffectName,
   DialogueNode,
   Mood,
   NodeId,
-} from "../types/dialogue";
+} from "../types";
 
 export const COMMON_CHOICES: Record<string, DialogueChoice | DialogueChoice[]> =
   {
     [ChoiceId.GOODBYE]: [
-      { text: "Goodbye", effects: [{ type: "conversation:end" }] },
+      {
+        text: "Goodbye",
+        effects: [{ name: DialogueEffectName.CONVERSATION_END }],
+      },
     ],
   };
 

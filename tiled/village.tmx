@@ -145,6 +145,9 @@
    </animation>
   </tile>
   <tile id="62">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="4" y="0" width="10" height="16.0003"/>
+   </objectgroup>
    <animation>
     <frame tileid="62" duration="100"/>
     <frame tileid="302" duration="100"/>
@@ -245,6 +248,9 @@
    </animation>
   </tile>
   <tile id="91">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="16" height="10"/>
+   </objectgroup>
    <animation>
     <frame tileid="91" duration="100"/>
     <frame tileid="331" duration="100"/>
@@ -255,6 +261,9 @@
    </animation>
   </tile>
   <tile id="92">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="10" height="16.0003"/>
+   </objectgroup>
    <animation>
     <frame tileid="92" duration="100"/>
     <frame tileid="332" duration="100"/>
@@ -1085,6 +1094,9 @@
 </data>
  </layer>
  <layer id="9" name="coast" width="64" height="64">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2003,0,1964,1998,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2003,0,2004,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

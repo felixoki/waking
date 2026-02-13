@@ -5,7 +5,7 @@ import path from "path";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { registerHandlers } from "./socket/index.js";
-import { CLIENT_URL, SERVER_PORT } from "./globals.js";
+import { CLIENT_URL, SERVER_PORT, TICK_RATE } from "./globals.js";
 import { Game } from "./Game.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,6 +33,10 @@ const io = new Server(server, {
 });
 
 const game = new Game();
+
+setInterval(() => {
+  game.update(TICK_RATE);
+}, TICK_RATE);
 
 io.on("connection", (socket) => {
   registerHandlers(io, socket, game);

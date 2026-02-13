@@ -3,6 +3,7 @@ export * from './behaviors';
 export * from './collectors';
 export * from './combat';
 export * from './components';
+export * from './dialogue';
 export * from './directions';
 export * from './economy';
 export * from './entities';

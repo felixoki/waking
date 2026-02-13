@@ -6,8 +6,10 @@ import {
   EntityName,
   MapName,
   StateName,
+  NodeId,
+  DialogueEffectName,
+  ChoiceId,
 } from "../types";
-import { NodeId } from "../types/dialogue";
 
 export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.ORC1]: {
@@ -167,7 +169,32 @@ export const definitions: Partial<Record<EntityName, EntityDefinition>> = {
     states: [StateName.IDLE, StateName.WALKING],
     behaviors: [],
     dialogue: {
-      [NodeId.GREETING]: { ref: NodeId.GREETING },
+      [NodeId.GREETING]: {
+        ref: NodeId.GREETING,
+        individual: [
+          {
+            text: "Are you looking for herbs?",
+            effects: [
+              {
+                name: DialogueEffectName.COLLECTION_START,
+              },
+            ],
+          },
+          {
+            text: "What is your role in this village?",
+            next: NodeId.STORY,
+          },
+        ],
+      },
+      [NodeId.STORY]: {
+        text: "I am the village herbalist. I collect herbs and make potions to help the villagers. I specialize in dream herbs, which can help with sleep and dreams. If you find any, please bring them to me.",
+        choices: [
+          {
+            ref: ChoiceId.GOODBYE,
+            effects: [{ name: DialogueEffectName.CONVERSATION_END }],
+          },
+        ],
+      },
     },
   },
   [EntityName.WINDMILL]: {

@@ -198,16 +198,6 @@ export class MainScene extends Phaser.Scene {
       handlers.combat.knockback(entity, data.knockback);
     });
 
-    this.socketManager.on(
-      "entity:interact:response",
-      (data: DialogueResponse) => {
-        const entity = this.entityManager.entities.get(data.entityId);
-        if (!entity) return;
-
-        handlers.interaction.start(entity, data);
-      },
-    );
-
     this.game.events.on("entity:input", (data: Partial<Input>) => {
       this.socketManager.emit("entity:input", data);
     });
@@ -216,15 +206,36 @@ export class MainScene extends Phaser.Scene {
       this.socketManager.emit("entity:pickup", data);
     });
 
-    this.game.events.on("entity:interact", (data: string) => {
-      this.socketManager.emit("entity:interact", {
+    this.game.events.on("entity:dialogue:start", (data: string) => {
+      this.socketManager.emit("entity:dialogue:iterate", {
         entityId: data,
         nodeId: NodeId.GREETING,
       });
     });
 
+    this.socketManager.on(
+      "entity:dialogue:response",
+      (data: DialogueResponse) => {
+        handlers.dialogue.start(data);
+      },
+    );
+
     this.game.events.on("entity:spotted:player", (data: Spot) => {
       this.socketManager.emit("entity:spotted:player", data);
+    });
+
+    EventBus.on(
+      "entity:dialogue:choice",
+      (data: { entityId: string; nodeId: NodeId }) => {
+        this.socketManager.emit("entity:dialogue:iterate", data);
+      },
+    );
+
+    EventBus.on("entity:collection:request", (data: string) => {
+      const entity = this.entityManager.get(data);
+      if (!entity) return;
+
+      handlers.collection.open(entity);
     });
 
     /**

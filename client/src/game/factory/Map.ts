@@ -25,10 +25,11 @@ export class MapFactory {
 
     tilemap.layers.forEach((data, index) => {
       const name = data.name;
-      
+
       if (name === "objects") return;
 
       const properties = data.properties as TiledProperty[] | undefined;
+
       const hasCollision = properties?.some(
         (prop) => prop.name === "collides" && prop.value === true,
       );
@@ -39,9 +40,7 @@ export class MapFactory {
 
       if (hasCollision) {
         layer.setCollisionByExclusion([-1, 0]);
-
-        scene.physics.add.collider(scene.physicsManager.groups.players, layer);
-        scene.physics.add.collider(scene.physicsManager.groups.entities, layer);
+        this.createCollisions(scene, layer);
       }
 
       layer.setDepth(index * 10);
@@ -86,6 +85,49 @@ export class MapFactory {
       const image = scene.add.image(x, y, texture, id);
       image.setOrigin(0, 1);
       image.setDepth(50);
+    });
+  }
+
+  private static createCollisions(
+    scene: Scene,
+    layer: Phaser.Tilemaps.TilemapLayer,
+  ): void {
+    const tiles = layer.getTilesWithin().filter((t) => t.collides);
+    let bodies = 0;
+
+    tiles.forEach((tile) => {
+      const tileset = tile.tileset;
+      if (!tileset) return;
+
+      const id = tile.index - tileset.firstgid;
+      const data = (tileset as any).tileData?.[id];
+
+      if (!data?.objectgroup?.objects) return;
+
+      data.objectgroup.objects.forEach((obj: any) => {
+        const worldX = tile.pixelX + (obj.x || 0);
+        const worldY = tile.pixelY + (obj.y || 0);
+
+        if (obj.width && obj.height) {
+          const rect = scene.add.rectangle(
+            worldX + obj.width / 2,
+            worldY + obj.height / 2,
+            obj.width,
+            obj.height,
+            0xff00ff,
+            0.6,
+          );
+          rect.setDepth(10003);
+          scene.physics.add.existing(rect, true);
+
+          scene.physics.add.collider(scene.physicsManager.groups.players, rect);
+          scene.physics.add.collider(
+            scene.physicsManager.groups.entities,
+            rect,
+          );
+          bodies++;
+        }
+      });
     });
   }
 }

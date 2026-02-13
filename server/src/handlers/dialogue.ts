@@ -1,9 +1,8 @@
 import { Socket } from "socket.io";
-import { definitions } from "../configs/definitions";
-import { COMMON_CHOICES, COMMON_NODES } from "../configs/dialogue";
+import { configs } from "../configs";
 import { Game } from "../Game";
-import { NeedName } from "../types";
 import {
+  NeedName,
   DialogueChoice,
   DialogueContext,
   DialogueNode,
@@ -11,7 +10,7 @@ import {
   DialogueText,
   Mood,
   NodeId,
-} from "../types/dialogue";
+} from "../types";
 
 export const dialogue = {
   getMood: (context: DialogueContext): Mood => {
@@ -38,7 +37,10 @@ export const dialogue = {
       choice: DialogueChoice | DialogueReference,
     ): DialogueChoice | null => {
       if ("ref" in choice) {
-        let common = COMMON_CHOICES[choice.ref as keyof typeof COMMON_CHOICES];
+        let common =
+          configs.dialogue.choices[
+            choice.ref as keyof typeof configs.dialogue.choices
+          ];
 
         if (!common) return null;
 
@@ -55,10 +57,22 @@ export const dialogue = {
       node: DialogueNode | DialogueNode[] | DialogueReference,
     ): DialogueNode | null => {
       if ("ref" in node) {
-        const common = COMMON_NODES[node.ref as keyof typeof COMMON_NODES];
+        const common =
+          configs.dialogue.nodes[
+            node.ref as keyof typeof configs.dialogue.nodes
+          ];
         if (!common || !common.length) return null;
 
-        return common[Math.floor(Math.random() * common.length)];
+        const resolved = common[Math.floor(Math.random() * common.length)];
+
+        if (node.individual) {
+          return {
+            ...resolved,
+            choices: [...(resolved.choices || []), ...node.individual],
+          };
+        }
+
+        return resolved;
       }
 
       if (Array.isArray(node)) {
@@ -72,11 +86,11 @@ export const dialogue = {
     },
   },
 
-  interact: (entityId: string, socket: Socket, game: Game, nodeId: NodeId) => {
+  iterate: (entityId: string, socket: Socket, game: Game, nodeId: NodeId) => {
     const entity = game.entities.get(entityId);
     if (!entity) return;
 
-    const definition = definitions[entity.name];
+    const definition = configs.definitions[entity.name];
     if (!definition) return;
 
     const player = game.players.getBySocketId(socket.id);
@@ -107,7 +121,7 @@ export const dialogue = {
         effects: choice!.effects,
       }));
 
-    socket.emit("entity:interact:response", {
+    socket.emit("entity:dialogue:response", {
       entityId,
       nodeId,
       text,

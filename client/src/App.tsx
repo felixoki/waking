@@ -5,7 +5,8 @@ import { Inventory } from "./ui/Inventory";
 import { Entities } from "./ui/Entities";
 import { Hotbar } from "./ui/Hotbar";
 import { Menu } from "./ui/Menu";
-import { Interaction } from "./ui/Interaction";
+import { Dialogue } from "./ui/Dialogue";
+import { Collection } from "./ui/Collection";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -15,6 +16,7 @@ function App() {
     if (game.current || !inGame) return;
 
     game.current = new Phaser.Game(config);
+    console.log(game);
 
     return () => {
       game.current?.destroy(true);
@@ -31,7 +33,8 @@ function App() {
       <div className="fixed top-0 left-0 flex flex-col gap-4 p-4">
         <Hotbar />
         <Inventory />
-        <Interaction />
+        <Dialogue />
+        <Collection />
       </div>
     </div>
   );

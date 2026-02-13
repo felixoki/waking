@@ -32,6 +32,9 @@ export class InteractableComponent extends Component {
     );
 
     if (distance <= this.range)
-      this.entity.scene.game.events.emit("entity:interact", this.entity.id);
+      this.entity.scene.game.events.emit(
+        "entity:dialogue:start",
+        this.entity.id,
+      );
   }
 }

@@ -5,12 +5,17 @@ import { PlayerStore } from "./stores/Player";
 import { ItemsStore } from "./stores/Items";
 import { MapName } from "./types";
 import { EconomyManager } from "./managers/Economy";
+import { DAY } from "./globals";
 
 export class Game {
   public readonly players: PlayerStore;
   public readonly entities: EntityStore;
   public readonly items: ItemsStore;
   public economy: EconomyManager;
+  private time: { current: number; days: number } = {
+    current: 0,
+    days: 0,
+  };
 
   constructor() {
     this.players = new PlayerStore();
@@ -33,10 +38,14 @@ export class Game {
     [...ve, ...he].forEach((e) => this.entities.add(e.id, e));
   }
 
-  /**
-   * We have to implement an update loop
-   */
-  update() {
+  update(delta: number) {
+    this.time.current += delta;
+
+    if (this.time.current >= DAY) {
+      this.time.current = 0;
+      this.time.days++;
+    }
+
     this.economy.update();
   }
 }

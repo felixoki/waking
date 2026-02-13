@@ -62,8 +62,9 @@ export function registerHandlers(io: Server, socket: Socket, game: Game) {
         console.log(`Entity ${data.entityId} spotted player ${data.playerId}`),
     },
     {
-      event: "entity:interact",
-      handler: (data: { entityId: string, nodeId: NodeId }) => handlers.dialogue.interact(data.entityId, socket, game, data.nodeId),
+      event: "entity:dialogue:iterate",
+      handler: (data: { entityId: string; nodeId: NodeId }) =>
+        handlers.dialogue.iterate(data.entityId, socket, game, data.nodeId),
     },
     /**
      * Items
