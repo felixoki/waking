@@ -1,13 +1,343 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="16" height="13" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#2f2929" nextlayerid="11" nextobjectid="5">
  <editorsettings>
-  <export target="../client/public/assets/maps/herbalist.json" format="json"/>
+  <export target="../client/public/assets/maps/herbalist_house.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="village_herbalist_interior" tilewidth="16" tileheight="16" tilecount="360" columns="40">
   <image source="../client/public/assets/sprites/village_herbalist_interior.png" width="640" height="144"/>
+  <tile id="22">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="4" width="16" height="12"/>
+   </objectgroup>
+  </tile>
+  <tile id="52">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="-4" width="16" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="53">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="-4" width="16" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="54">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="-4" width="16" height="24"/>
+   </objectgroup>
+  </tile>
+  <tile id="62">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="81">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="-4" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="82">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="83">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="84">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="102">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="12"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="361" name="village_herbalist_walls_floor" tilewidth="16" tileheight="16" tilecount="140" columns="28">
   <image source="../client/public/assets/sprites/village_herbalist_walls_floor.png" width="448" height="80"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="2" width="14" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="8" width="16" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="14" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="20">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="21">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="22">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="25">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="26">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0.00353978" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="28">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="29">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="30">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0.00353978" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="31">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="32">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="39">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="46">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="47">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="48">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="49">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="50">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="51">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="52">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="53">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="54">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0.00353978" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="55">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="56">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="57">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="58">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0.00353978" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="59">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="60">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="67">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0.00353978" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="80">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="81">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="82">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="83">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="84">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="85">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="86">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="87">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="14" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="88">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="2" width="14" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="108">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="109">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="115">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="116">
+   <objectgroup draworder="index" id="3">
+    <object id="2" x="2" y="0" width="14" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="117">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="16" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="118">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0.00353978" y="2" width="16" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="119">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="16" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="120">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="16" height="14"/>
+   </objectgroup>
+  </tile>
+  <tile id="122">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="2" width="16" height="14"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="501" name="village_herbalist_boiler" tilewidth="16" tileheight="16" tilecount="72" columns="24">
   <image source="../client/public/assets/sprites/village_herbalist_boiler.png" width="384" height="48"/>
@@ -84,6 +414,9 @@
 </data>
  </layer>
  <layer id="6" name="interior-2" width="16" height="13">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,1,2,3,4,5,6,0,0,0,0,0,

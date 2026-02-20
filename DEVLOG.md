@@ -229,11 +229,15 @@
 
 - Add attack behavior ✅
 
+#### 20.2.2026
+
+- Add map builder ✅
+- Add border, noise and terrain generators ✅
+- Add terrain smoother ✅
+
 ### Next up
 
 - Procedural forest generation ⭐
-  - Add party management
-  - Add map creation
   - Add ambience manager
   - Add foggy forest shader
 
@@ -256,6 +260,8 @@
   - Aim assist
   - Catch animal
   - Water fountain
+  - Meteor shower
+  - Lightning strike
   - Improve illuminate shader
   - Add mana usage
   - Add particle texture for sharp effects
