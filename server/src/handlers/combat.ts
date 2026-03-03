@@ -1,15 +1,17 @@
 import { Socket } from "socket.io";
 import {
+  ComponentConfig,
   ComponentName,
   EntityConfig,
   Hit,
+  Item,
   PlayerConfig,
   SpellConfig,
   WeaponConfig,
 } from "../types";
 import { World } from "../World";
 import { randomUUID } from "crypto";
-import { definitions } from "../definitions";
+import { configs } from "../configs";
 
 export const combat = {
   getKnockback: (
@@ -56,15 +58,15 @@ export const combat = {
       socket.to(`map:${entity.map}`).emit("entity:destroy", { id: entity.id });
       socket.emit("entity:destroy", { id: entity.id });
 
-      const definition = definitions[entity.name];
+      const definition = configs.entities[entity.name];
       const damagable = definition?.components.find(
-        (c) => c.name === ComponentName.DAMAGEABLE,
+        (c: ComponentConfig) => c.name === ComponentName.DAMAGEABLE,
       );
 
       if (damagable && damagable.config) {
         const loot = damagable.config.loot;
 
-        loot.forEach((entry) => {
+        loot.forEach((entry: Item & { chance: number }) => {
           if (Math.random() > entry.chance) return;
 
           const item: EntityConfig = {
@@ -92,6 +94,7 @@ export const combat = {
       id: target.id,
       health: health,
       knockback: knockback,
+      attackerId: attacker.id,
     };
 
     const emit = entity ? "entity:hurt" : "player:hurt";

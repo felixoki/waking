@@ -5,7 +5,7 @@ import {
   EntityDefinition,
   EntityName,
   StateName,
-} from "../types";
+} from "../../types";
 
 export const creatures: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.ORC1]: {

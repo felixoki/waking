@@ -1,3 +1,4 @@
+import { configs } from "../../configs";
 import { handlers } from "../../handlers";
 import {
   BiomeConfig,
@@ -6,7 +7,6 @@ import {
   TerrainName,
 } from "../../types/generation";
 import { NoiseGenerator } from "../generators/Noise";
-import { definitions } from "../../definitions";
 
 export class EntitySpawner {
   private config: BiomeConfig;
@@ -52,7 +52,7 @@ export class EntitySpawner {
           const hash = gen.spatialHash(x, y, r);
           const name = rule.entities[hash % rule.entities.length];
           const pos = gen.tileToWorld(x, y, tileWidth, tileHeight);
-          const offset = definitions[name]?.offset;
+          const offset = configs.entities[name]?.offset;
 
           entities.push({
             name,
@@ -60,9 +60,8 @@ export class EntitySpawner {
             y: pos.y + (offset?.y ?? 0),
           });
 
-          if (rule.group) {
+          if (rule.group)
             this._spawnGroup(x, y, r, hash, rule, terrain, entities, occupied);
-          }
 
           this._reserve(occupied, x, y, rule.spacing);
         }
@@ -99,7 +98,7 @@ export class EntitySpawner {
       const hash = gen.spatialHash(spot.x, spot.y, r + i);
       const name = rule.entities[hash % rule.entities.length];
       const pos = gen.tileToWorld(spot.x, spot.y, tileWidth, tileHeight);
-      const offset = definitions[name]?.offset;
+      const offset = configs.entities[name]?.offset;
 
       entities.push({
         name,

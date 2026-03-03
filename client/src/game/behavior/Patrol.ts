@@ -23,7 +23,7 @@ export class PatrolBehavior extends Behavior {
     lastCheck: 0,
     interval: 200,
   };
-  private vision: number = 400;
+  private vision: number = 500;
   private fov: number = Math.PI * 2;
 
   public name = BehaviorName.PATROL;

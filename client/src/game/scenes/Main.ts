@@ -14,18 +14,14 @@ import {
   Item,
   Transition,
   Spot,
-  BehaviorName,
   Party,
 } from "@server/types";
 import EventBus from "../EventBus";
 import { handlers } from "../handlers";
 import { InventoryComponent } from "../components/Inventory";
 import { DialogueResponse, NodeId } from "@server/types/dialogue";
-import { BehaviorQueue } from "../components/BehaviorQueue";
-import { AttackBehavior } from "../behavior/Attack";
 import { DamageableComponent } from "../components/Damageable";
 import { effects } from "../effects";
-import { FleeBehavior } from "../behavior/Flee";
 
 export class MainScene extends Phaser.Scene {
   public playerManager!: PlayerManager;
@@ -188,6 +184,7 @@ export class MainScene extends Phaser.Scene {
       const entity = this.entityManager.entities.get(data.id);
       if (!entity) return;
 
+      handlers.behavior.react(entity, data.attackerId);
       handlers.combat.hurt(entity, data.health);
       handlers.combat.knockback(entity, data.knockback);
     });
@@ -203,25 +200,7 @@ export class MainScene extends Phaser.Scene {
       const entity = this.entityManager.get(data.entityId);
       if (!entity) return;
 
-      const queue = entity.getComponent<BehaviorQueue>(
-        ComponentName.BEHAVIOR_QUEUE,
-      );
-      if (!queue) return;
-
-      const flee = queue.get<FleeBehavior>(BehaviorName.FLEE);
-
-      if (flee) {
-        flee.start(data.playerId);
-        queue.shiftTo(BehaviorName.FLEE);
-        return;
-      }
-
-      const attack = queue.get<AttackBehavior>(BehaviorName.ATTACK);
-
-      if (attack) {
-        attack.start(data.playerId);
-        queue.shiftTo(BehaviorName.ATTACK);
-      }
+      handlers.behavior.react(entity, data.playerId);
     });
 
     this.game.events.on("entity:input", (data: Partial<Input>) => {

@@ -4,7 +4,7 @@ import {
   EntityDefinition,
   EntityName,
   MapName,
-} from "../types";
+} from "../../types";
 
 export const buildings: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.HOUSE1]: {

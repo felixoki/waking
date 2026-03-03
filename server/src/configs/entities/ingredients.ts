@@ -3,7 +3,7 @@ import {
   Direction,
   EntityDefinition,
   EntityName,
-} from "../types";
+} from "../../types";
 
 export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.FLYAMINATA1]: {

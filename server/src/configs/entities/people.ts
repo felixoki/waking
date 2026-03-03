@@ -8,7 +8,7 @@ import {
   EntityName,
   NodeId,
   StateName,
-} from "../types";
+} from "../../types";
 
 export const people: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.HERBALIST]: {

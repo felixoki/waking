@@ -10,6 +10,7 @@ import { state } from "./state";
 import { vision } from "./vision";
 import { weapons } from "./weapons";
 import { collection } from "./collection";
+import { behavior } from "./behavior";
 
 export const handlers = {
   state,
@@ -24,4 +25,5 @@ export const handlers = {
   collection,
   vision,
   path,
+  behavior,
 };

@@ -1,7 +1,7 @@
 import { ComponentName, EntityName, Item } from "@server/types";
 import { Component } from "./Component";
-import { definitions } from "@server/definitions";
 import EventBus from "../EventBus";
+import { configs } from "@server/configs";
 
 export class InventoryComponent extends Component {
   private items: (Item | null)[] = new Array(20).fill(null);
@@ -13,7 +13,7 @@ export class InventoryComponent extends Component {
   detach(): void {}
 
   add(name: EntityName, quantity: number = 1): boolean {
-    const def = definitions[name];
+    const def = configs.entities[name];
 
     if (!def || !def.metadata) return false;
 

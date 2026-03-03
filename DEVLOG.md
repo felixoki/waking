@@ -271,6 +271,11 @@
 - Add blacksmith scene ✅
 - Add glassblower scene ✅
 
+#### 3.3.2026
+
+- Refactor behavior shifts ✅
+- Refactor definitions and map configs ✅
+
 ### Next up
 
 - Day cycle ⭐
@@ -287,9 +292,13 @@
 
 - General
   - Add crafting behavior
-  - Add idle action state
+  - Add idle-action state
   - Lock entities during interaction
   - Add world animation component
+
+### Bugs
+
+- Jumping and rolling into a scene causes crash
 
 ### Backlog
 
@@ -310,11 +319,6 @@
   - Add plantable and growable component
 
 - Animal keeping ⭐
-
-- Blacksmith ⭐
-  - Add resource iron (dropped by orcs)
-  - Add crafting system
-  - Add lantern
 
 - Harbor district ⭐
 

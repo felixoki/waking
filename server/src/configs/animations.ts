@@ -38,7 +38,7 @@ export const animations: Partial<
   [EntityName.HERBALIST]: {
     [StateName.IDLE]: {
       frameCount: 6,
-      frameRate: 6,
+      frameRate: 8,
       repeat: -1,
     },
     [StateName.WALKING]: {
@@ -50,7 +50,7 @@ export const animations: Partial<
   [EntityName.BLACKSMITH]: {
     [StateName.IDLE]: {
       frameCount: 6,
-      frameRate: 6,
+      frameRate: 8,
       repeat: -1,
     },
     [StateName.WALKING]: {

@@ -8,10 +8,8 @@ import { people } from "./people";
 import { rocks } from "./rocks";
 import { transitions } from "./transitions";
 
-/**
- * should be entities, not definitions
- */
-export const definitions = {
+
+export const entities = {
   ...animals,
   ...buildings,
   ...creatures,

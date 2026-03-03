@@ -3,7 +3,7 @@ import { Entity } from "../Entity";
 import { Factory } from "../factory/Factory";
 import { Scene } from "../scenes/Scene";
 import type { MainScene } from "../scenes/Main";
-import { definitions } from "@server/definitions";
+import { configs } from "@server/configs";
 
 export class EntityManager {
   public entities: Map<string, Entity> = new Map();
@@ -33,7 +33,7 @@ export class EntityManager {
     const scene = this.main.scene.get(config.map) as Scene;
     if (!scene?.physicsManager) return;
 
-    const definition = definitions[config.name];
+    const definition = configs.entities[config.name];
     const entity = Factory.create(scene, { ...config, ...definition! });
 
     entity.map = config.map;

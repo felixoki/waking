@@ -3,7 +3,7 @@ import {
   Direction,
   EntityDefinition,
   EntityName,
-} from "../types";
+} from "../../types";
 
 export const interior: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.BARREL1]: {

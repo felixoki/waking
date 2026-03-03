@@ -1,7 +1,7 @@
 import { Item } from "@server/types";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
-import { definitions } from "@server/definitions";
+import { configs } from "@server/configs";
 
 export const Collection = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -43,7 +43,7 @@ export const Collection = () => {
               key={item.name}
               className="flex flex-col items-center justify-center text-center rounded-lg text-xs w-16 aspect-square text-slate-900 bg-gray-200"
             >
-              {definitions[item.name]?.metadata?.displayName}{" "}
+              {configs.entities[item.name]?.metadata?.displayName}{" "}
               <button
                 onClick={() => give(item)}
                 className="rounded bg-gray-300 px-2 py-1 hover:bg-gray-400"

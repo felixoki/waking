@@ -25,7 +25,7 @@ export class WanderBehavior extends Behavior {
     lastCheck: 0,
     interval: 200,
   };
-  private vision: number = 300;
+  private vision: number = 600;
   private fov: number = Math.PI * 2;
 
   public name = BehaviorName.WANDER;

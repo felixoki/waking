@@ -3,7 +3,7 @@ import {
   Direction,
   EntityDefinition,
   EntityName,
-} from "../types";
+} from "../../types";
 
 export const rocks: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.ROCK1]: {

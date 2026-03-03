@@ -11,6 +11,7 @@ export interface Hurt {
   id: string;
   health: number;
   knockback: { x: number; y: number };
+  attackerId: string;
 }
 
 export interface Spot {

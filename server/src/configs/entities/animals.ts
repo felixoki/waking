@@ -5,7 +5,7 @@ import {
   EntityDefinition,
   EntityName,
   StateName,
-} from "../types";
+} from "../../types";
 
 export const animals: Partial<Record<EntityName, EntityDefinition>> = {
   [EntityName.BOAR]: {
