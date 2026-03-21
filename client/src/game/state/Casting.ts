@@ -7,6 +7,7 @@ import { handlers } from "../handlers";
 import { Player } from "../Player";
 import { HotbarComponent } from "../components/Hotbar";
 import { configs } from "@server/configs";
+import EventBus from "../EventBus";
 
 export class Casting implements State {
   private timer: Phaser.Time.TimerEvent | null = null;
@@ -14,6 +15,21 @@ export class Casting implements State {
   public name: StateName = StateName.CASTING;
 
   enter(entity: Entity): void {
+    const hotbar = (entity as Player).getComponent<HotbarComponent>(
+      ComponentName.HOTBAR,
+    );
+    const equipped = hotbar?.get();
+
+    const config = configs.spells[equipped?.name as SpellName];
+    const player = entity as Player;
+
+    if (player.mana < config.mana) {
+      const reset = entity.states?.get(StateName.IDLE);
+      if (reset) reset.enter(entity);
+
+      return;
+    }
+
     entity.setState(this.name);
     entity.isLocked = true;
 
@@ -22,12 +38,11 @@ export class Casting implements State {
     );
     anim?.play(this.name, entity.facing);
 
-    const hotbar = (entity as Player).getComponent<HotbarComponent>(
-      ComponentName.HOTBAR,
-    );
-    const equipped = hotbar?.get();
+    if (player.isControllable) {
+      player.mana -= config.mana;
+      EventBus.emit("player:mana", player.mana);
+    }
 
-    const config = configs.spells[equipped?.name as SpellName];
     const direction = handlers.direction.getDirectionToPoint(
       entity,
       entity.target!,

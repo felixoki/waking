@@ -22,6 +22,7 @@ export const player = {
         socketId: socket.id,
         map: map.id,
         health: 100,
+        mana: 100000,
         isHost,
       };
 
@@ -48,6 +49,7 @@ export const player = {
     socket.to(`map:${player.map}`).emit("player:create", player);
     socket.emit("party:list", world.parties.getLobbies());
     socket.emit("world:time", world.getTime());
+    socket.emit("economy:update", world.economy.getSnapshot());
   },
 
   delete: (io: Server, socket: Socket, world: World) => {

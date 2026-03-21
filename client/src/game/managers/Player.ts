@@ -52,6 +52,7 @@ export class PlayerManager {
       config.id,
       EntityName.PLAYER,
       config.health,
+      config.mana,
       config.facing!,
       [],
       new Map([

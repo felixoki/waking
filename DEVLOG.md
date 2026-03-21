@@ -287,17 +287,23 @@
 - Add chunk manager ✅
 - Add dissolve emitter ✅
 
+#### 19.3.2026
+- Add mana and health bar ✅
+- Add economy ui ✅
+- Add detail layers ✅
+- Butterfly effigy spell ✅
+- Lightning strike ✅
+
+
 ### In progress
 
-- Butterfly effigy spell
-- Add economy ui
-- Add detail layers
+- Light2D is broken for static entities
+- Entity creation queue
 
 ### Next up
 
-- Procedural forest generation ⭐
+- Procedural generation ⭐
   - Detail layer
-  - Entity creation queue
   - Static entity groups
   - Chunk-scoped socket rooms
   - Party leader authority
@@ -317,7 +323,6 @@
 
 - Jumping and rolling into a scene causes crash
 - Jumping down ignores collisions
-- Light2D is broken for static entities
 
 ### Backlog
 
@@ -325,9 +330,7 @@
   - Aim assist spell
   - Catch animal spell
   - Water fountain
-  - Lightning strike
   - Absorb life
-  - Add mana usage bar
   - Add spell impact preview
 
 - Effects ⭐

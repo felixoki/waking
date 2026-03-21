@@ -9,5 +9,6 @@ export interface PlayerConfig {
   y: number;
   facing: Direction;
   health: number;
+  mana: number;
   isHost: boolean;
 }

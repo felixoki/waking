@@ -112,6 +112,8 @@ export class MainScene extends Phaser.Scene {
       this.game.events.emit("camera:follow", { key: data.map, player });
 
       EventBus.emit("player:create:local", { id: data.id });
+      EventBus.emit("player:health", player.health);
+      EventBus.emit("player:mana", player.mana);
     });
 
     this.socketManager.on("player:create:others", (data: PlayerConfig[]) => {
@@ -140,6 +142,9 @@ export class MainScene extends Phaser.Scene {
 
       handlers.combat.hurt(player, data.health);
       handlers.combat.knockback(player, data.knockback);
+
+      if (player === this.playerManager.player)
+        EventBus.emit("player:health", player.health);
     });
 
     this.socketManager.on("player:transition", (data: PlayerConfig) => {
@@ -288,6 +293,16 @@ export class MainScene extends Phaser.Scene {
     EventBus.on("item:collect", (data: Item) => {
       this.socketManager.emit("item:collect", data);
     });
+
+    /**
+     * Economy
+     */
+    this.socketManager.on(
+      "economy:update",
+      (data: Record<string, number>) => {
+        EventBus.emit("economy:update", data);
+      },
+    );
 
     /**
      * Shared

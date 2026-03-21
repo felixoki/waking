@@ -23,46 +23,60 @@ export class MapFactory {
       })
       .filter((t): t is Phaser.Tilemaps.Tileset => t !== null);
 
-    tilemap.layers.forEach((data, index) => {
-      const name = data.name;
+    const rawLayers = scene.cache.tilemap.get(map)?.data?.layers ?? [];
 
-      if (name === "objects") return;
+    let tileLayerIndex = 0;
+    let objectLayerIndex = 0;
 
-      const properties = data.properties as TiledProperty[] | undefined;
+    rawLayers.forEach((rawLayer: any, overallIndex: number) => {
+      const depth = overallIndex * 10;
 
-      const hasCollision = properties?.some(
-        (prop) => prop.name === "collides" && prop.value === true,
-      );
+      if (rawLayer.type === "tilelayer") {
+        const data = tilemap.layers[tileLayerIndex];
+        const currentIndex = tileLayerIndex;
+        tileLayerIndex++;
 
-      const layer = tilemap.createLayer(name, tilesets, 0, 0);
+        if (!data || data.name === "objects") return;
 
-      if (!layer) return;
+        const properties = data.properties as TiledProperty[] | undefined;
 
-      layer.setPipeline('Light2D');
+        const hasCollision = properties?.some(
+          (prop) => prop.name === "collides" && prop.value === true,
+        );
 
-      if (hasCollision) {
-        layer.setCollisionByExclusion([-1, 0]);
-        this.createCollisions(scene, layer);
+        const layer = tilemap.createLayer(currentIndex, tilesets, 0, 0);
+
+        if (!layer) return;
+
+        layer.setPipeline('Light2D');
+
+        if (hasCollision) {
+          layer.setCollisionByExclusion([-1, 0]);
+          this.createCollisions(scene, layer);
+        }
+
+        layer.setDepth(depth);
       }
 
-      layer.setDepth(index * 10);
-    });
+      if (rawLayer.type === "objectgroup") {
+        const layer = tilemap.objects[objectLayerIndex];
+        objectLayerIndex++;
 
-    const objectLayers = tilemap.objects;
+        if (!layer) return;
 
-    objectLayers.forEach((layer) => {
-      const properties = layer.properties as TiledProperty[];
+        const properties = layer.properties as TiledProperty[];
 
-      if (!properties || !Array.isArray(properties)) return;
+        if (!properties || !Array.isArray(properties)) return;
 
-      const render = properties.some(
-        (prop) => prop.name === "renders" && prop.value === true,
-      );
+        const render = properties.some(
+          (prop) => prop.name === "renders" && prop.value === true,
+        );
 
-      const texture = properties.find((prop) => prop.name === "texture");
+        const texture = properties.find((prop) => prop.name === "texture");
 
-      if (render && texture)
-        this.createStaticLayer(scene, tilemap, layer, texture.value);
+        if (render && texture)
+          this.createStaticLayer(scene, tilemap, layer, texture.value, depth);
+      }
     });
 
     return tilemap;
@@ -73,6 +87,7 @@ export class MapFactory {
     tilemap: Phaser.Tilemaps.Tilemap,
     layer: Phaser.Tilemaps.ObjectLayer,
     texture: string,
+    depth: number,
   ): void {
     layer.objects.forEach((obj) => {
       if (!obj.gid) return;
@@ -86,7 +101,7 @@ export class MapFactory {
 
       const image = scene.add.image(x, y, texture, id);
       image.setOrigin(0, 1);
-      image.setDepth(50);
+      image.setDepth(depth);
       image.setPipeline('Light2D');
     });
   }
@@ -118,6 +133,7 @@ export class MapFactory {
             obj.width,
             obj.height,
           );
+
           rect.setVisible(false);
           scene.physics.add.existing(rect, true);
 
@@ -126,6 +142,7 @@ export class MapFactory {
             scene.physicsManager.groups.entities,
             rect,
           );
+
           bodies++;
         }
       });

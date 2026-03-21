@@ -7,6 +7,7 @@ export class EconomyManager {
   private needs: Map<NeedName, NeedConfig> = new Map();
   private tier: number = 1;
   private updated: number = Date.now();
+  public dirty: boolean = false;
 
   constructor(private supply: ItemsStore) {
     this._init();
@@ -31,6 +32,7 @@ export class EconomyManager {
       if (available > 0) {
         const consumption = need.consumption[this.tier] * days;
         this._consume(need, consumption);
+        this.dirty = true;
       }
     });
   }
@@ -67,5 +69,15 @@ export class EconomyManager {
 
     const threshold = need.threshold[this.tier];
     return this.getSupply(need) < threshold * 0.3;
+  }
+
+  getSnapshot(): Record<string, number> {
+    const snapshot: Record<string, number> = {};
+
+    this.needs.forEach((need) => {
+      snapshot[need.name] = Math.floor(this.getSupply(need));
+    });
+
+    return snapshot;
   }
 }

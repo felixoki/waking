@@ -4,12 +4,15 @@ export enum SpellName {
   ILLUMINATE = "illuminate",
   HURT_SHADOWS = "hurt_shadows",
   METEOR_SHOWER = "meteor_shower",
+  BUTTERFLY_EFFIGY = "butterfly_effigy",
+  LIGHTNING_STRIKE = "lightning_strike",
 }
 
 export interface SpellConfig {
   name: SpellName;
   damage: number;
   knockback: number;
+  mana: number;
   speed?: number;
   range?: number;
   duration?: number;

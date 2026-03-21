@@ -10,5 +10,10 @@ export const item = {
       name: data.name,
       quantity: data.quantity,
     });
+
+    const snapshot = world.economy.getSnapshot();
+    
+    socket.emit("economy:update", snapshot);
+    socket.broadcast.emit("economy:update", snapshot);
   },
 };

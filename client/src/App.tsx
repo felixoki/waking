@@ -8,6 +8,8 @@ import { Menu } from "./ui/Menu";
 import { Dialogue } from "./ui/Dialogue";
 import { Collection } from "./ui/Collection";
 import { PartyPanel as Party } from "./ui/Party";
+import { Stats } from "./ui/Stats";
+import { Economy } from "./ui/Economy";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -30,6 +32,8 @@ function App() {
     <div>
       <div id="game" className="w-screen h-screen"></div>
       <Entities />
+      <Stats />
+      <Economy />
       <div className="fixed top-0 left-0 flex flex-col gap-4 p-4">
         <Hotbar />
         <Inventory />

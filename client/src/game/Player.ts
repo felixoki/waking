@@ -33,6 +33,7 @@ export class Player extends Entity {
     id: string,
     name: EntityName,
     health: number,
+    mana: number,
     facing: Direction,
     moving: Direction[],
     states: Map<StateName, State>,
@@ -53,6 +54,7 @@ export class Player extends Entity {
       states,
     );
 
+    this.mana = mana;
     this.socketId = socketId;
     this.isHost = isHost;
     this.isControllable = isControllable;
@@ -83,8 +85,8 @@ export class Player extends Entity {
         { type: HotbarSlotType.SPELL, name: SpellName.ILLUMINATE },
         { type: HotbarSlotType.SPELL, name: SpellName.HURT_SHADOWS },
         { type: HotbarSlotType.SPELL, name: SpellName.METEOR_SHOWER },
-        null,
-        null,
+        { type: HotbarSlotType.SPELL, name: SpellName.BUTTERFLY_EFFIGY },
+        { type: HotbarSlotType.SPELL, name: SpellName.LIGHTNING_STRIKE },
         null,
       ]),
     );

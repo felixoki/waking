@@ -399,4 +399,226 @@ export const emitters = {
       embers.destroy();
     });
   },
+
+  butterfly: (scene: Scene, x: number, y: number) => {
+    const emitter = scene.add.particles(x, y, "particle_butterfly", {
+      tint: [
+        0x66ccff, 0x88ddff, 0xaa88ff, 0xdd66ff, 0xff66aa, 0xff8866, 0xffcc44,
+        0x66ffaa, 0x44ffdd, 0xccffff, 0xffffff,
+      ],
+      alpha: { start: 1, end: 0 },
+      scale: { start: 0.35, end: 0.15 },
+      speed: { min: 2, max: 8 },
+      lifespan: 900,
+      frequency: 50,
+      quantity: 1,
+      blendMode: "ADD",
+      rotate: { min: -25, max: 25 },
+    });
+    emitter.setDepth(2000);
+
+    return emitter;
+  },
+
+  lightning: (
+    scene: Scene,
+    source: { x: number; y: number },
+    dest: { x: number; y: number },
+  ) => {
+    const createBolt = (
+      sx: number,
+      sy: number,
+      dx: number,
+      dy: number,
+    ): { x: number; y: number }[] => {
+      const tanX = dx - sx;
+      const tanY = dy - sy;
+      const length = Math.sqrt(tanX * tanX + tanY * tanY);
+      const nx = tanY / length;
+      const ny = -tanX / length;
+
+      const positions: number[] = [0];
+      const segCount = Math.max(4, Math.floor(length / 4));
+
+      for (let i = 0; i < segCount; i++) positions.push(Math.random());
+
+      positions.sort((a, b) => a - b);
+
+      const sway = 60;
+      const jaggedness = 1 / sway;
+      const points: { x: number; y: number }[] = [{ x: sx, y: sy }];
+      let prevDisplacement = 0;
+
+      for (let i = 1; i < positions.length; i++) {
+        const pos = positions[i];
+        const scale = length * jaggedness * (pos - positions[i - 1]);
+        const envelope = pos > 0.95 ? 20 * (1 - pos) : 1;
+
+        let displacement = Phaser.Math.FloatBetween(-sway, sway);
+        displacement -= (displacement - prevDisplacement) * (1 - scale);
+        displacement *= envelope;
+
+        points.push({
+          x: sx + pos * tanX + displacement * nx,
+          y: sy + pos * tanY + displacement * ny,
+        });
+
+        prevDisplacement = displacement;
+      }
+
+      points.push({ x: dx, y: dy });
+      return points;
+    };
+
+    const drawBolt = (
+      g: Phaser.GameObjects.Graphics,
+      points: { x: number; y: number }[],
+      thickness: number,
+      color: number,
+      alpha: number,
+    ) => {
+      g.lineStyle(thickness, color, alpha);
+      g.beginPath();
+      g.moveTo(points[0].x, points[0].y);
+
+      for (let i = 1; i < points.length; i++)
+        g.lineTo(points[i].x, points[i].y);
+
+      g.strokePath();
+    };
+
+    const g = scene.add.graphics();
+    g.setDepth(2500);
+
+    const mainPoints = createBolt(source.x, source.y, dest.x, dest.y);
+
+    drawBolt(g, mainPoints, 2, 0x8888ff, 0.8);
+    drawBolt(g, mainPoints, 1, 0xffffff, 1);
+
+    for (let i = 0; i < mainPoints.length; i++) {
+      if (i % 2 !== 0) continue;
+      const p = mainPoints[i];
+
+      const spark = scene.add.particles(p.x, p.y, "particle_circle", {
+        tint: [0x8888ff, 0xaaaaff, 0xccccff, 0xffffff],
+        alpha: { start: 0.7, end: 0 },
+        scale: { start: 0.08, end: 0.01 },
+        speed: { min: 1, max: 5 },
+        lifespan: 2500,
+        quantity: 4,
+        frequency: -1,
+        blendMode: "ADD",
+      });
+      spark.setDepth(2500);
+      spark.explode();
+
+      scene.time.delayedCall(2500, () => spark.destroy());
+    }
+
+    const branchCount = Phaser.Math.Between(2, 5);
+    const diff = { x: dest.x - source.x, y: dest.y - source.y };
+
+    for (let b = 0; b < branchCount; b++) {
+      const t = Phaser.Math.FloatBetween(0.2, 0.7);
+      const idx = Math.min(
+        Math.floor(t * (mainPoints.length - 1)),
+        mainPoints.length - 2,
+      );
+      const branchStart = mainPoints[idx];
+
+      const branchAngle = ((b % 2 === 0 ? 1 : -1) * Math.PI) / 6;
+      const cos = Math.cos(branchAngle);
+      const sin = Math.sin(branchAngle);
+      const remaining = 1 - t;
+      const branchEnd = {
+        x:
+          branchStart.x +
+          (diff.x * remaining * cos - diff.y * remaining * sin) * 0.5,
+        y:
+          branchStart.y +
+          (diff.x * remaining * sin + diff.y * remaining * cos) * 0.5,
+      };
+
+      const branchPoints = createBolt(
+        branchStart.x,
+        branchStart.y,
+        branchEnd.x,
+        branchEnd.y,
+      );
+
+      drawBolt(g, branchPoints, 1.5, 0x8888ff, 0.6);
+      drawBolt(g, branchPoints, 0.5, 0xffffff, 0.8);
+
+      for (let j = 0; j < branchPoints.length; j++) {
+        if (j % 5 !== 0) continue;
+        const p = branchPoints[j];
+
+        const bSpark = scene.add.particles(p.x, p.y, "particle_circle", {
+          tint: [0x8888ff, 0xaaaaff, 0xffffff],
+          alpha: { start: 0.5, end: 0 },
+          scale: { start: 0.06, end: 0.01 },
+          speed: { min: 1, max: 4 },
+          lifespan: 2000,
+          quantity: 3,
+          frequency: -1,
+          blendMode: "ADD",
+        });
+        bSpark.setDepth(2500);
+        bSpark.explode();
+
+        scene.time.delayedCall(2000, () => bSpark.destroy());
+      }
+    }
+
+    const flash = scene.add.circle(dest.x, dest.y, 6, 0xccccff, 0.9);
+    flash.setDepth(2501);
+    flash.setBlendMode(Phaser.BlendModes.ADD);
+
+    scene.tweens.add({
+      targets: flash,
+      alpha: 0,
+      scaleX: 4,
+      scaleY: 4,
+      duration: 300,
+      onComplete: () => flash.destroy(),
+    });
+
+    scene.tweens.add({
+      targets: g,
+      alpha: 0,
+      duration: 600,
+      delay: 80,
+      onComplete: () => g.destroy(),
+    });
+
+    const sparks = scene.add.particles(dest.x, dest.y, "particle_circle", {
+      tint: [0xaaaaff, 0xccccff, 0xffffff, 0x6666ff],
+      alpha: { start: 1, end: 0 },
+      scale: { start: 0.15, end: 0.02 },
+      speed: { min: 20, max: 60 },
+      lifespan: 800,
+      quantity: 40,
+      frequency: -1,
+      blendMode: "ADD",
+    });
+    sparks.setDepth(2500);
+    sparks.explode();
+
+    scene.time.delayedCall(800, () => sparks.destroy());
+
+    const embers = scene.add.particles(dest.x, dest.y, "particle_circle", {
+      tint: [0x6666ff, 0x8888ff, 0xaaaaff, 0xffffff],
+      alpha: { start: 0.6, end: 0 },
+      scale: { start: 0.08, end: 0.01 },
+      speed: { min: 1, max: 6 },
+      lifespan: 3000,
+      quantity: 30,
+      frequency: -1,
+      blendMode: "ADD",
+    });
+    embers.setDepth(2501);
+    embers.explode();
+
+    scene.time.delayedCall(3000, () => embers.destroy());
+  },
 };

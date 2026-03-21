@@ -127,4 +127,98 @@ export const spells: Record<SpellName, SpellHandler> = {
       });
     }
   },
+
+  [SpellName.BUTTERFLY_EFFIGY]: (
+    entity: Entity,
+    config: SpellConfig,
+    target: { x: number; y: number },
+    _direction: { x: number; y: number },
+  ) => {
+    const count = 12;
+    const radius = config.radius! * 2;
+    const scene = entity.scene;
+
+    for (let i = 0; i < count; i++) {
+      const delay = i * 80;
+
+      scene.time.delayedCall(delay, () => {
+        const dest = {
+          x: target.x + Phaser.Math.Between(-radius, radius),
+          y: target.y + Phaser.Math.Between(-radius, radius),
+        };
+
+        const flightDuration = Phaser.Math.Between(800, 1200);
+        const amplitude = Phaser.Math.Between(12, 28);
+        const freq = Phaser.Math.Between(3, 6);
+        const startX = entity.x;
+        const startY = entity.y;
+        const angle = Math.atan2(dest.y - startY, dest.x - startX);
+        const perpAngle = angle + Math.PI / 2;
+
+        const hitbox = new Hitbox(
+          scene,
+          startX,
+          startY,
+          config.hitbox!.width,
+          config.hitbox!.height,
+          entity.id,
+          { ...config, duration: flightDuration + 500 },
+        );
+
+        const emitter = effects.emitters.butterfly(scene, startX, startY);
+        emitter.setPosition(0, 0);
+        emitter.startFollow(hitbox);
+
+        const progress = { value: 0 };
+
+        scene.tweens.add({
+          targets: progress,
+          value: 1,
+          duration: flightDuration,
+          ease: "Sine.easeInOut",
+          onUpdate: () => {
+            const t = progress.value;
+            const baseX = startX + (dest.x - startX) * t;
+            const baseY = startY + (dest.y - startY) * t;
+            const flutter =
+              Math.sin(t * Math.PI * freq) * amplitude * (1 - t * 0.3);
+
+            hitbox.setPosition(
+              baseX + Math.cos(perpAngle) * flutter,
+              baseY + Math.sin(perpAngle) * flutter,
+            );
+          },
+          onComplete: () => {
+            emitter.stop();
+            scene.time.delayedCall(800, () => emitter.destroy());
+          },
+        });
+      });
+    }
+  },
+
+  [SpellName.LIGHTNING_STRIKE]: (
+    entity: Entity,
+    config: SpellConfig,
+    target: { x: number; y: number },
+    _direction: { x: number; y: number },
+  ) => {
+    const scene = entity.scene;
+    const source = { x: target.x + Phaser.Math.Between(-40, 40), y: target.y - 350 };
+
+    effects.emitters.lightning(scene, source, target);
+
+    scene.cameras.main.shake(200, 0.003);
+    scene.cameras.main.flash(100, 200, 200, 255);
+
+    new Hitbox(
+      scene,
+      target.x,
+      target.y,
+      config.hitbox!.width,
+      config.hitbox!.height,
+      entity.id,
+      config,
+    );
+  },
 };

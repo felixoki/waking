@@ -41,6 +41,20 @@ export class Preloader {
       g.destroy();
     }
 
+    if (!scene.textures.exists("particle_butterfly")) {
+      const g = scene.add.graphics();
+      g.fillStyle(0xffffff);
+
+      g.fillTriangle(7, 7, 1, 1, 1, 9);
+      g.fillTriangle(7, 9, 2, 9, 3, 14);
+      g.fillTriangle(9, 7, 15, 1, 15, 9);
+      g.fillTriangle(9, 9, 14, 9, 13, 14);
+      g.fillRect(7, 3, 2, 12);
+
+      g.generateTexture("particle_butterfly", 16, 16);
+      g.destroy();
+    }
+
     /**
      * Tilemap
      */
@@ -57,7 +71,7 @@ export class Preloader {
           {
             frameWidth: spritesheet.frameWidth || 64,
             frameHeight: spritesheet.frameHeight || 64,
-          }
+          },
         );
       }
     });

@@ -68,6 +68,11 @@ export class World {
     }
 
     this.economy.update();
+
+    if (this.economy.dirty) {
+      this.economy.dirty = false;
+      this.server.emit("economy:update", this.economy.getSnapshot());
+    }
   }
 
   getTime(): TimeState {

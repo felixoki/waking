@@ -5630,10 +5630,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="16" name="grass_ground_details">
+ <objectgroup id="16" name="ground_grass_details">
   <properties>
    <property name="renders" type="bool" value="true"/>
-   <property name="texture" value="grass_ground_details"/>
+   <property name="texture" value="ground_grass_details"/>
   </properties>
   <object id="52" gid="4130" x="442.084" y="655.89" width="16" height="16"/>
   <object id="53" gid="4151" x="442.056" y="671.966" width="16" height="16"/>
