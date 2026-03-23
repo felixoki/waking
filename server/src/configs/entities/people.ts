@@ -125,6 +125,120 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
       },
     },
   },
+  [EntityName.GLASSBLOWER]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.INTERACTABLE },
+      {
+        name: ComponentName.COLLECTOR,
+        config: {
+          accepts: [EntityName.QUARTZ1],
+        },
+      },
+      { name: ComponentName.ANIMATION },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 8,
+          height: 12,
+          offsetX: 12,
+          offsetY: 12,
+          pushable: false,
+        },
+      },
+      { name: ComponentName.BEHAVIOR_QUEUE },
+    ],
+    states: [StateName.IDLE],
+    behaviors: [{ name: BehaviorName.STAY }],
+    dialogue: {
+      [NodeId.GREETING]: {
+        ref: NodeId.GREETING,
+        individual: [
+          {
+            text: "Are you looking for quartz?",
+            effects: [
+              {
+                name: DialogueEffectName.COLLECTION_START,
+              },
+            ],
+          },
+          {
+            text: "What is your role in this village?",
+            next: NodeId.STORY,
+          },
+        ],
+      },
+      [NodeId.STORY]: {
+        text: "I am the village glassblower. I collect quartz and craft glass items to help the villagers. If you find any, please bring them to me.",
+        choices: [
+          {
+            ref: ChoiceId.GOODBYE,
+            effects: [{ name: DialogueEffectName.CONVERSATION_END }],
+          },
+        ],
+      },
+    },
+  },
+  [EntityName.GREENGROCER]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.INTERACTABLE },
+      {
+        name: ComponentName.COLLECTOR,
+        config: {
+          accepts: [EntityName.VENISON_MEAT],
+        },
+      },
+      { name: ComponentName.ANIMATION },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 8,
+          height: 12,
+          offsetX: 12,
+          offsetY: 12,
+          pushable: false,
+        },
+      },
+      { name: ComponentName.BEHAVIOR_QUEUE },
+    ],
+    states: [StateName.IDLE],
+    behaviors: [{ name: BehaviorName.STAY }],
+    dialogue: {
+      [NodeId.GREETING]: {
+        ref: NodeId.GREETING,
+        individual: [
+          {
+            text: "Are you looking for venison meat?",
+            effects: [
+              {
+                name: DialogueEffectName.COLLECTION_START,
+              },
+            ],
+          },
+          {
+            text: "What is your role in this village?",
+            next: NodeId.STORY,
+          },
+        ],
+      },
+      [NodeId.STORY]: {
+        text: "I am the village greengrocer. I collect venison meat and provide fresh produce to the villagers. If you find any, please bring them to me.",
+        choices: [
+          {
+            ref: ChoiceId.GOODBYE,
+            effects: [{ name: DialogueEffectName.CONVERSATION_END }],
+          },
+        ],
+      },
+    },
+  },
   [EntityName.CITIZEN1]: {
     facing: Direction.DOWN,
     moving: [],

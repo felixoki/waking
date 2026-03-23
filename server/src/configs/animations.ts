@@ -47,6 +47,20 @@ export const animations: Partial<
       repeat: -1,
     },
   },
+  [EntityName.GLASSBLOWER]: {
+    [StateName.IDLE]: {
+      frameCount: 12,
+      frameRate: 14,
+      repeat: -1,
+    },
+  },
+  [EntityName.GREENGROCER]: {
+    [StateName.IDLE]: {
+      frameCount: 12,
+      frameRate: 14,
+      repeat: -1,
+    },
+  },
   [EntityName.BLACKSMITH]: {
     [StateName.IDLE]: {
       frameCount: 6,

@@ -11,6 +11,7 @@ export class Scene extends Phaser.Scene {
   public tileManager!: TileManager;
   public cameraManager!: CameraManager;
   public interfaceManager!: InterfaceManager;
+  public light!: Phaser.GameObjects.Rectangle;
 
   get managers() {
     const main = this.scene.get("main") as MainScene;
@@ -31,13 +32,19 @@ export class Scene extends Phaser.Scene {
     this.lights.enable();
     this.lights.setAmbientColor(0xffffff);
 
+    this.light = this.add.rectangle(0, 0, 1, 1, 0xffffff);
+    this.light.setOrigin(0, 0);
+    this.light.setDepth(Number.MAX_SAFE_INTEGER);
+    this.light.setBlendMode(Phaser.BlendModes.MULTIPLY);
+    this.light.setPipeline("Light2D");
+    this.light.setScrollFactor(0);
+
     this.cameras.main.setPostPipeline(PipelineName.AMBIENCE);
 
     this.game.events.on(
       "camera:follow",
       (data: { key: string; player: Player }) => {
-        if (data.key === this.scene.key)
-          this.cameraManager.follow(data.player);
+        if (data.key === this.scene.key) this.cameraManager.follow(data.player);
       },
     );
   }
@@ -45,6 +52,9 @@ export class Scene extends Phaser.Scene {
   update(_time: number, delta: number): void {
     this.tileManager?.update(delta);
     this.interfaceManager.update();
+
+    const { width, height } = this.cameras.main;
+    this.light.setSize(width, height);
   }
 
   shutdown(): void {

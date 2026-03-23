@@ -137,7 +137,18 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
     moving: [],
     components: [
       { name: ComponentName.ANIMATION },
-      { name: ComponentName.DAMAGEABLE },
+      { name: ComponentName.DAMAGEABLE,
+        config: {
+          loot: [
+            {
+              name: EntityName.VENISON_MEAT,
+              quantity: 1,
+              stackable: true,
+              chance: 1,
+            },
+          ],
+        },
+       },
       { name: ComponentName.BEHAVIOR_QUEUE },
       {
         name: ComponentName.BODY,

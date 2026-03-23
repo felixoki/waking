@@ -18,16 +18,10 @@ export const creatures: Partial<Record<EntityName, EntityDefinition>> = {
         config: {
           loot: [
             {
-              name: EntityName.FLYAMINATA1,
+              name: EntityName.QUARTZ1,
               quantity: 1,
               stackable: true,
               chance: 1,
-            },
-            {
-              name: EntityName.BASKETFERN,
-              quantity: 1,
-              stackable: true,
-              chance: 0.25,
             },
           ],
         },

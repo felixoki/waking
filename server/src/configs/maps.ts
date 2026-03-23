@@ -126,6 +126,44 @@ const animals: Spritesheet[] = [
   },
 ];
 
+const plants: Spritesheet[] = [
+  {
+    key: "plants_bushes",
+    file: "plants_bushes.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "reed",
+    file: "reed.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "gathering1",
+    file: "gathering1.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "gathering2",
+    file: "gathering2.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "gathering3",
+    file: "gathering3.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+];
+
 const buildings: Spritesheet[] = [
   {
     key: "village_herbalist_house",
@@ -169,6 +207,13 @@ const buildings: Spritesheet[] = [
     frameHeight: 16,
     asTileset: true,
   },
+  {
+    key: "village_fishing_dock_house",
+    file: "village_fishing_dock_house.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
 ];
 
 const citizens: Spritesheet[] = [
@@ -181,6 +226,12 @@ const citizens: Spritesheet[] = [
   {
     key: "citizen1-walking",
     file: "citizen1_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "greengrocer-idle",
+    file: "greengrocer_idle.png",
     frameWidth: 32,
     frameHeight: 32,
   },
@@ -202,6 +253,7 @@ export const maps: Record<MapName, MapConfig> = {
     spritesheets: [
       ...player,
       ...animals,
+      ...plants,
       ...buildings,
       ...citizens,
       {
@@ -226,6 +278,20 @@ export const maps: Record<MapName, MapConfig> = {
         asTileset: true,
       },
       {
+        key: "village_fishing_dock_boat1",
+        file: "village_fishing_dock_boat1.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_fishing_dock_ground",
+        file: "village_fishing_dock_ground.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
         key: "ground_grass",
         file: "ground_grass.png",
         frameWidth: 16,
@@ -240,15 +306,15 @@ export const maps: Record<MapName, MapConfig> = {
         asTileset: true,
       },
       {
-        key: "plants_bushes",
-        file: "plants_bushes.png",
+        key: "crystals",
+        file: "crystals.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
       },
       {
-        key: "reed",
-        file: "reed.png",
+        key: "icons1",
+        file: "icons1.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
@@ -383,7 +449,7 @@ export const maps: Record<MapName, MapConfig> = {
   },
   [MapName.GLASSBLOWER_HOUSE]: {
     id: MapName.GLASSBLOWER_HOUSE,
-    spawn: { x: 128, y: 168 },
+    spawn: { x: 144, y: 272 },
     json: "glassblower_house.json",
     isIndoor: true,
     spritesheets: [
@@ -394,6 +460,33 @@ export const maps: Record<MapName, MapConfig> = {
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
+      },
+      {
+        key: "village_glassblower_forge",
+        file: "village_glassblower_forge.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_glassblower_interior",
+        file: "village_glassblower_interior.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_glassblower_master",
+        file: "village_glassblower_master.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "glassblower-idle",
+        file: "glassblower_idle.png",
+        frameWidth: 32,
+        frameHeight: 32,
       },
     ],
   },
@@ -451,6 +544,7 @@ export const maps: Record<MapName, MapConfig> = {
     spritesheets: [
       ...player,
       ...animals,
+      ...plants,
       ...creatures,
       {
         key: "village_home",
@@ -476,20 +570,6 @@ export const maps: Record<MapName, MapConfig> = {
       {
         key: "ground_grass_details",
         file: "ground_grass_details.png",
-        frameWidth: 16,
-        frameHeight: 16,
-        asTileset: true,
-      },
-      {
-        key: "plants_bushes",
-        file: "plants_bushes.png",
-        frameWidth: 16,
-        frameHeight: 16,
-        asTileset: true,
-      },
-      {
-        key: "reed",
-        file: "reed.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,

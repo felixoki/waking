@@ -52,6 +52,9 @@ export class AttackBehavior extends Behavior {
       return {};
     }
 
+    if (!this.target.lastPosition)
+      this.target.lastPosition = { x: target.x, y: target.y };
+
     const now = Date.now();
 
     const canSee = handlers.vision.canSee(

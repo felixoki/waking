@@ -78,4 +78,97 @@ export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
       stackable: true,
     },
   },
+  [EntityName.BELLADONNA]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      {
+        name: ComponentName.TEXTURE,
+        config: {
+          spritesheet: "gathering1",
+          tileSize: 16,
+          tiles: [
+            { row: 15, start: 7, end: 8 },
+            { row: 16, start: 7, end: 8 },
+          ],
+        },
+        key: "belladonna_texture",
+      },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 16,
+          height: 16,
+          offsetX: 0,
+          offsetY: 0,
+          collides: false,
+          static: true,
+        },
+      },
+      {
+        name: ComponentName.BOUNCE,
+      },
+      {
+        name: ComponentName.POINTABLE,
+      },
+      {
+        name: ComponentName.PICKABLE,
+      },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Belladonna",
+      description: "A poisonous plant with striking purple flowers.",
+      stackable: true,
+    },
+  },
+  [EntityName.SUNFLOWER]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      {
+        name: ComponentName.TEXTURE,
+        config: {
+          spritesheet: "gathering3",
+          tileSize: 16,
+          tiles: [
+            { row: 25, start: 5, end: 6 },
+            { row: 26, start: 5, end: 6 },
+            { row: 27, start: 5, end: 6 },
+          ],
+        },
+        key: "sunflower_texture",
+      },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 16,
+          height: 16,
+          offsetX: 0,
+          offsetY: 0,
+          collides: false,
+          static: true,
+        },
+      },
+      {
+        name: ComponentName.BOUNCE,
+      },
+      {
+        name: ComponentName.POINTABLE,
+      },
+      {
+        name: ComponentName.PICKABLE,
+      },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Belladonna",
+      description: "A poisonous plant with striking purple flowers.",
+      stackable: true,
+    },
+  },
 };

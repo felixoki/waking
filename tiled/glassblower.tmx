@@ -1,13 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="18" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="2">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="18" height="18" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="4">
  <editorsettings>
   <export target="../client/public/assets/maps/glassblower_house.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="village_glassblower_walls_floor" tilewidth="16" tileheight="16" tilecount="272" columns="16">
   <image source="../client/public/assets/sprites/village_glassblower_walls_floor.png" width="256" height="272"/>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="6" width="16" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="105">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="6" width="16" height="10"/>
+   </objectgroup>
+  </tile>
+  <tile id="107">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="6" width="16" height="10"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="273" name="village_glassblower_interior" tilewidth="16" tileheight="16" tilecount="507" columns="13">
   <image source="../client/public/assets/sprites/village_glassblower_interior.png" width="208" height="624"/>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="11.9987" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="28">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="29">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="30">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="31">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="32">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="33">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="34">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="35">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="36">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="12" width="16" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="67">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="68">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="6.00457" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="80">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="81">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="6" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="93">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="94">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="6" y="0" width="10" height="16"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="780" name="village_glassblower_forge" tilewidth="16" tileheight="16" tilecount="144" columns="24">
   <image source="../client/public/assets/sprites/village_glassblower_forge.png" width="384" height="96"/>
@@ -728,6 +873,9 @@
 </data>
  </layer>
  <layer id="4" name="interior1" width="18" height="18">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -750,6 +898,9 @@
 </data>
  </layer>
  <layer id="3" name="interior2" width="18" height="18">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -772,6 +923,9 @@
 </data>
  </layer>
  <layer id="1" name="walls" width="18" height="18">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 18,18,81,82,82,82,82,82,82,82,82,82,82,82,82,83,18,18,
 81,82,92,6,139,133,139,139,139,139,132,133,139,131,78,91,82,83,
@@ -861,5 +1015,7 @@
  </layer>
  <objectgroup id="9" name="objects">
   <object id="1" name="Glassblower_Exit" x="144" y="272" width="1" height="1"/>
+  <object id="2" name="Glassblower" x="144" y="216" width="1" height="1"/>
+  <object id="3" name="Light" x="142" y="68" width="1" height="1"/>
  </objectgroup>
 </map>

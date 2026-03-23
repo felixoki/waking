@@ -6059,28 +6059,6 @@
                 }, 
                 {
                  "height":1,
-                 "id":8,
-                 "name":"FlyAminata1",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1,
-                 "x":400,
-                 "y":640
-                }, 
-                {
-                 "height":1,
-                 "id":9,
-                 "name":"BasketFern",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1,
-                 "x":528,
-                 "y":560
-                }, 
-                {
-                 "height":1,
                  "id":34,
                  "name":"Bush1",
                  "rotation":0,
@@ -6815,8 +6793,7 @@
                  "width":1,
                  "x":144,
                  "y":512
-                },
-            
+                }, 
                 {
                  "height":1,
                  "id":437,
@@ -6838,7 +6815,8 @@
                  "width":1,
                  "x":192,
                  "y":560
-                }, 
+                },
+            
                 {
                  "height":1,
                  "id":439,
@@ -7265,8 +7243,8 @@
                  "type":"",
                  "visible":true,
                  "width":1,
-                 "x":450,
-                 "y":588
+                 "x":448,
+                 "y":572
                 }, 
                 {
                  "height":1,
@@ -7322,6 +7300,39 @@
                  "width":1,
                  "x":182,
                  "y":1210
+                }, 
+                {
+                 "height":1,
+                 "id":493,
+                 "name":"Greengrocer",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1,
+                 "x":320,
+                 "y":1120
+                }, 
+                {
+                 "height":2.92850269840608,
+                 "id":498,
+                 "name":"Belladonna",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.09178764171861,
+                 "x":560.599087980588,
+                 "y":576.915031585993
+                }, 
+                {
+                 "height":3.0812172620665,
+                 "id":499,
+                 "name":"Sunflower",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.99372881663135,
+                 "x":576.187628006452,
+                 "y":588.874993203197
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -7330,7 +7341,7 @@
          "y":0
         }],
  "nextlayerid":34,
- "nextobjectid":492,
+ "nextobjectid":500,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

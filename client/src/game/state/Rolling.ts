@@ -28,13 +28,14 @@ export class Rolling implements State {
   update(_entity: Entity): void {}
 
   exit(entity: Entity): void {
-    entity.body.setVelocity(0, 0);
-
     if (this.timer) {
       this.timer.destroy();
       this.timer = null;
     }
 
+    if (!entity.body) return;
+
+    (entity.body as Phaser.Physics.Arcade.Body).setVelocity(0, 0);
     entity.isLocked = false;
 
     const reset = entity.states?.get(StateName.IDLE);

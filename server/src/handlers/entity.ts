@@ -73,8 +73,7 @@ export const entity = {
     world.chunks.removeEntity(entity.id);
     world.entities.remove(entity.id);
 
-    if (key)
-      socket.to(`chunk:${key}`).emit("entity:despawn", { id: entity.id });
-    socket.emit("entity:despawn", { id: entity.id });
+    if (key) socket.to(`chunk:${key}`).emit("entity:despawn", entity.id);
+    socket.emit("entity:despawn", entity.id);
   },
 };

@@ -294,17 +294,26 @@
 - Butterfly effigy spell ✅
 - Lightning strike ✅
 
+#### 21.3.2026
+- Play testing ✅
+
+#### 22.3.2026
+- Add belladonna ✅
+- Fix flee and attack behavior ✅
+
+#### 23.3.2026
+- Light2D is broken for static entities ✅
+- Jumping and rolling into a scene causes crash ✅
 
 ### In progress
 
-- Light2D is broken for static entities
 - Entity creation queue
+- Static entity groups
 
 ### Next up
 
 - Procedural generation ⭐
   - Detail layer
-  - Static entity groups
   - Chunk-scoped socket rooms
   - Party leader authority
 
@@ -321,8 +330,8 @@
 
 ### Bugs
 
-- Jumping and rolling into a scene causes crash
 - Jumping down ignores collisions
+- Party is stuck on leave after leaving
 
 ### Backlog
 
@@ -424,6 +433,7 @@
 - Blue lotus
 - Bearded tooth fungus
 - Clary sage
+- Belladonna
 
 ### Dungeon
 

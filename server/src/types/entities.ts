@@ -46,6 +46,7 @@ export enum EntityName {
   BLACKSMITH_EXIT = "blacksmith_exit",
   GLASSBLOWER_HOUSE = "glassblower_house",
   GLASSBLOWER_EXIT = "glassblower_exit",
+  GLASSBLOWER = "glassblower",
   MARKET_STAND1 = "market_stand1",
   MARKET_STAND2 = "market_stand2",
   MARKET_STAND3 = "market_stand3",
@@ -95,6 +96,10 @@ export enum EntityName {
   BARRELS1 = "barrels1",
   CITIZEN1 = "citizen1",
   TORCH1 = "torch1",
+  QUARTZ1 = "quartz1",
+  GREENGROCER = "greengrocer",
+  BELLADONNA = "belladonna",
+  SUNFLOWER = "sunflower",
 }
 
 export interface EntityPickup {

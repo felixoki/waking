@@ -48,8 +48,6 @@ export class MapFactory {
 
         if (!layer) return;
 
-        layer.setPipeline('Light2D');
-
         if (hasCollision) {
           layer.setCollisionByExclusion([-1, 0]);
           this.createCollisions(scene, layer);
@@ -102,7 +100,6 @@ export class MapFactory {
       const image = scene.add.image(x, y, texture, id);
       image.setOrigin(0, 1);
       image.setDepth(depth);
-      image.setPipeline('Light2D');
     });
   }
 
