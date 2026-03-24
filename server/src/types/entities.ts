@@ -101,11 +101,3 @@ export enum EntityName {
   BELLADONNA = "belladonna",
   SUNFLOWER = "sunflower",
 }
-
-export interface EntityPickup {
-  id: string;
-}
-
-export interface EntityDestroy {
-  id: string;
-}

@@ -8,7 +8,7 @@ export const PartyPanel = () => {
   const [lobbies, setLobbies] = useState<Party[]>([]);
 
   useEffect(() => {
-    const local = (data: { id: string }) => setPlayerId(data.id);
+    const local = (data: string) => setPlayerId(data);
     const list = (data: Party[]) => setLobbies(data);
     const create = (data: Party) => setParty(data);
     const update = (data: Party) => setParty(data);

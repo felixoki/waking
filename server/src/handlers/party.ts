@@ -100,7 +100,7 @@ export const party = {
 
       socket.leave(`map:${MapName.REALM}`);
       socket.join(`map:${MapName.VILLAGE}`);
-      socket.to(`map:${MapName.REALM}`).emit("player:leave", { id: player.id });
+      socket.to(`map:${MapName.REALM}`).emit("player:leave", player.id);
 
       const updated = world.players.get(player.id);
       const others = world.players.getOthersOnMap(player.id, MapName.VILLAGE);
@@ -183,7 +183,7 @@ export const party = {
 
       memberSocket.leave(`map:${prev}`);
       memberSocket.join(`map:${MapName.REALM}`);
-      memberSocket.to(`map:${prev}`).emit("player:leave", { id: member.id });
+      memberSocket.to(`map:${prev}`).emit("player:leave", member.id);
 
       handlers.chunks.sync.player(
         memberSocket,

@@ -90,7 +90,7 @@ export class PatrolBehavior extends Behavior {
     if (!this.target && !this.path.length) this.target = this._getRandomPoint();
 
     if (this.target && !this.path.length) {
-      const grid = handlers.path.getGrid(entity.scene);
+      const grid = handlers.path.getGrid(entity);
 
       if (!grid.length || !entity.scene.tileManager) return {};
 

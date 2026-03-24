@@ -32,9 +32,7 @@ export class PickableComponent extends Component {
 
     if (!inventory?.add(this.entity.name)) return;
 
-    this.entity.scene.game.events.emit("entity:pickup", {
-      id: this.entity.id,
-    });
+    this.entity.scene.game.events.emit("entity:pickup", this.entity.id);
 
     this.entity.scene.managers.entities.remove(this.entity.id);
   }

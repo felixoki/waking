@@ -1,5 +1,4 @@
 import { DIRECTIONS, DIRECTIONS_CARDINAL } from "@server/globals";
-import { Scene } from "../scenes/Scene";
 import { Entity } from "../Entity";
 import { Input, Stuck, Waypoint } from "@server/types";
 import { handlers } from ".";
@@ -176,17 +175,13 @@ export const path = {
     return null;
   },
 
-  getGrid: (scene: Scene): number[][] => {
-    const { tileManager } = scene;
+  getGrid: (entity: Entity): number[][] => {
+    const { tileManager } = entity.scene;
     if (!tileManager) return [];
 
     return path.mergeObstacles(
       tileManager.getCollisionGrid(),
-      scene.managers.entities.getStatic(
-        scene,
-        tileManager.map.tileWidth,
-        tileManager.map.tileHeight,
-      ),
+      entity.scene.managers.entities.getStatic(entity.x, entity.y),
     );
   },
 

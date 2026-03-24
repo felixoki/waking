@@ -57,7 +57,7 @@ export class FleeBehavior extends Behavior {
     }
 
     if (this.exit && !this.path.length) {
-      const grid = handlers.path.getGrid(entity.scene);
+      const grid = handlers.path.getGrid(entity);
       if (!grid.length) return {};
 
       const start = {

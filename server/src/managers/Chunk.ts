@@ -30,6 +30,7 @@ export class ChunkManager {
 
     if (!this.entitiesInChunk.has(key))
       this.entitiesInChunk.set(key, new Set());
+
     this.entitiesInChunk.get(key)!.add(id);
   }
 

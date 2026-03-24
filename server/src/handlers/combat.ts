@@ -55,8 +55,9 @@ export const combat = {
     if (entity && health <= 0) {
       entities.remove(entity.id);
 
-      socket.to(`map:${entity.map}`).emit("entity:destroy", { id: entity.id });
-      socket.emit("entity:destroy", { id: entity.id });
+      const key = world.chunks.getChunkByEntity(entity.id);
+      if (key) socket.to(`chunk:${key}`).emit("entity:destroy", entity.id);
+      socket.emit("entity:destroy", entity.id);
 
       const definition = configs.entities[entity.name];
       const damagable = definition?.components.find(
@@ -64,9 +65,9 @@ export const combat = {
       );
 
       if (damagable && damagable.config) {
-        const loot = damagable.config.loot;
+        const items = damagable.config.loot;
 
-        loot.forEach((entry: Item & { chance: number }) => {
+        items.forEach((entry: Item & { chance: number }) => {
           if (Math.random() > entry.chance) return;
 
           const item: EntityConfig = {
@@ -80,7 +81,8 @@ export const combat = {
 
           world.entities.add(item.id, item);
 
-          socket.to(`map:${entity.map}`).emit("entity:create", item);
+          const key = world.chunks.getChunkByEntity(item.id);
+          if (key) socket.to(`chunk:${key}`).emit("entity:create", item);
           socket.emit("entity:create", item);
         });
       }
@@ -98,8 +100,9 @@ export const combat = {
     };
 
     const emit = entity ? "entity:hurt" : "player:hurt";
+    const key = world.chunks.getChunkByEntity(target.id);
 
-    socket.to(`map:${target.map}`).emit(emit, event);
+    if (key) socket.to(`chunk:${key}`).emit(emit, event);
     socket.emit(emit, event);
   },
 };

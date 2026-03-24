@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityName, EntityPickup, Input, MapName, Spot } from "../types";
+import { EntityName, Input, MapName, Spot } from "../types";
 import { randomInt, randomUUID } from "crypto";
 import { World } from "../World";
 
@@ -40,8 +40,8 @@ export const entity = {
     socket.to(`chunk:${key}`).emit("entity:input", data);
   },
 
-  pickup: (data: EntityPickup, socket: Socket, world: World) => {
-    const entity = world.entities.get(data.id);
+  pickup: (data: string, socket: Socket, world: World) => {
+    const entity = world.entities.get(data);
     if (!entity) return;
 
     const key = world.chunks.getChunkByEntity(entity.id);
@@ -49,8 +49,7 @@ export const entity = {
     world.chunks.removeEntity(entity.id);
     world.entities.remove(entity.id);
 
-    if (key)
-      socket.to(`chunk:${key}`).emit("entity:destroy", { id: entity.id });
+    if (key) socket.to(`chunk:${key}`).emit("entity:destroy", entity.id);
   },
 
   spot: (data: Spot, socket: Socket, world: World) => {

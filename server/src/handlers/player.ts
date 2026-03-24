@@ -70,11 +70,15 @@ export const player = {
 
       const hostSocket = io.sockets.sockets.get(host.socketId);
       hostSocket?.emit("player:host:transfer");
-      
+
       handlers.chunks.sync.host(io, world);
     }
 
-    socket.broadcast.emit("player:leave", { id: player.id });
+    const keys = world.chunks.clearPlayer(player.id);
+    keys.forEach((key) => {
+      socket.to(`chunk:${key}`).emit("player:leave", player.id);
+      socket.leave(`chunk:${key}`);
+    });
   },
 
   input: (data: Input, io: Server, socket: Socket, world: World) => {
@@ -92,7 +96,8 @@ export const player = {
       },
     });
 
-    socket.broadcast.emit("player:input", data);
+    const key = world.chunks.getChunkByEntity(data.id!);
+    if (key) socket.to(`chunk:${key}`).emit("player:input", data);
 
     const { activated, deactivated } = handlers.chunks.sync.player(
       socket,
@@ -124,7 +129,7 @@ export const player = {
 
     socket.leave(`map:${prev.map}`);
     socket.join(`map:${data.to}`);
-    socket.to(`map:${prev.map}`).emit("player:leave", { id: player.id });
+    socket.to(`map:${prev.map}`).emit("player:leave", player.id);
 
     const updated = world.players.get(player.id);
     const others = world.players.getOthersOnMap(player.id, data.to);

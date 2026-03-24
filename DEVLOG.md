@@ -304,17 +304,23 @@
 #### 23.3.2026
 - Light2D is broken for static entities ✅
 - Jumping and rolling into a scene causes crash ✅
+- Entity creation queue ✅
+- Static entity groups ✅
+- Chunk-scoped socket rooms ✅
+
+#### 24.3.2026
 
 ### In progress
 
-- Entity creation queue
-- Static entity groups
+- Add party loading screen
+- Party is stuck on leave after leaving
+- Add plantable and growable component
+
 
 ### Next up
 
 - Procedural generation ⭐
   - Detail layer
-  - Chunk-scoped socket rooms
   - Party leader authority
 
 - Save files ⭐
@@ -323,15 +329,9 @@
   - Add manual saves
   - Add save file loading
 
-- General
-  - Add crafting behavior
-  - Add idle-action state
-  - Lock entities during interaction
-
 ### Bugs
 
 - Jumping down ignores collisions
-- Party is stuck on leave after leaving
 
 ### Backlog
 
@@ -347,11 +347,8 @@
   - Add resistances and weaknesses
 
 - Farming ⭐
-  - Add plantable and growable component
 
 - Animal keeping ⭐
-
-- Harbor district ⭐
 
 - Game sounds ⭐
   - Add music and ambience
@@ -360,6 +357,9 @@
   - Improve depth sorting system
   - Add throttling network updates and change detection
   - Update interpolation system
+  - Add crafting behavior
+  - Add idle-action state
+  - Lock entities during interaction
 
 ## Economy
 
@@ -378,6 +378,7 @@
 - Tier 3: Wine
 
 **Cloths**
+- Tier 1: Deer hide
 - Tier 2: Sheep wool, Fox pelt
 
 ## Collectors
@@ -418,7 +419,7 @@
 
 - Goblin1 (Rat meat, bones)
 - Goblin2 (Rat meat, bones)
-- Orc1 (Iron ore)
+- Orc1 (Iron ore, Quartz)
 
 #### Boss
 

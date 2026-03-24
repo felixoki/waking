@@ -21,6 +21,10 @@ export class Scene extends Phaser.Scene {
       entities: main.entityManager,
       socket: main.socketManager,
       chunks: main.chunkManager,
+      physics: this.physicsManager,
+      tile: this.tileManager,
+      camera: this.cameraManager,
+      interface: this.interfaceManager,
     };
   }
 

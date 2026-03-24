@@ -5,8 +5,6 @@ import {
   EntityConfig,
   PlayerConfig,
   Input,
-  EntityPickup,
-  EntityDestroy,
   Hit,
   Hurt,
   MapName,
@@ -35,6 +33,16 @@ export class MainScene extends Phaser.Scene {
 
   constructor() {
     super("main");
+  }
+
+  get managers() {
+    return {
+      players: this.playerManager,
+      entities: this.entityManager,
+      ambience: this.ambienceManager,
+      socket: this.socketManager,
+      chunks: this.chunkManager,
+    };
   }
 
   create(): void {
@@ -111,7 +119,7 @@ export class MainScene extends Phaser.Scene {
 
       this.game.events.emit("camera:follow", { key: data.map, player });
 
-      EventBus.emit("player:create:local", { id: data.id });
+      EventBus.emit("player:create:local", data.id);
       EventBus.emit("player:health", player.health);
       EventBus.emit("player:mana", player.mana);
     });
@@ -126,8 +134,8 @@ export class MainScene extends Phaser.Scene {
       this.playerManager.add(data, false);
     });
 
-    this.socketManager.on("player:leave", (data: { id: string }) => {
-      this.playerManager.remove(data.id);
+    this.socketManager.on("player:leave", (data: string) => {
+      this.playerManager.remove(data);
     });
 
     this.socketManager.on("player:input", (data: Input) => {
@@ -179,13 +187,11 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.socketManager.on("entity:create:all", (data: EntityConfig[]) => {
-      data.forEach((config) => {
-        this.entityManager.add(config);
-      });
+      this.entityManager.batch(data);
     });
 
-    this.socketManager.on("entity:destroy", (data: EntityDestroy) => {
-      const entity = this.entityManager.entities.get(data.id);
+    this.socketManager.on("entity:destroy", (data: string) => {
+      const entity = this.entityManager.entities.get(data);
 
       if (entity) {
         const damageable = entity.getComponent<DamageableComponent>(
@@ -196,7 +202,7 @@ export class MainScene extends Phaser.Scene {
           effects.emitters.dissolve(entity);
       }
 
-      this.entityManager.remove(data.id);
+      this.entityManager.remove(data);
     });
 
     this.socketManager.on("entity:despawn", (data: string) => {
@@ -235,7 +241,7 @@ export class MainScene extends Phaser.Scene {
       this.socketManager.emit("entity:input", data);
     });
 
-    this.game.events.on("entity:pickup", (data: EntityPickup) => {
+    this.game.events.on("entity:pickup", (data: string) => {
       this.socketManager.emit("entity:pickup", data);
     });
 
@@ -331,9 +337,7 @@ export class MainScene extends Phaser.Scene {
 
         const scene = this.scene.get(MapName.REALM);
         scene.events.once(Phaser.Scenes.Events.CREATE, () => {
-          data.entities.forEach((config) => {
-            this.entityManager.add(config);
-          });
+          this.entityManager.batch(data.entities);
 
           const localId = this.playerManager.player?.id;
           const config = data.players.find((p) => p.id === localId);

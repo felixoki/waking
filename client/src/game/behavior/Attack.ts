@@ -97,7 +97,7 @@ export class AttackBehavior extends Behavior {
       }
 
       if (handlers.path.stuck(entity, this.stuck, now, 2)) {
-        const grid = handlers.path.getGrid(entity.scene);
+        const grid = handlers.path.getGrid(entity);
 
         if (grid.length) {
           const { tileManager } = entity.scene;
@@ -158,7 +158,7 @@ export class AttackBehavior extends Behavior {
       ) {
         this.recalculation.last = now;
 
-        const grid = handlers.path.getGrid(entity.scene);
+        const grid = handlers.path.getGrid(entity);
 
         if (grid.length) {
           const { tileManager } = entity.scene;

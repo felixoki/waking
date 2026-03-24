@@ -12,6 +12,7 @@ export const TILE_SIZE = 16;
 export const CHUNK_SIZE = 16;
 export const CHUNK_PIXEL_SIZE = CHUNK_SIZE * TILE_SIZE;
 export const CHUNK_ACTIVATION_RADIUS = 2;
+export const CHUNK_ACTIVATION_BUDGET = 4;
 
 export const SPEED_WALKING = 80;
 export const SPEED_RUNNING = 120;

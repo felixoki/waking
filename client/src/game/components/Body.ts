@@ -23,20 +23,21 @@ export class BodyComponent extends Component {
 
     if (useStaticBody) {
       const body = this.entity.body as Phaser.Physics.Arcade.StaticBody;
+
       body.setSize(this.config.width, this.config.height);
       body.setOffset(this.config.offsetX, this.config.offsetY);
 
-      this.entity.scene.physicsManager.groups.statics.add(this.entity);
       this.entity.isStatic = true;
 
       return;
     }
 
     const body = this.entity.body as Phaser.Physics.Arcade.Body;
+    
     body.setSize(this.config.width, this.config.height);
     body.setOffset(this.config.offsetX, this.config.offsetY);
-    body.pushable = this.config.pushable || false;
     body.setImmovable(this.config.immovable || false);
+    body.pushable = this.config.pushable || false;
 
     const group = collides
       ? this.entity.scene.physicsManager.groups.entities
