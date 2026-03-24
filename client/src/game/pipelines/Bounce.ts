@@ -1,3 +1,4 @@
+import { PipelineName } from "@server/types";
 import Phaser from "phaser";
 
 const MultiPipeline = Phaser.Renderer.WebGL.Pipelines.MultiPipeline;
@@ -10,7 +11,7 @@ export class BouncePipeline extends MultiPipeline {
   private frequency: number = 10.0;
   private phase: number = 0;
 
-  constructor(game: Phaser.Game, name: string = "bounce") {
+  constructor(game: Phaser.Game, name: string = PipelineName.BOUNCE) {
     super({
       name: name,
       game: game,

@@ -11,6 +11,7 @@ import { PartyPanel as Party } from "./ui/Party";
 import { Stats } from "./ui/Stats";
 import { Economy } from "./ui/Economy";
 import { Loading } from "./ui/Loading";
+import { Seeds } from "./ui/Seeds";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -42,6 +43,7 @@ function App() {
         <Dialogue />
         <Collection />
         <Party />
+        <Seeds />
       </div>
     </div>
   );

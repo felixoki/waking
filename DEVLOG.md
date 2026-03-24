@@ -320,16 +320,14 @@
 - Add slash stacking ✅
 - Add party loading screen ✅
 - Party ui is stuck on leave screen after leaving ✅
+- Add plantable and growable component ✅
+- Add hoe, carrot, tomato and cabbage ✅
 
 ### In progress
 
-- Add plantable and growable component
+- Party leader authority
 
 ### Next up
-
-- Procedural generation ⭐
-  - Detail layer
-  - Party leader authority
 
 - Save files ⭐
   - Add database
@@ -342,6 +340,9 @@
 - Jumping down ignores collisions
 
 ### Backlog
+
+- Procedural generation ⭐
+  - Detail layer
 
 - Magic ⭐
   - Aim assist spell

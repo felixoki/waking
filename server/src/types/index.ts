@@ -9,6 +9,7 @@ export * from "./dialogue";
 export * from "./directions";
 export * from "./economy";
 export * from "./entities";
+export * from "./farming";
 export * from "./hotbar";
 export * from "./input";
 export * from "./maps";

@@ -25,7 +25,7 @@ export const spells: Record<SpellName, SpellConfig> = {
     },
     combo: [
       { damage: 30, knockback: 100, duration: 300, offset: 20, hitbox: { width: 40, height: 40 } },
-      { damage: 40, knockback: 160, duration: 300, offset: 28, hitbox: { width: 20, height: 50 } },
+      { damage: 40, knockback: 160, duration: 300, offset: 28, hitbox: { width: 40, height: 60 } },
     ],
   },
   [SpellName.ILLUMINATE]: {

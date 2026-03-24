@@ -30,10 +30,18 @@ export class TextureComponent extends Component {
 
     if (scene.textures.exists(this.key)) return;
 
-    const width = Math.max(...tiles.map((t) => t.end - t.start + 1)) * tileSize;
-    const height = tiles.length * tileSize;
+    const width = tiles.length
+      ? Math.max(...tiles.map((t) => t.end - t.start + 1)) * tileSize
+      : tileSize;
+    const height = tiles.length ? tiles.length * tileSize : tileSize;
 
     const rt = scene.make.renderTexture({ width, height }, false);
+
+    if (!tiles.length) {
+      rt.saveTexture(this.key);
+      rt.destroy();
+      return;
+    }
 
     const texture = scene.textures.get(spritesheet);
     const columns = Math.floor(texture.source[0].width / tileSize);
@@ -50,6 +58,14 @@ export class TextureComponent extends Component {
 
     rt.saveTexture(this.key);
     rt.destroy();
+  }
+
+  swap(config: TextureConfig, key: string): void {
+    this.config = config;
+    this.key = key;
+
+    this._create();
+    this.entity.setTexture(this.key);
   }
 
   update(): void {}

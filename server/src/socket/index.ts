@@ -4,10 +4,10 @@ import { tryCatch } from "../utils/tryCatch.js";
 import {
   Input,
   Hit,
-  EntityPickup,
   Item,
   Transition,
   Spot,
+  EntityConfig,
 } from "../types/index.js";
 import { World } from "../World.js";
 import { NodeId } from "../types/dialogue.js";
@@ -44,7 +44,8 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      */
     {
       event: "entity:create",
-      handler: () => handlers.entity.create(socket, world),
+      handler: (data: Omit<EntityConfig, "id">) =>
+        handlers.entity.create(data, socket, world),
     },
     {
       event: "entity:input",
@@ -53,8 +54,7 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: "entity:pickup",
-      handler: (data: EntityPickup) =>
-        handlers.entity.pickup(data, socket, world),
+      handler: (data: string) => handlers.entity.pickup(data, socket, world),
     },
     {
       event: "entity:spotted:player",
@@ -75,6 +75,17 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     {
       event: "item:collect",
       handler: (data: Item) => handlers.item.collect(data, socket, world),
+    },
+    /**
+     * Farming
+     */
+    {
+      event: "entity:plant",
+      handler: (data: any) => handlers.farming.plant(data, socket, world),
+    },
+    {
+      event: "entity:harvest",
+      handler: (data: any) => handlers.farming.harvest(data, socket, world),
     },
     /**
      * Shared

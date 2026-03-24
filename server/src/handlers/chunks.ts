@@ -49,9 +49,9 @@ export const chunks = {
       const socket = io.sockets.sockets.get(player.socketId);
       if (!socket) return;
 
-      world.chunks
-        .getActiveChunks()
-        .forEach((key) => socket.join(`chunk:${key}`));
+      const chunks = world.chunks.getActiveChunks();
+      chunks.forEach((key) => socket.join(`chunk:${key}`));
+      socket.emit("chunks:active", [...chunks]);
     },
   },
 

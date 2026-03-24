@@ -1,21 +1,11 @@
 import { Socket } from "socket.io";
-import { EntityName, Input, MapName, Spot } from "../types";
-import { randomInt, randomUUID } from "crypto";
+import { EntityConfig, Input, Spot } from "../types";
+import { randomUUID } from "crypto";
 import { World } from "../World";
 
 export const entity = {
-  create: (socket: Socket, world: World) => {
-    const player = world.players.getBySocketId(socket.id);
-    if (!player || !player.isHost) return;
-
-    const config = {
-      x: randomInt(0, 400),
-      y: randomInt(0, 400),
-      id: randomUUID(),
-      map: MapName.VILLAGE,
-      name: EntityName.ORC1,
-      health: 100,
-    };
+  create: (data: Omit<EntityConfig, "id">, socket: Socket, world: World) => {
+    const config = { ...data, id: randomUUID() };
 
     world.entities.add(config.id, config);
     world.chunks.registerEntity(config.id, config.map, config.x, config.y);

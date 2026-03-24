@@ -121,7 +121,7 @@ export class EntityManager {
     config: EntityConfig,
     scene: Scene,
   ): void {
-    const key = this._toChunkKey(config.x, config.y);
+    const key = this._toChunkKey(config.map, config.x, config.y);
     const group = this._getChunkGroup(scene, key);
 
     group.add(entity);
@@ -145,7 +145,7 @@ export class EntityManager {
   private _unregisterStatic(id: string, entity: Entity): void {
     if (!entity) return;
 
-    const key = this._toChunkKey(entity.x, entity.y);
+    const key = this._toChunkKey(entity.map, entity.x, entity.y);
     const chunk = this.grid.get(key);
 
     if (chunk) {
@@ -154,7 +154,7 @@ export class EntityManager {
     }
   }
 
-  getStatic(x: number, y: number, radius: number = 2): Rect[] {
+  getStatic(map: MapName, x: number, y: number, radius: number = 2): Rect[] {
     const cx = Math.floor(x / CHUNK_PIXEL_SIZE);
     const cy = Math.floor(y / CHUNK_PIXEL_SIZE);
 
@@ -162,15 +162,15 @@ export class EntityManager {
 
     for (let dx = -radius; dx <= radius; dx++)
       for (let dy = -radius; dy <= radius; dy++) {
-        const chunk = this.grid.get(`${cx + dx}:${cy + dy}`);
+        const chunk = this.grid.get(`${map}:${cx + dx}:${cy + dy}`);
         if (chunk) for (const rect of chunk.values()) entities.push(rect);
       }
 
     return entities;
   }
 
-  private _toChunkKey(x: number, y: number): string {
-    return `${Math.floor(x / CHUNK_PIXEL_SIZE)}:${Math.floor(y / CHUNK_PIXEL_SIZE)}`;
+  private _toChunkKey(map: MapName, x: number, y: number): string {
+    return `${map}:${Math.floor(x / CHUNK_PIXEL_SIZE)}:${Math.floor(y / CHUNK_PIXEL_SIZE)}`;
   }
 
   private _getChunkGroup(
@@ -207,7 +207,7 @@ export class EntityManager {
         this.queued.delete(c.id);
         return false;
       }
-      
+
       return true;
     });
 
@@ -218,6 +218,15 @@ export class EntityManager {
         this.entities.delete(id);
       }
     });
+
+    const prefix = `${map}:`;
+
+    for (const [key, entry] of this.groups)
+      if (key.startsWith(prefix)) {
+        entry.collider.destroy();
+        entry.group.destroy(true);
+        this.groups.delete(key);
+      }
   }
 
   deactivate(ids: string[]): void {
@@ -239,7 +248,7 @@ export class EntityManager {
       if (!entity) continue;
 
       if (entity.isStatic) {
-        const key = this._toChunkKey(entity.x, entity.y);
+        const key = this._toChunkKey(entity.map, entity.x, entity.y);
         affected.add(key);
         this._unregisterStatic(id, entity);
       }

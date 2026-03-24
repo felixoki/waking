@@ -164,47 +164,98 @@ export const emitters = {
     }
   },
 
-  stab: (
-    scene: Scene,
-    entity: Entity,
-    direction: { x: number; y: number },
-  ) => {
+  stab: (scene: Scene, entity: Entity, direction: { x: number; y: number }) => {
     const angle = Math.atan2(direction.y, direction.x);
     const degrees = Phaser.Math.RadToDeg(angle);
+    const rad = Phaser.Math.DegToRad(degrees);
 
-    const waves = 3;
-    const particlesPerWave = 6;
-    const coneSpread = 30;
+    const stepsPerArm = 18;
+    const armLength = 34;
+    const halfAngle = 22;
+    const tipDistance = 36;
+    const duration = 140;
+    const pushDistance = 16;
 
-    for (let w = 0; w < waves; w++) {
-      const delay = w * 35;
+    const originX = entity.x;
+    const originY = entity.y;
 
-      scene.time.delayedCall(delay, () => {
-        for (let i = 0; i < particlesPerWave; i++) {
-          const particleAngle = degrees - coneSpread / 2 + (i / (particlesPerWave - 1)) * coneSpread;
-          const rad = Phaser.Math.DegToRad(particleAngle);
-          const dist = 16 + w * 6;
+    const armAngles = [degrees + 180 - halfAngle, degrees + 180 + halfAngle];
 
-          const x = entity.x + Math.cos(rad) * dist;
-          const y = entity.y + Math.sin(rad) * dist;
+    const totalFrames = 5;
 
-          const emitter = scene.add.particles(x, y, "particle_diamond", {
-            tint: [0xffaa00, 0xffcc44, 0xffdd66, 0xffffff],
-            alpha: { start: 0.9, end: 0 },
-            scale: { start: 0.2 + w * 0.05, end: 0.04 },
-            speed: { min: 40, max: 80 },
-            angle: { min: particleAngle - 8, max: particleAngle + 8 },
-            lifespan: 200,
-            blendMode: "ADD",
-            quantity: 2,
-            frequency: -1,
-          });
+    for (let f = 0; f < totalFrames; f++) {
+      const frameDelay = (f / (totalFrames - 1)) * duration;
+      const push = (f / (totalFrames - 1)) * pushDistance;
 
-          emitter.setDepth(2000);
-          emitter.explode();
+      scene.time.delayedCall(frameDelay, () => {
+        const tipX = originX + Math.cos(rad) * (tipDistance + push);
+        const tipY = originY + Math.sin(rad) * (tipDistance + push);
 
-          scene.time.delayedCall(200, () => emitter.destroy());
+        for (let a = 0; a < armAngles.length; a++) {
+          const armRad = Phaser.Math.DegToRad(armAngles[a]);
+          const armDelay = a * 40;
+
+          for (let step = 1; step < stepsPerArm; step++) {
+            const progress = step / (stepsPerArm - 1);
+
+            scene.time.delayedCall(armDelay, () => {
+              const px = tipX + Math.cos(armRad) * armLength * progress;
+              const py = tipY + Math.sin(armRad) * armLength * progress;
+
+              const taper = 0.15 + progress * 0.85;
+
+              const emitter = scene.add.particles(px, py, "particle_diamond", {
+                tint: [0xffaa00, 0xffcc44, 0xffdd66, 0xffffff],
+                alpha: { start: 0.9 * taper, end: 0 },
+                scale: { start: 0.3 * taper, end: 0.05 },
+                speed: { min: 30, max: 60 },
+                angle: { min: degrees - 10, max: degrees + 10 },
+                lifespan: 200,
+                blendMode: "ADD",
+                quantity: 2,
+                frequency: -1,
+              });
+
+              emitter.setDepth(2000);
+              emitter.explode();
+
+              if (step % 3 === 0) {
+                const ember = scene.add.particles(px, py, "particle_circle", {
+                  tint: [0xff6600, 0xff8800, 0xffaa33],
+                  alpha: { start: 0.6, end: 0 },
+                  scale: { start: 0.1, end: 0.02 },
+                  speed: { min: 3, max: 12 },
+                  lifespan: 600,
+                  blendMode: "ADD",
+                  quantity: 2,
+                  frequency: -1,
+                });
+                ember.setDepth(2001);
+                ember.explode();
+
+                scene.time.delayedCall(600, () => ember.destroy());
+              }
+
+              scene.time.delayedCall(200, () => emitter.destroy());
+            });
+          }
         }
+
+        const spark = scene.add.particles(tipX, tipY, "particle_diamond", {
+          tint: [0xffffff, 0xffee88],
+          alpha: { start: 0.7, end: 0 },
+          scale: { start: 0.12, end: 0.02 },
+          speed: { min: 40, max: 70 },
+          angle: { min: degrees - 6, max: degrees + 6 },
+          lifespan: 120,
+          blendMode: "ADD",
+          quantity: 1,
+          frequency: -1,
+        });
+        spark.setDepth(2001);
+        spark.explode();
+
+        scene.time.delayedCall(120, () => spark.destroy());
       });
     }
   },

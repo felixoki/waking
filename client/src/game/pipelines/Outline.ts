@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { getOutlineFrag } from "./frags/outline";
+import { PipelineName } from "@server/types";
 
 const PostFXPipeline = Phaser.Renderer.WebGL.Pipelines.PostFXPipeline;
 const Color = Phaser.Display.Color;
@@ -13,7 +14,7 @@ export class OutlinePipeline extends PostFXPipeline {
 
   constructor(game: Phaser.Game) {
     super({
-      name: "outline",
+      name: PipelineName.OUTLINE,
       game: game,
       renderTarget: true,
       fragShader: getOutlineFrag(DEFAULT_QUALITY),

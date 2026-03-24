@@ -35,7 +35,9 @@ export const player = {
     const scene = main.scene.get(data.map);
 
     prev.scene.scene.setVisible(false);
+    prev.scene.input.enabled = false;
     scene.scene.setVisible(true);
+    scene.input.enabled = true;
 
     if (prev.map === MapName.REALM && data.map !== MapName.REALM) {
       main.entityManager.removeByMap(MapName.REALM);

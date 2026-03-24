@@ -87,7 +87,7 @@ export class Player extends Entity {
         { type: HotbarSlotType.SPELL, name: SpellName.METEOR_SHOWER },
         { type: HotbarSlotType.SPELL, name: SpellName.BUTTERFLY_EFFIGY },
         { type: HotbarSlotType.SPELL, name: SpellName.LIGHTNING_STRIKE },
-        null,
+        { type: HotbarSlotType.ENTITY, name: EntityName.HOE },
       ]),
     );
     this.addComponent(new DamageableComponent());

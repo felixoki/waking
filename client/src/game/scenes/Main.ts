@@ -68,6 +68,7 @@ export class MainScene extends Phaser.Scene {
 
       scene.events.once(Phaser.Scenes.Events.CREATE, () => {
         scene.scene.setVisible(false);
+        scene.input.enabled = false;
         ready.add(key);
 
         if (ready.size === scenes.length) {
@@ -114,6 +115,7 @@ export class MainScene extends Phaser.Scene {
 
       const map = this.scene.get(data.map);
       map.scene.setVisible(true);
+      map.input.enabled = true;
 
       const player = this.playerManager.player!;
 
@@ -245,6 +247,14 @@ export class MainScene extends Phaser.Scene {
       this.socketManager.emit("entity:pickup", data);
     });
 
+    this.game.events.on("entity:plant", (data: any) => {
+      this.socketManager.emit("entity:plant", data);
+    });
+
+    this.game.events.on("entity:harvest", (data: any) => {
+      this.socketManager.emit("entity:harvest", data);
+    });
+
     this.game.events.on("entity:dialogue:start", (data: string) => {
       this.socketManager.emit("entity:dialogue:iterate", {
         entityId: data,
@@ -279,6 +289,10 @@ export class MainScene extends Phaser.Scene {
      */
     this.socketManager.on("chunk:deactivate", (data: string[]) => {
       this.entityManager.deactivate(data);
+    });
+
+    this.socketManager.on("chunks:active", (data: string[]) => {
+      this.chunkManager.updateRemote(data);
     });
 
     /**
@@ -320,6 +334,10 @@ export class MainScene extends Phaser.Scene {
     /**
      * Party
      */
+    this.socketManager.on("party:start:loading", () => {
+      EventBus.emit("party:start:loading");
+    });
+
     this.socketManager.on(
       "party:start",
       (data: {

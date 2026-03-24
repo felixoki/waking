@@ -8,11 +8,11 @@ export function Loading() {
     const show = () => setLoading(true);
     const hide = () => setLoading(false);
 
-    EventBus.on("party:start:request", show);
+    EventBus.on("party:start:loading", show);
     EventBus.on("party:start:ready", hide);
 
     return () => {
-      EventBus.off("party:start:request", show);
+      EventBus.off("party:start:loading", show);
       EventBus.off("party:start:ready", hide);
     };
   }, []);

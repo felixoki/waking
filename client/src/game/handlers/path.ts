@@ -181,7 +181,7 @@ export const path = {
 
     return path.mergeObstacles(
       tileManager.getCollisionGrid(),
-      entity.scene.managers.entities.getStatic(entity.x, entity.y),
+      entity.scene.managers.entities.getStatic(entity.map, entity.x, entity.y),
     );
   },
 

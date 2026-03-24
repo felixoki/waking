@@ -17,6 +17,8 @@ import { CollectorComponent } from "../components/Collector";
 import { BounceComponent } from "../components/Bounce";
 import { LightComponent } from "../components/Light";
 import { TextureAnimationComponent } from "../components/TextureAnimation";
+import { GrowableComponent } from "../components/Growable";
+import { FarmableComponent } from "../components/Farmable";
 
 export class ComponentFactory {
   static create(
@@ -80,6 +82,12 @@ export class ComponentFactory {
           break;
         case ComponentName.TEXTURE_ANIMATION:
           comp = new TextureAnimationComponent(entity, component.config);
+          break;
+        case ComponentName.FARMABLE:
+          comp = new FarmableComponent(entity);
+          break;
+        case ComponentName.GROWABLE:
+          comp = new GrowableComponent(entity, component.config);
           break;
       }
 

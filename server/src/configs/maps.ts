@@ -162,6 +162,20 @@ const plants: Spritesheet[] = [
     frameHeight: 16,
     asTileset: true,
   },
+  {
+    key: "gathering4",
+    file: "gathering4.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "gathering5",
+    file: "gathering5.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
 ];
 
 const buildings: Spritesheet[] = [

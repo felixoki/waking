@@ -6,7 +6,7 @@ export class ChunkManager {
   private playersInChunk = new Map<string, Set<ChunkKey>>();
   private chunkByEntity = new Map<string, ChunkKey>();
 
-  static toChunkKey(
+  toChunkKey(
     map: MapName,
     x: number,
     y: number,
@@ -25,7 +25,7 @@ export class ChunkManager {
     y: number,
     partyId?: string,
   ): void {
-    const key = ChunkManager.toChunkKey(map, x, y, partyId);
+    const key = this.toChunkKey(map, x, y, partyId);
     this.chunkByEntity.set(id, key);
 
     if (!this.entitiesInChunk.has(key))
@@ -50,7 +50,7 @@ export class ChunkManager {
     partyId?: string,
   ): boolean {
     const prev = this.chunkByEntity.get(id);
-    const next = ChunkManager.toChunkKey(map, x, y, partyId);
+    const next = this.toChunkKey(map, x, y, partyId);
     if (prev === next) return false;
 
     this.entitiesInChunk.get(prev!)?.delete(id);

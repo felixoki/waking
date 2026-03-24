@@ -142,6 +142,10 @@ export const party = {
       return;
 
     const seed = `${data.id}-${Date.now()}`;
+
+    socket.emit("party:start:loading");
+    socket.to(`party:${data.id}`).emit("party:start:loading");
+
     const biome = generateBiome(BiomeName.FOREST, seed);
 
     if (!biome) return;

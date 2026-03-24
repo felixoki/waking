@@ -100,4 +100,12 @@ export enum EntityName {
   GREENGROCER = "greengrocer",
   BELLADONNA = "belladonna",
   SUNFLOWER = "sunflower",
+  CARROT = "carrot",
+  CARROT_SEED = "carrot_seed",
+  TOMATO = "tomato",
+  TOMATO_SEED = "tomato_seed",
+  CABBAGE = "cabbage",
+  CABBAGE_SEED = "cabbage_seed",
+  HOE = "hoe",
+  FARMPLOT = "farmplot",
 }

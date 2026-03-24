@@ -1,8 +1,7 @@
 import { EntityName } from './entities';
 
 export enum NeedName {
-  MEAT = 'meat',
-  VEGETABLES = 'vegetables',
+  FOOD = 'food',
   RESOURCES = 'resources',
 }
 

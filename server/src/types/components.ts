@@ -1,7 +1,8 @@
-import { EntityName } from './entities';
-import { MapName } from './maps';
-import { CollectorConfig } from './collectors';
-import { LightConfig } from './ambience';
+import { EntityName } from "./entities";
+import { MapName } from "./maps";
+import { CollectorConfig } from "./collectors";
+import { LightConfig } from "./ambience";
+import { GrowthStageConfig } from "./farming";
 
 export enum ComponentName {
   ANIMATION = "animation",
@@ -20,6 +21,8 @@ export enum ComponentName {
   BOUNCE = "bounce",
   LIGHT = "light",
   TEXTURE_ANIMATION = "textureAnimation",
+  FARMABLE = "farmable",
+  GROWABLE = "growable",
 }
 
 export type ComponentConfig =
@@ -38,7 +41,9 @@ export type ComponentConfig =
   | { name: ComponentName.COLLECTOR; config: CollectorConfig }
   | { name: ComponentName.BOUNCE }
   | { name: ComponentName.LIGHT; config: LightConfig }
-  | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig };
+  | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
+  | { name: ComponentName.FARMABLE }
+  | { name: ComponentName.GROWABLE; config: GrowableConfig };
 
 export interface BodyConfig {
   width: number;
@@ -84,11 +89,21 @@ export interface TextureAnimationConfig {
   tileSize: number;
   tiles: { row: number; start: number; end: number }[];
   frames: number;
-  direction: 'horizontal' | 'vertical';
+  direction: "horizontal" | "vertical";
   frameRate: number;
   repeat: number;
 }
 
 export interface DamageableConfig {
   loot: (Item & { chance: number })[];
+}
+
+export interface GrowableConfig {
+  spritesheet: string;
+  tileSize: number;
+  stages: GrowthStageConfig[];
+  duration: number;
+  yield: Item[];
+  regrows?: boolean;
+  needsWater?: boolean;
 }

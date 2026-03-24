@@ -1,3 +1,4 @@
+import { PipelineName } from "@server/types";
 import { getAmbienceFrag } from "./frags/ambience";
 
 const PostFXPipeline = Phaser.Renderer.WebGL.Pipelines.PostFXPipeline;
@@ -10,7 +11,7 @@ export class AmbiencePipeline extends PostFXPipeline {
 
   constructor(game: Phaser.Game) {
     super({
-      name: "ambience",
+      name: PipelineName.AMBIENCE,
       game: game,
       renderTarget: true,
       fragShader: getAmbienceFrag(),

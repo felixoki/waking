@@ -57,7 +57,11 @@ export const player = {
     if (!player) return;
 
     party.leave(socket, io, world);
-    handlers.chunks.clear(socket, world, player.id);
+
+    const keys = handlers.chunks.clear(socket, world, player.id);
+    keys.forEach((key) => {
+      socket.to(`chunk:${key}`).emit("player:leave", player.id);
+    });
 
     const isHost = player.isHost;
     world.players.remove(player.id);
@@ -73,12 +77,6 @@ export const player = {
 
       handlers.chunks.sync.host(io, world);
     }
-
-    const keys = world.chunks.clearPlayer(player.id);
-    keys.forEach((key) => {
-      socket.to(`chunk:${key}`).emit("player:leave", player.id);
-      socket.leave(`chunk:${key}`);
-    });
   },
 
   input: (data: Input, io: Server, socket: Socket, world: World) => {
@@ -96,8 +94,8 @@ export const player = {
       },
     });
 
-    const key = world.chunks.getChunkByEntity(data.id!);
-    if (key) socket.to(`chunk:${key}`).emit("player:input", data);
+    const key = world.chunks.toChunkKey(player.map, data.x, data.y);
+    socket.to(`chunk:${key}`).emit("player:input", data);
 
     const { activated, deactivated } = handlers.chunks.sync.player(
       socket,

@@ -2,6 +2,7 @@ import { chunks } from "./chunks.js";
 import { combat } from "./combat.js";
 import { dialogue } from "./dialogue.js";
 import { entity } from "./entity.js";
+import { farming } from "./farming.js";
 import { generation } from "./generation.js";
 import { host } from "./host.js";
 import { item } from "./item.js";
@@ -12,6 +13,7 @@ export const handlers = {
   chunks,
   player,
   entity,
+  farming,
   item,
   combat,
   dialogue,

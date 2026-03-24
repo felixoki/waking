@@ -33,6 +33,9 @@ export const combat = {
   hurt: (entity: Entity, health: number) => {
     entity.health = health;
 
+    entity.scene.tweens.killTweensOf(entity);
+    entity.setAlpha(1);
+
     entity.scene.tweens.add({
       targets: entity,
       alpha: 0.1,
@@ -52,8 +55,7 @@ export const combat = {
       body.velocity.y + knockback.y,
     );
 
-    const drag = body.drag.x;
     body.setDrag(800);
-    entity.scene.time.delayedCall(300, () => body.setDrag(drag));
+    entity.scene.time.delayedCall(300, () => body.setDrag(0));
   },
 };
