@@ -10,6 +10,7 @@ import { Collection } from "./ui/Collection";
 import { PartyPanel as Party } from "./ui/Party";
 import { Stats } from "./ui/Stats";
 import { Economy } from "./ui/Economy";
+import { Loading } from "./ui/Loading";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -31,6 +32,7 @@ function App() {
   return (
     <div>
       <div id="game" className="w-screen h-screen"></div>
+      <Loading />
       <Entities />
       <Stats />
       <Economy />

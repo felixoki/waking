@@ -318,11 +318,11 @@
 #### 24.3.2026
 
 - Add slash stacking ✅
+- Add party loading screen ✅
+- Party ui is stuck on leave screen after leaving ✅
 
 ### In progress
 
-- Add party loading screen
-- Party is stuck on leave after leaving
 - Add plantable and growable component
 
 ### Next up

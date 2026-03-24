@@ -28,7 +28,6 @@ export const party = {
       handlers.host.realm.unload(io, world);
 
       socket.to(`party:${data.id}`).emit("party:update", data);
-      socket.emit("party:update", data);
     }
   },
 

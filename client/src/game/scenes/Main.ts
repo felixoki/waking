@@ -336,6 +336,7 @@ export class MainScene extends Phaser.Scene {
         this.scene.launch(MapName.REALM);
 
         const scene = this.scene.get(MapName.REALM);
+        
         scene.events.once(Phaser.Scenes.Events.CREATE, () => {
           this.entityManager.batch(data.entities);
 
@@ -350,6 +351,8 @@ export class MainScene extends Phaser.Scene {
           data.players
             .filter((p) => p.id !== localId)
             .forEach((config) => this.playerManager.add(config, false));
+
+          EventBus.emit("party:start:ready");
         });
       },
     );
