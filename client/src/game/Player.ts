@@ -134,10 +134,12 @@ export class Player extends Entity {
 
     if (this.isControllable) this.scene.game.events.emit("player:input", input);
 
-    /**
-     * We will need to implement a proper depth sorting system
-     */
-    this.setDepth(1000 + this.y);
+    const depthY = Math.round(this.y);
+    
+    if (depthY !== this._depthY) {
+      this._depthY = depthY;
+      this.setDepth(1000 + this.y);
+    }
   }
 
   protected _getInput(): Input {

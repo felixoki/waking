@@ -58,6 +58,7 @@ export class AmbienceManager {
 
   private _getPipelines(): AmbiencePipeline[] {
     return this._getOutdoorScenes()
+      .filter((s) => s.cameras.main)
       .map(
         (s) =>
           s.cameras.main.getPostPipeline(

@@ -43,15 +43,17 @@ export const combat = {
   },
 
   knockback: (entity: Entity, knockback: { x: number; y: number }) => {
-    if (!entity.body.immovable) return;
+    if (entity.body.immovable) return;
 
-    entity.body.setVelocity(
-      entity.body.velocity.x + knockback.x,
-      entity.body.velocity.y + knockback.y,
+    const body = entity.body as Phaser.Physics.Arcade.Body;
+
+    body.setVelocity(
+      body.velocity.x + knockback.x,
+      body.velocity.y + knockback.y,
     );
 
-    const drag = entity.body.drag.x;
-    entity.body.setDrag(800);
-    entity.scene.time.delayedCall(300, () => entity.body.setDrag(drag));
+    const drag = body.drag.x;
+    body.setDrag(800);
+    entity.scene.time.delayedCall(300, () => body.setDrag(drag));
   },
 };

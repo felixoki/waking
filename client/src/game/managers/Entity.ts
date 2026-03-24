@@ -17,7 +17,7 @@ export class EntityManager {
   private main: MainScene;
   private queue: EntityConfig[] = [];
   private queued: Set<string> = new Set();
-  private static: Map<string, Map<string, Rect>> = new Map();
+  private grid: Map<string, Map<string, Rect>> = new Map();
   private groups: Map<
     string,
     {
@@ -132,9 +132,9 @@ export class EntityManager {
     const tw = scene.managers.tile.map.tileWidth;
     const th = scene.managers.tile.map.tileHeight;
 
-    if (!this.static.has(key)) this.static.set(key, new Map());
+    if (!this.grid.has(key)) this.grid.set(key, new Map());
 
-    this.static.get(key)!.set(config.id, {
+    this.grid.get(key)!.set(config.id, {
       x: Math.floor(body.x / tw),
       y: Math.floor(body.y / th),
       width: Math.ceil((body.x + body.width) / tw) - Math.floor(body.x / tw),
@@ -146,11 +146,11 @@ export class EntityManager {
     if (!entity) return;
 
     const key = this._toChunkKey(entity.x, entity.y);
-    const grid = this.static.get(key);
+    const chunk = this.grid.get(key);
 
-    if (grid) {
-      grid.delete(id);
-      if (!grid.size) this.static.delete(key);
+    if (chunk) {
+      chunk.delete(id);
+      if (!chunk.size) this.grid.delete(key);
     }
   }
 
@@ -162,8 +162,8 @@ export class EntityManager {
 
     for (let dx = -radius; dx <= radius; dx++)
       for (let dy = -radius; dy <= radius; dy++) {
-        const grid = this.static.get(`${cx + dx}:${cy + dy}`);
-        if (grid) for (const rect of grid.values()) entities.push(rect);
+        const chunk = this.grid.get(`${cx + dx}:${cy + dy}`);
+        if (chunk) for (const rect of chunk.values()) entities.push(rect);
       }
 
     return entities;
@@ -202,6 +202,15 @@ export class EntityManager {
   }
 
   removeByMap(map: MapName): void {
+    this.queue = this.queue.filter((c) => {
+      if (c.map === map) {
+        this.queued.delete(c.id);
+        return false;
+      }
+      
+      return true;
+    });
+
     this.entities.forEach((entity, id) => {
       if (entity.map === map) {
         this._unregisterStatic(id, entity);
@@ -253,7 +262,7 @@ export class EntityManager {
   destroy(): void {
     this.queue.length = 0;
     this.queued.clear();
-    this.static.clear();
+    this.grid.clear();
 
     this.groups.forEach(({ group, collider }) => {
       collider.destroy();

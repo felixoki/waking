@@ -277,17 +277,21 @@
 - Refactor definitions and map configs ✅
 
 #### 4.3.2026
+
 - Add ambience manager ✅
 - Add day cycle ✅
 
 #### 12.3.2026
+
 - Add texture animation component ✅
 
 #### 17.3.2026
+
 - Add chunk manager ✅
 - Add dissolve emitter ✅
 
 #### 19.3.2026
+
 - Add mana and health bar ✅
 - Add economy ui ✅
 - Add detail layers ✅
@@ -295,13 +299,16 @@
 - Lightning strike ✅
 
 #### 21.3.2026
+
 - Play testing ✅
 
 #### 22.3.2026
+
 - Add belladonna ✅
 - Fix flee and attack behavior ✅
 
 #### 23.3.2026
+
 - Light2D is broken for static entities ✅
 - Jumping and rolling into a scene causes crash ✅
 - Entity creation queue ✅
@@ -310,12 +317,13 @@
 
 #### 24.3.2026
 
+- Add slash stacking ✅
+
 ### In progress
 
 - Add party loading screen
 - Party is stuck on leave after leaving
 - Add plantable and growable component
-
 
 ### Next up
 

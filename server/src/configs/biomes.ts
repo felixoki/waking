@@ -3,7 +3,7 @@ import { BiomeConfig, BiomeName, TerrainName } from "../types/generation";
 
 export const forest: BiomeConfig = {
   id: BiomeName.FOREST,
-  width: 256, // Up to 128 without performance issues
+  width: 256,
   height: 256,
   tileWidth: 16,
   tileHeight: 16,

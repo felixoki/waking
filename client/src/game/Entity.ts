@@ -23,6 +23,8 @@ export class Entity extends Phaser.GameObjects.Sprite {
   public mana: number = 100;
   public target?: { x: number; y: number };
 
+  protected _depthY: number = 0;
+
   public components = new Map<ComponentName, Component>();
   public states?: Map<StateName, State>;
 
@@ -58,6 +60,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
 
   private _init() {
     this.scene.add.existing(this);
+    this._depthY = this.y;
     this.setDepth(1000 + this.y);
   }
 
@@ -99,10 +102,12 @@ export class Entity extends Phaser.GameObjects.Sprite {
     const isHost = scene.managers.players?.player?.isHost;
     if (isHost && input) this.scene.game.events.emit("entity:input", input);
 
-    /**
-     * We will need to implement a proper depth sorting system
-     */
-    this.setDepth(1000 + this.y);
+    const depthY = Math.round(this.y);
+    
+    if (depthY !== this._depthY) {
+      this._depthY = depthY;
+      this.setDepth(1000 + this.y);
+    }
   }
 
   protected _getInput(): Partial<Input> | null {

@@ -91,6 +91,124 @@ export const emitters = {
     }
   },
 
+  backslash: (
+    scene: Scene,
+    entity: Entity,
+    direction: { x: number; y: number },
+  ) => {
+    const angle = Math.atan2(direction.y, direction.x);
+    const degrees = Phaser.Math.RadToDeg(angle);
+
+    const lines = 4;
+    const spread = 55;
+    const duration = 150;
+    const steps = 24;
+    const radius = 28;
+
+    for (let i = 0; i < lines; i++) {
+      const offset = (i - (lines - 1) / 2) * -10;
+
+      for (let step = 0; step < steps; step++) {
+        const delay = (step / steps) * duration + Phaser.Math.Between(-5, 5);
+        const progress = step / (steps - 1);
+
+        const currentAngle = degrees + offset + (0.5 - progress) * spread;
+        const rad = Phaser.Math.DegToRad(currentAngle);
+        const distance = radius + progress * 8 + Phaser.Math.Between(-1, 1);
+
+        const x = entity.x + Math.cos(rad) * distance;
+        const y = entity.y + Math.sin(rad) * distance;
+
+        scene.time.delayedCall(delay, () => {
+          const envelope = Math.sin(progress * Math.PI);
+          const alphaStart = 1 * envelope;
+          const scaleStart = 0.25 * (0.3 + 0.7 * envelope);
+
+          const emitter = scene.add.particles(x, y, "particle_diamond", {
+            tint: [0xff4400, 0xff6600, 0xff7700, 0xff9900],
+            alpha: { start: alphaStart, end: 0 },
+            scale: { start: scaleStart, end: 0.04 },
+            speed: { min: 3, max: 10 },
+            angle: { min: currentAngle - 10, max: currentAngle + 10 },
+            lifespan: 250,
+            blendMode: "ADD",
+            quantity: 2,
+            frequency: -1,
+          });
+
+          emitter.setDepth(2000);
+          emitter.explode();
+
+          if (step % 4 === 0) {
+            const ember = scene.add.particles(x, y, "particle_circle", {
+              tint: [0xff7700, 0xff9900, 0xffbb44],
+              alpha: { start: 0.6, end: 0 },
+              scale: { start: 0.1, end: 0.02 },
+              speed: { min: 3, max: 12 },
+              lifespan: 600,
+              blendMode: "ADD",
+              quantity: 2,
+              frequency: -1,
+            });
+            ember.setDepth(2001);
+            ember.explode();
+
+            scene.time.delayedCall(600, () => ember.destroy());
+          }
+
+          scene.time.delayedCall(200, () => {
+            emitter.destroy();
+          });
+        });
+      }
+    }
+  },
+
+  stab: (
+    scene: Scene,
+    entity: Entity,
+    direction: { x: number; y: number },
+  ) => {
+    const angle = Math.atan2(direction.y, direction.x);
+    const degrees = Phaser.Math.RadToDeg(angle);
+
+    const waves = 3;
+    const particlesPerWave = 6;
+    const coneSpread = 30;
+
+    for (let w = 0; w < waves; w++) {
+      const delay = w * 35;
+
+      scene.time.delayedCall(delay, () => {
+        for (let i = 0; i < particlesPerWave; i++) {
+          const particleAngle = degrees - coneSpread / 2 + (i / (particlesPerWave - 1)) * coneSpread;
+          const rad = Phaser.Math.DegToRad(particleAngle);
+          const dist = 16 + w * 6;
+
+          const x = entity.x + Math.cos(rad) * dist;
+          const y = entity.y + Math.sin(rad) * dist;
+
+          const emitter = scene.add.particles(x, y, "particle_diamond", {
+            tint: [0xffaa00, 0xffcc44, 0xffdd66, 0xffffff],
+            alpha: { start: 0.9, end: 0 },
+            scale: { start: 0.2 + w * 0.05, end: 0.04 },
+            speed: { min: 40, max: 80 },
+            angle: { min: particleAngle - 8, max: particleAngle + 8 },
+            lifespan: 200,
+            blendMode: "ADD",
+            quantity: 2,
+            frequency: -1,
+          });
+
+          emitter.setDepth(2000);
+          emitter.explode();
+
+          scene.time.delayedCall(200, () => emitter.destroy());
+        }
+      });
+    }
+  },
+
   claw: (
     scene: Scene,
     x: number,

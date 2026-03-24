@@ -8,6 +8,17 @@ export enum SpellName {
   LIGHTNING_STRIKE = "lightning_strike",
 }
 
+export interface ComboStep {
+  damage: number;
+  knockback: number;
+  duration?: number;
+  offset: number;
+  hitbox: {
+    width: number;
+    height: number;
+  };
+}
+
 export interface SpellConfig {
   name: SpellName;
   damage: number;
@@ -21,4 +32,5 @@ export interface SpellConfig {
     width: number;
     height: number;
   };
+  combo?: ComboStep[];
 }

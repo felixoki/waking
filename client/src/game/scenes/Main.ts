@@ -371,10 +371,7 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.socketManager.on("party:cleanup", () => {
-      this.entityManager.entities.forEach((entity) => {
-        if (entity.map === MapName.REALM) this.entityManager.remove(entity.id);
-      });
-
+      this.entityManager.removeByMap(MapName.REALM);
       this.scene.stop(MapName.REALM);
     });
 

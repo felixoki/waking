@@ -9,6 +9,7 @@ type SpellHandler = (
   config: SpellConfig,
   target: { x: number; y: number },
   direction: { x: number; y: number },
+  step?: number,
 ) => void;
 
 export const spells: Record<SpellName, SpellHandler> = {
@@ -40,18 +41,28 @@ export const spells: Record<SpellName, SpellHandler> = {
     config: SpellConfig,
     _target: { x: number; y: number },
     direction: { x: number; y: number },
+    step: number = 0,
   ) => {
+    const offset =
+      step > 0 && config.combo ? config.combo[step - 1].offset : 20;
+
     new Hitbox(
       entity.scene,
-      entity.x + direction.x * 20,
-      entity.y + direction.y * 20,
+      entity.x + direction.x * offset,
+      entity.y + direction.y * offset,
       config.hitbox!.width,
       config.hitbox!.height,
       entity.id,
       config,
     );
 
-    effects.emitters.slash(entity.scene, entity, direction);
+    const emitters: Record<number, () => void> = {
+      0: () => effects.emitters.slash(entity.scene, entity, direction),
+      1: () => effects.emitters.backslash(entity.scene, entity, direction),
+      2: () => effects.emitters.stab(entity.scene, entity, direction),
+    };
+
+    emitters[step]?.();
   },
 
   [SpellName.ILLUMINATE]: (
@@ -204,7 +215,10 @@ export const spells: Record<SpellName, SpellHandler> = {
     _direction: { x: number; y: number },
   ) => {
     const scene = entity.scene;
-    const source = { x: target.x + Phaser.Math.Between(-40, 40), y: target.y - 350 };
+    const source = {
+      x: target.x + Phaser.Math.Between(-40, 40),
+      y: target.y - 350,
+    };
 
     effects.emitters.lightning(scene, source, target);
 
