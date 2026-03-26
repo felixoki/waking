@@ -1,4 +1,4 @@
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 import { Entity } from "../Entity";
 import { Component } from "./Component";
 
@@ -33,7 +33,7 @@ export class InteractableComponent extends Component {
 
     if (distance <= this.range)
       this.entity.scene.game.events.emit(
-        "entity:dialogue:start",
+        Event.ENTITY_DIALOGUE_START,
         this.entity.id,
       );
   }

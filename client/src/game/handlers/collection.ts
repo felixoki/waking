@@ -1,4 +1,4 @@
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 import { CollectorComponent } from "../components/Collector";
 import { Entity } from "../Entity";
 import { InventoryComponent } from "../components/Inventory";
@@ -18,7 +18,7 @@ export const collection = {
       ?.get()
       .filter((item) => item && collector?.config.accepts.includes(item.name));
 
-    EventBus.emit("entity:collection:open", {
+    EventBus.emit(Event.ENTITY_COLLECTION_OPEN, {
       id: entity.id,
       items,
     });

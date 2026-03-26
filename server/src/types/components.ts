@@ -23,6 +23,7 @@ export enum ComponentName {
   TEXTURE_ANIMATION = "textureAnimation",
   FARMABLE = "farmable",
   GROWABLE = "growable",
+  FELLABLE = "fellable",
 }
 
 export type ComponentConfig =
@@ -43,7 +44,8 @@ export type ComponentConfig =
   | { name: ComponentName.LIGHT; config: LightConfig }
   | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
   | { name: ComponentName.FARMABLE }
-  | { name: ComponentName.GROWABLE; config: GrowableConfig };
+  | { name: ComponentName.GROWABLE; config: GrowableConfig }
+  | { name: ComponentName.FELLABLE };
 
 export interface BodyConfig {
   width: number;

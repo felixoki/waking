@@ -1,4 +1,4 @@
-import { HotbarSlot } from "@server/types";
+import { Event, HotbarSlot } from "@server/types";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
 
@@ -17,10 +17,10 @@ export function Hotbar() {
       setActive(state.active);
     };
 
-    EventBus.on("hotbar:update", handler);
+    EventBus.on(Event.HOTBAR_UPDATE, handler);
 
     return () => {
-      EventBus.off("hotbar:update", handler);
+      EventBus.off(Event.HOTBAR_UPDATE, handler);
     };
   }, []);
 

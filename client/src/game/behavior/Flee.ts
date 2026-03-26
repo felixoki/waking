@@ -1,5 +1,6 @@
 import {
   BehaviorName,
+  Event,
   FleeBehaviorConfig,
   Input,
   Stuck,
@@ -156,6 +157,6 @@ export class FleeBehavior extends Behavior {
   private _despawn(entity: Entity): void {
     this.completed = true;
 
-    entity.scene.game.events.emit("entity:flee", entity.id);
+    entity.scene.game.events.emit(Event.ENTITY_FLEE, entity.id);
   }
 }

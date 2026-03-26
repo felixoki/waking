@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { MapName } from "../types";
+import { Event, MapName } from "../types";
 import { World } from "../World";
 
 export const chunks = {
@@ -28,7 +28,7 @@ export const chunks = {
           .map((id) => world.entities.get(id))
           .filter(Boolean);
 
-        if (entities.length) socket.emit("entity:create:all", entities);
+        if (entities.length) socket.emit(Event.ENTITY_CREATE_ALL, entities);
       }
 
       if (deactivated.length) {
@@ -36,7 +36,7 @@ export const chunks = {
           .filter((key) => !world.chunks.isChunkActive(key))
           .flatMap((key) => world.chunks.getEntitiesInChunk([key]));
 
-        if (stale.length) socket.emit("chunk:deactivate", stale);
+        if (stale.length) socket.emit(Event.CHUNK_DEACTIVATE, stale);
       }
 
       return { activated, deactivated };

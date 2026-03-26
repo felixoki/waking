@@ -1,5 +1,6 @@
 import {
   BehaviorName,
+  Event,
   Idle,
   Input,
   PatrolBehaviorConfig,
@@ -63,7 +64,7 @@ export class PatrolBehavior extends Behavior {
             7,
           )
         ) {
-          entity.scene.game.events.emit("entity:spotted:player", {
+          entity.scene.game.events.emit(Event.ENTITY_SPOTTED_PLAYER, {
             entityId: entity.id,
             playerId: player.id,
           });

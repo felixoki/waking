@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
+import { Event } from "@server/types";
 
 interface Entity {
   id: string;
@@ -16,10 +17,10 @@ export function Entities() {
       setEntities(data);
     };
 
-    EventBus.on("entities:update", handler);
+    EventBus.on(Event.ENTITIES_UPDATE, handler);
 
     return () => {
-      EventBus.off("entities:update", handler);
+      EventBus.off(Event.ENTITIES_UPDATE, handler);
     };
   }, []);
 

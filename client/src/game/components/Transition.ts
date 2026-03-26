@@ -1,4 +1,4 @@
-import { ComponentName, TransitionConfig } from "@server/types";
+import { ComponentName, Event, TransitionConfig } from "@server/types";
 import { Entity } from "../Entity";
 import { Component } from "./Component";
 
@@ -58,7 +58,7 @@ export class TransitionComponent extends Component {
     const local = player as Entity;
     if (local !== this.entity.scene.managers.players.player) return;
 
-    this.entity.scene.game.events.emit("player:transition", {
+    this.entity.scene.game.events.emit(Event.PLAYER_TRANSITION, {
       to: this.config.to,
       x: this.config.x,
       y: this.config.y,

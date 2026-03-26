@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Item } from "@server/types";
+import { Event, Item } from "@server/types";
 import EventBus from "../game/EventBus";
 
 export function Inventory() {
@@ -10,10 +10,10 @@ export function Inventory() {
       setItems(items);
     };
 
-    EventBus.on("inventory:update", add);
+    EventBus.on(Event.INVENTORY_UPDATE, add);
 
     return () => {
-      EventBus.off("inventory:update", add);
+      EventBus.off(Event.INVENTORY_UPDATE, add);
     };
   }, []);
 

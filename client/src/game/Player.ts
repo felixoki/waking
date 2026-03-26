@@ -1,5 +1,6 @@
 import {
   Direction,
+  Event,
   Input,
   StateName,
   EntityName,
@@ -86,7 +87,7 @@ export class Player extends Entity {
         { type: HotbarSlotType.SPELL, name: SpellName.HURT_SHADOWS },
         { type: HotbarSlotType.SPELL, name: SpellName.METEOR_SHOWER },
         { type: HotbarSlotType.SPELL, name: SpellName.BUTTERFLY_EFFIGY },
-        { type: HotbarSlotType.SPELL, name: SpellName.LIGHTNING_STRIKE },
+        { type: HotbarSlotType.ENTITY, name: EntityName.AXE },
         { type: HotbarSlotType.ENTITY, name: EntityName.HOE },
       ]),
     );
@@ -132,7 +133,7 @@ export class Player extends Entity {
       this.setPosition(x, y);
     }
 
-    if (this.isControllable) this.scene.game.events.emit("player:input", input);
+    if (this.isControllable) this.scene.game.events.emit(Event.PLAYER_INPUT, input);
 
     const depthY = Math.round(this.y);
     

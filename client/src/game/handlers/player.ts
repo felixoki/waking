@@ -1,4 +1,4 @@
-import { ComponentName, MapName, PlayerConfig } from "@server/types";
+import { ComponentName, Event, MapName, PlayerConfig } from "@server/types";
 import { InventoryComponent } from "../components/Inventory";
 import { HotbarComponent } from "../components/Hotbar";
 import type { MainScene } from "../scenes/Main";
@@ -45,7 +45,7 @@ export const player = {
       main.cache.tilemap.remove(MapName.REALM);
     }
 
-    main.game.events.emit("camera:follow", {
+    main.game.events.emit(Event.CAMERA_FOLLOW, {
       key: data.map,
       player: updated,
     });

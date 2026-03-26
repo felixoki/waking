@@ -1,4 +1,4 @@
-import { Item } from "@server/types";
+import { Event, Item } from "@server/types";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
 import { configs } from "@server/configs";
@@ -11,7 +11,7 @@ export const Collection = () => {
     const updated = items.filter((i) => i.name !== item.name);
 
     setItems(updated);
-    EventBus.emit("item:collect", item);
+    EventBus.emit(Event.ITEM_COLLECT, item);
   };
 
   const close = () => {
@@ -25,10 +25,10 @@ export const Collection = () => {
       setIsOpen(true);
     };
 
-    EventBus.on("entity:collection:open", handler);
+    EventBus.on(Event.ENTITY_COLLECTION_OPEN, handler);
 
     return () => {
-      EventBus.off("entity:collection:open", handler);
+      EventBus.off(Event.ENTITY_COLLECTION_OPEN, handler);
     };
   }, []);
 

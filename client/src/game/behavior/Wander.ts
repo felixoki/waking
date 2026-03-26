@@ -1,5 +1,6 @@
 import {
   BehaviorName,
+  Event,
   Input,
   Scan,
   StateName,
@@ -65,7 +66,7 @@ export class WanderBehavior extends Behavior {
             7,
           )
         ) {
-          entity.scene.game.events.emit("entity:spotted:player", {
+          entity.scene.game.events.emit(Event.ENTITY_SPOTTED_PLAYER, {
             entityId: entity.id,
             playerId: player.id,
           });

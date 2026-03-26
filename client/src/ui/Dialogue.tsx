@@ -6,6 +6,7 @@ import {
 } from "@server/types/dialogue";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
+import { Event } from "@server/types";
 
 export const Dialogue = () => {
   const [data, setData] = useState<DialogueResponse | null>(null);
@@ -18,7 +19,7 @@ export const Dialogue = () => {
         setData(null);
       },
       [DialogueEffectName.COLLECTION_START]: () => {
-        EventBus.emit("entity:collection:request", data?.entityId);
+        EventBus.emit(Event.ENTITY_COLLECTION_REQUEST, data?.entityId);
       },
       [DialogueEffectName.COLLECTION_END]: () => {},
     };
@@ -30,7 +31,7 @@ export const Dialogue = () => {
     });
 
     if (choice.next) {
-      EventBus.emit("entity:dialogue:choice", {
+      EventBus.emit(Event.ENTITY_DIALOGUE_CHOICE, {
         entityId: data?.entityId,
         nodeId: choice.next,
       });
@@ -43,10 +44,10 @@ export const Dialogue = () => {
       setIsOpen(true);
     };
 
-    EventBus.on("entity:dialogue:start", handler);
+    EventBus.on(Event.ENTITY_DIALOGUE_START, handler);
 
     return () => {
-      EventBus.off("entity:dialogue:start", handler);
+      EventBus.off(Event.ENTITY_DIALOGUE_START, handler);
     };
   }, []);
 

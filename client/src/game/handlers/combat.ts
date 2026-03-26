@@ -1,4 +1,4 @@
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 import { DamageableComponent } from "../components/Damageable";
 import { Entity } from "../Entity";
 import { Hitbox } from "../Hitbox";
@@ -24,7 +24,7 @@ export const combat = {
 
     hitbox.hits.add(entity.id);
 
-    entity.scene.game.events.emit("hit", {
+    entity.scene.game.events.emit(Event.HIT, {
       config: hitbox.config,
       attackerId: hitbox.ownerId,
       targetId: entity.id,

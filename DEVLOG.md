@@ -326,11 +326,16 @@
 #### 25.3.2026
 
 - Add authority system ✅
-- Player death
+- Player death ✅
+
+#### 26.3.2026
+
+- Add events enum ✅
+- Add fellable component ✅
 
 ### In progress
 
--
+- Refactor ui
 
 ### Next up
 
@@ -364,20 +369,19 @@
   - Add wet effect
   - Add resistances and weaknesses
 
-- Farming ⭐
-
 - Animal keeping ⭐
 
 - Game sounds ⭐
   - Add music and ambience
 
 - Refactoring and improvement
-  - Improve depth sorting system
   - Add throttling network updates and change detection
   - Update interpolation system
   - Add crafting behavior
   - Add idle-action state
   - Lock entities during interaction
+  - Add chest component
+  - Refactor entity health bar
 
 ## Economy
 

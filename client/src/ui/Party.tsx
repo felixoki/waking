@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
-import { Party, Death } from "@server/types";
+import { Event, Party, Death } from "@server/types";
 import { REVIVE_MANA } from "@server/globals";
 
 export const PartyPanel = () => {
@@ -37,15 +37,15 @@ export const PartyPanel = () => {
     };
 
     const events = [
-      ["player:create:local", (id: string) => setPlayerId(id)],
-      ["party:list", (data: Party[]) => setLobbies(data)],
-      ["party:create", (data: Party) => setParty(data)],
-      ["party:update", (data: Party) => setParty(data)],
-      ["party:leave", onLeave],
-      ["party:start:ready", () => setInRealm(true)],
-      ["player:death", onDeath],
-      ["player:revive", onRevive],
-      ["party:wipe", onWipe],
+      [Event.PLAYER_CREATE_LOCAL, (id: string) => setPlayerId(id)],
+      [Event.PARTY_LIST, (data: Party[]) => setLobbies(data)],
+      [Event.PARTY_CREATE, (data: Party) => setParty(data)],
+      [Event.PARTY_UPDATE, (data: Party) => setParty(data)],
+      [Event.PARTY_LEAVE, onLeave],
+      [Event.PARTY_START_READY, () => setInRealm(true)],
+      [Event.PLAYER_DEATH, onDeath],
+      [Event.PLAYER_REVIVE, onRevive],
+      [Event.PARTY_WIPE, onWipe],
     ] as const;
 
     for (const [event, handler] of events) EventBus.on(event, handler);
@@ -63,7 +63,7 @@ export const PartyPanel = () => {
     const i = spectating ? alive.indexOf(spectating) : -1;
     const next = alive[(i + 1) % alive.length];
     setSpectating(next);
-    EventBus.emit("player:spectate:request", next);
+    EventBus.emit(Event.PLAYER_SPECTATE_REQUEST, next);
   };
 
   if (party && inRealm && dead.size > 0) {
@@ -78,7 +78,7 @@ export const PartyPanel = () => {
               {dead.has(id) && !isDead && (
                 <button
                   className="rounded bg-gray-300 px-2 py-0.5 text-xs hover:bg-gray-400"
-                  onClick={() => EventBus.emit("player:revive:request", id)}
+                  onClick={() => EventBus.emit(Event.PLAYER_REVIVE_REQUEST, id)}
                 >
                   Revive ({REVIVE_MANA} mana)
                 </button>
@@ -111,14 +111,14 @@ export const PartyPanel = () => {
           {party.leader === playerId && (
             <button
               className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
-              onClick={() => EventBus.emit("party:start:request")}
+              onClick={() => EventBus.emit(Event.PARTY_START_REQUEST)}
             >
               Start
             </button>
           )}
           <button
             className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
-            onClick={() => EventBus.emit("party:leave:request")}
+            onClick={() => EventBus.emit(Event.PARTY_LEAVE_REQUEST)}
           >
             Leave
           </button>
@@ -131,7 +131,7 @@ export const PartyPanel = () => {
     <div className="flex flex-col gap-2 rounded-lg bg-gray-200 p-4">
       <button
         className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
-        onClick={() => EventBus.emit("party:create:request")}
+        onClick={() => EventBus.emit(Event.PARTY_CREATE_REQUEST)}
       >
         Create party
       </button>
@@ -142,7 +142,7 @@ export const PartyPanel = () => {
               {p.id.slice(0, 8)} ({p.members.length})
               <button
                 className="rounded bg-gray-300 px-2 py-1 text-xs hover:bg-gray-400"
-                onClick={() => EventBus.emit("party:join:request", p.id)}
+                onClick={() => EventBus.emit(Event.PARTY_JOIN_REQUEST, p.id)}
               >
                 Join
               </button>

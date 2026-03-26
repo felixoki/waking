@@ -1,5 +1,6 @@
 import {
   ComponentName,
+  Event,
   GrowableConfig,
   GrowthStageConfig,
 } from "@server/types";
@@ -55,7 +56,7 @@ export class GrowableComponent extends Component {
     const last = this.config.stages[this.config.stages.length - 1];
     if (this.config.stages[this.stageIndex] !== last) return;
 
-    this.entity.scene.game.events.emit("entity:harvest", {
+    this.entity.scene.game.events.emit(Event.ENTITY_HARVEST, {
       entityId: this.entity.id,
       yield: this.config.yield,
     });

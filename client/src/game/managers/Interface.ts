@@ -1,7 +1,7 @@
 import { Entity } from "../Entity";
 import { Scene } from "../scenes/Scene";
 import EventBus from "../EventBus";
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 
 export class InterfaceManager {
   private scene: Scene;
@@ -28,7 +28,7 @@ export class InterfaceManager {
     });
 
     const data = this._getScreenData(entities, player);
-    EventBus.emit("entities:update", data);
+    EventBus.emit(Event.ENTITIES_UPDATE, data);
   }
 
   private _getScreenData(

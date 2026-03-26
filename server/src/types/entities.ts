@@ -35,6 +35,7 @@ export interface EntityMetadata {
 
 export enum EntityName {
   APPLETREE2 = "appletree2",
+  AXE = "axe",
   BARN = "barn",
   BARREL1 = "barrel1",
   BARRELS1 = "barrels1",
@@ -54,6 +55,8 @@ export enum EntityName {
   CARROT = "carrot",
   CARROT_SEED = "carrot_seed",
   CITIZEN1 = "citizen1",
+  CITIZEN2 = "citizen2",
+  CITIZEN3 = "citizen3",
   DEER = "deer",
   DRAKE = "drake",
   DUCK = "duck",

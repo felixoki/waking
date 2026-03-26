@@ -272,4 +272,69 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
       },
     },
   },
+  [EntityName.CITIZEN2]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.INTERACTABLE },
+      { name: ComponentName.ANIMATION },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 8,
+          height: 12,
+          offsetX: 12,
+          offsetY: 12,
+          pushable: false,
+        },
+      },
+      { name: ComponentName.BEHAVIOR_QUEUE },
+    ],
+    states: [StateName.IDLE, StateName.WALKING],
+    behaviors: [
+      {
+        name: BehaviorName.AMBLE,
+        config: { radius: 20, idle: { range: [6000, 12000] } },
+      },
+    ],
+    dialogue: {
+      [NodeId.GREETING]: {
+        ref: NodeId.GREETING,
+      },
+    },
+  },
+  [EntityName.CITIZEN3]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.INTERACTABLE },
+      { name: ComponentName.ANIMATION },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 8,
+          height: 12,
+          offsetX: 12,
+          offsetY: 12,
+          pushable: false,
+        },
+      },
+      { name: ComponentName.BEHAVIOR_QUEUE },
+    ],
+    states: [StateName.IDLE],
+    behaviors: [
+      {
+        name: BehaviorName.STAY,
+      },
+    ],
+    dialogue: {
+      [NodeId.GREETING]: {
+        ref: NodeId.GREETING,
+      },
+    },
+  },
 };

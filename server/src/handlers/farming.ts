@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { EntityName, Item, seeds } from "../types";
+import { EntityName, Event, Item, seeds } from "../types";
 import { World } from "../World";
 import { entity } from "./entity.js";
 
@@ -35,13 +35,13 @@ export const farming = {
     world: World,
   ) => {
     world.entities.remove(data.entityId);
-    socket.broadcast.emit("entity:despawn", data.entityId);
+    socket.broadcast.emit(Event.ENTITY_DESPAWN, data.entityId);
 
     for (const item of data.yield) world.items.add(item.name, item.quantity);
 
     const snapshot = world.economy.getSnapshot();
 
-    socket.emit("economy:update", snapshot);
-    socket.broadcast.emit("economy:update", snapshot);
+    socket.emit(Event.ECONOMY_UPDATE, snapshot);
+    socket.broadcast.emit(Event.ECONOMY_UPDATE, snapshot);
   },
 };

@@ -56,8 +56,8 @@ export const animations: Partial<
   },
   [EntityName.GREENGROCER]: {
     [StateName.IDLE]: {
-      frameCount: 12,
-      frameRate: 14,
+      frameCount: 9,
+      frameRate: 11,
       repeat: -1,
     },
   },
@@ -177,13 +177,32 @@ export const animations: Partial<
   },
   [EntityName.CITIZEN1]: {
     [StateName.IDLE]: {
-      frameCount: 6,
-      frameRate: 8,
+      frameCount: 12,
+      frameRate: 14,
       repeat: -1,
     },
     [StateName.WALKING]: {
       frameCount: 6,
       frameRate: 8,
+      repeat: -1,
+    },
+  },
+  [EntityName.CITIZEN2]: {
+    [StateName.IDLE]: {
+      frameCount: 12,
+      frameRate: 14,
+      repeat: -1,
+    },
+    [StateName.WALKING]: {
+      frameCount: 6,
+      frameRate: 8,
+      repeat: -1,
+    },
+  },
+  [EntityName.CITIZEN3]: {
+    [StateName.IDLE]: {
+      frameCount: 10,
+      frameRate: 12,
       repeat: -1,
     },
   },

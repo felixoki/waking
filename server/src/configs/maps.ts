@@ -244,10 +244,52 @@ const citizens: Spritesheet[] = [
     frameHeight: 32,
   },
   {
+    key: "citizen2-idle",
+    file: "citizen2_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen2-walking",
+    file: "citizen2_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen3-idle",
+    file: "citizen3_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
     key: "greengrocer-idle",
     file: "greengrocer_idle.png",
     frameWidth: 32,
     frameHeight: 32,
+  },
+];
+
+const icons: Spritesheet[] = [
+  {
+    key: "icons1",
+    file: "icons1.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "icons2",
+    file: "icons2.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+  {
+    key: "icons3",
+    file: "icons3.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
   },
 ];
 
@@ -270,6 +312,7 @@ export const maps: Record<MapName, MapConfig> = {
       ...plants,
       ...buildings,
       ...citizens,
+      ...icons,
       {
         key: "village_home",
         file: "village_home.png",
@@ -322,13 +365,6 @@ export const maps: Record<MapName, MapConfig> = {
       {
         key: "crystals",
         file: "crystals.png",
-        frameWidth: 16,
-        frameHeight: 16,
-        asTileset: true,
-      },
-      {
-        key: "icons1",
-        file: "icons1.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,

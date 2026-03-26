@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EntityName, seeds } from "@server/types";
+import { EntityName, Event, seeds } from "@server/types";
 import EventBus from "../game/EventBus";
 
 const available = Object.keys(seeds) as EntityName[];
@@ -11,7 +11,7 @@ export function Seeds() {
     const next = seed === active ? null : seed;
 
     setActive(next);
-    EventBus.emit("seeds:select", next);
+    EventBus.emit(Event.SEEDS_SELECT, next);
   };
 
   return (

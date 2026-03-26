@@ -1,4 +1,4 @@
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 import { Component } from "./Component";
 import { Entity } from "../Entity";
 import { Player } from "../Player";
@@ -33,7 +33,7 @@ export class PickableComponent extends Component {
 
     if (!inventory?.add(this.entity.name)) return;
 
-    this.entity.scene.game.events.emit("entity:pickup", this.entity.id);
+    this.entity.scene.game.events.emit(Event.ENTITY_PICKUP, this.entity.id);
 
     effects.shaders.stretch(this.entity, () => {
       this.entity.scene?.managers.entities.remove(this.entity.id);

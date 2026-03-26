@@ -1,6 +1,7 @@
 import {
   ComponentName,
   Direction,
+  Event,
   Input,
   MapName,
   StateName,
@@ -101,7 +102,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
 
     const scene = this.scene as Scene;
     const isAuthority = scene.managers.players?.player?.isAuthority;
-    if (isAuthority && input) this.scene.game.events.emit("entity:input", input);
+    if (isAuthority && input) this.scene.game.events.emit(Event.ENTITY_INPUT, input);
 
     const depthY = Math.round(this.y);
     

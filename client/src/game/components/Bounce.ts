@@ -1,4 +1,4 @@
-import { ComponentName } from "@server/types";
+import { ComponentName, Event } from "@server/types";
 import { Entity } from "../Entity";
 import { Component } from "./Component";
 import { BouncePipeline } from "../pipelines/Bounce";
@@ -55,7 +55,7 @@ export class BounceComponent extends Component {
   }
 
   attach(): void {
-    this.entity.scene.game.events.on("entity:overlap", this._bounce, this);
+    this.entity.scene.game.events.on(Event.ENTITY_OVERLAP, this._bounce, this);
   }
 
   private _bounce = (entity: Entity, other: Entity) => {
@@ -86,7 +86,7 @@ export class BounceComponent extends Component {
   update(): void {}
 
   detach(): void {
-    this.entity.scene.game.events.off("entity:overlap", this._bounce, this);
+    this.entity.scene.game.events.off(Event.ENTITY_OVERLAP, this._bounce, this);
 
     if (this.activeEntry) {
       this.entity.resetPipeline();

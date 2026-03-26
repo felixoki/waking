@@ -1,5 +1,6 @@
 import {
   ComponentName,
+  Event,
   SpellConfig,
   SpellName,
   StateName,
@@ -50,7 +51,7 @@ export class Casting implements State {
 
     if (player.isControllable) {
       player.mana -= config.mana;
-      EventBus.emit("player:mana", player.mana);
+      EventBus.emit(Event.PLAYER_MANA, player.mana);
     }
 
     const direction = handlers.direction.getDirectionToPoint(

@@ -3,7 +3,7 @@ import { MapLoader } from "./loaders/Map";
 import { EntityStore } from "./stores/Entity";
 import { PlayerStore } from "./stores/Player";
 import { ItemsStore } from "./stores/Items";
-import { MapName, TimePhase, TimeState } from "./types";
+import { Event, MapName, TimePhase, TimeState } from "./types";
 import { EconomyManager } from "./managers/Economy";
 import { DAY, PHASE_STARTS } from "./globals";
 import { PartyStore } from "./stores/Party";
@@ -66,14 +66,14 @@ export class World {
 
     if (phase !== this.time.phase) {
       this.time.phase = phase;
-      this.server.emit("world:phase", this.time.phase);
+      this.server.emit(Event.WORLD_PHASE, this.time.phase);
     }
 
     this.economy.update();
 
     if (this.economy.dirty) {
       this.economy.dirty = false;
-      this.server.emit("economy:update", this.economy.getSnapshot());
+      this.server.emit(Event.ECONOMY_UPDATE, this.economy.getSnapshot());
     }
   }
 

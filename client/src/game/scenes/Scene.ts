@@ -2,7 +2,7 @@ import { PhysicsManager } from "../managers/Physics";
 import { TileManager } from "../managers/Tile";
 import { CameraManager } from "../managers/Camera";
 import { InterfaceManager } from "../managers/Interface";
-import { PipelineName } from "@server/types";
+import { Event, PipelineName } from "@server/types";
 import type { MainScene } from "./Main";
 import { Player } from "../Player";
 
@@ -46,7 +46,7 @@ export class Scene extends Phaser.Scene {
     this.cameras.main.setPostPipeline(PipelineName.AMBIENCE);
 
     this.game.events.on(
-      "camera:follow",
+      Event.CAMERA_FOLLOW,
       (data: { key: string; player: Player }) => {
         if (data.key === this.scene.key) this.cameraManager.follow(data.player);
       },

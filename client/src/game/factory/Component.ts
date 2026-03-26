@@ -19,6 +19,7 @@ import { LightComponent } from "../components/Light";
 import { TextureAnimationComponent } from "../components/TextureAnimation";
 import { GrowableComponent } from "../components/Growable";
 import { FarmableComponent } from "../components/Farmable";
+import { FellableComponent } from "../components/Fellable";
 
 export class ComponentFactory {
   static create(
@@ -88,6 +89,9 @@ export class ComponentFactory {
           break;
         case ComponentName.GROWABLE:
           comp = new GrowableComponent(entity, component.config);
+          break;
+        case ComponentName.FELLABLE:
+          comp = new FellableComponent(entity);
           break;
       }
 

@@ -1,4 +1,4 @@
-import { ComponentName, HotbarDirection, HotbarSlot } from "@server/types";
+import { ComponentName, Event, HotbarDirection, HotbarSlot } from "@server/types";
 import { Component } from "./Component";
 import { Player } from "../Player";
 import EventBus from "../EventBus";
@@ -31,7 +31,7 @@ export class HotbarComponent extends Component {
   detach(): void {}
 
   emit(): void {
-    EventBus.emit("hotbar:update", {
+    EventBus.emit(Event.HOTBAR_UPDATE, {
       slots: [...this.slots],
       active: this.active,
     });

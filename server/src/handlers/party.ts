@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { World } from "../World";
 import { randomUUID } from "crypto";
-import { EntityConfig, MapName, PartyStatus } from "../types";
+import { EntityConfig, Event, MapName, PartyStatus } from "../types";
 import { generateBiome } from "../biomes";
 import { BiomeName } from "../types/generation";
 import { configs } from "../configs/index.js";
@@ -38,7 +38,7 @@ export const party = {
         isDead: false,
       }, data.members);
 
-      memberSocket.emit("party:wipe");
+      memberSocket.emit(Event.PARTY_WIPE);
     }
 
     const firstSocket = io.sockets.sockets.get(world.players.get(data.members[0])!.socketId);
@@ -63,7 +63,7 @@ export const party = {
       data.status = PartyStatus.LOBBY;
       world.clearAuthority(MapName.REALM);
 
-      socket.to(`party:${data.id}`).emit("party:update", data);
+      socket.to(`party:${data.id}`).emit(Event.PARTY_UPDATE, data);
     }
   },
 
@@ -71,8 +71,8 @@ export const party = {
     const list = world.parties.getLobbies();
     const maps = Object.values(MapName).filter((m) => m !== MapName.REALM);
 
-    socket.emit("party:list", list);
-    for (const map of maps) socket.to(`map:${map}`).emit("party:list", list);
+    socket.emit(Event.PARTY_LIST, list);
+    for (const map of maps) socket.to(`map:${map}`).emit(Event.PARTY_LIST, list);
   },
 
   create: (socket: Socket, world: World) => {
@@ -89,7 +89,7 @@ export const party = {
 
     world.parties.add(id, data);
     socket.join(`party:${id}`);
-    socket.emit("party:create", data);
+    socket.emit(Event.PARTY_CREATE, data);
 
     party.broadcast(socket, world);
   },
@@ -104,8 +104,8 @@ export const party = {
     data.members.push(player.id);
 
     socket.join(`party:${id}`);
-    socket.to(`party:${id}`).emit("party:update", data);
-    socket.emit("party:update", data);
+    socket.to(`party:${id}`).emit(Event.PARTY_UPDATE, data);
+    socket.emit(Event.PARTY_UPDATE, data);
 
     party.broadcast(socket, world);
   },
@@ -120,7 +120,7 @@ export const party = {
     data.members = data.members.filter((id) => id !== player.id);
 
     socket.leave(`party:${data.id}`);
-    socket.emit("party:leave");
+    socket.emit(Event.PARTY_LEAVE);
 
     if (data.status === PartyStatus.IN_GAME && player.map === MapName.REALM) {
       const village = configs.maps[MapName.VILLAGE];
@@ -130,7 +130,7 @@ export const party = {
         health: 100,
       });
 
-      socket.emit("player:inventory:wipe");
+      socket.emit(Event.PLAYER_INVENTORY_WIPE);
 
       party.cleanup(socket, world, data.id);
     }
@@ -143,7 +143,7 @@ export const party = {
 
     if (data.leader === player.id) data.leader = data.members[0];
 
-    socket.to(`party:${data.id}`).emit("party:update", data);
+    socket.to(`party:${data.id}`).emit(Event.PARTY_UPDATE, data);
     party.broadcast(socket, world);
   },
 
@@ -157,8 +157,8 @@ export const party = {
 
     const seed = `${data.id}-${Date.now()}`;
 
-    socket.emit("party:start:loading");
-    socket.to(`party:${data.id}`).emit("party:start:loading");
+    socket.emit(Event.PARTY_START_LOADING);
+    socket.to(`party:${data.id}`).emit(Event.PARTY_START_LOADING);
 
     const biome = generateBiome(BiomeName.FOREST, seed);
 
@@ -197,7 +197,7 @@ export const party = {
 
       if (nextId) {
         const nextSocket = io.sockets.sockets.get(world.players.get(nextId)!.socketId);
-        nextSocket?.emit("player:authority", true);
+        nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
       }
 
       world.players.update(id, {
@@ -209,7 +209,7 @@ export const party = {
 
       memberSocket.leave(`map:${prev}`);
       memberSocket.join(`map:${MapName.REALM}`);
-      memberSocket.to(`map:${prev}`).emit("player:leave", member.id);
+      memberSocket.to(`map:${prev}`).emit(Event.PLAYER_LEAVE, member.id);
 
       handlers.chunks.sync.player(
         memberSocket,
@@ -235,8 +235,8 @@ export const party = {
       players,
     };
 
-    socket.emit("party:start", payload);
-    socket.to(`party:${data.id}`).emit("party:start", payload);
+    socket.emit(Event.PARTY_START, payload);
+    socket.to(`party:${data.id}`).emit(Event.PARTY_START, payload);
 
     party.broadcast(socket, world);
   },

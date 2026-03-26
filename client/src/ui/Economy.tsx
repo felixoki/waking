@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
+import { Event } from "@server/types";
 
 export function Economy() {
   const [needs, setNeeds] = useState<Record<string, number>>({});
@@ -9,10 +10,10 @@ export function Economy() {
       setNeeds(data);
     };
 
-    EventBus.on("economy:update", handler);
+    EventBus.on(Event.ECONOMY_UPDATE, handler);
 
     return () => {
-      EventBus.off("economy:update", handler);
+      EventBus.off(Event.ECONOMY_UPDATE, handler);
     };
   }, []);
 

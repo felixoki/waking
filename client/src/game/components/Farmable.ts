@@ -1,6 +1,7 @@
 import {
   ComponentName,
   EntityName,
+  Event,
   HotbarSlotType,
 } from "@server/types";
 import { Component } from "./Component";
@@ -9,7 +10,7 @@ import { HotbarComponent } from "./Hotbar";
 import EventBus from "../EventBus";
 
 let selected: EntityName | null = null;
-EventBus.on("seeds:select", (seed: EntityName | null) => {
+EventBus.on(Event.SEEDS_SELECT, (seed: EntityName | null) => {
   selected = seed;
 });
 
@@ -50,7 +51,7 @@ export class FarmableComponent extends Component {
 
     if (!selected) return;
 
-    this.entity.scene.game.events.emit("entity:plant", {
+    this.entity.scene.game.events.emit(Event.ENTITY_PLANT, {
       seed: selected,
       x: this.entity.x,
       y: this.entity.y,

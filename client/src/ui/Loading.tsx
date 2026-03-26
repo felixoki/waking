@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
+import { Event } from "@server/types";
 
 export function Loading() {
   const [loading, setLoading] = useState(false);
@@ -8,12 +9,12 @@ export function Loading() {
     const show = () => setLoading(true);
     const hide = () => setLoading(false);
 
-    EventBus.on("party:start:loading", show);
-    EventBus.on("party:start:ready", hide);
+    EventBus.on(Event.PARTY_START_LOADING, show);
+    EventBus.on(Event.PARTY_START_READY, hide);
 
     return () => {
-      EventBus.off("party:start:loading", show);
-      EventBus.off("party:start:ready", hide);
+      EventBus.off(Event.PARTY_START_LOADING, show);
+      EventBus.off(Event.PARTY_START_READY, hide);
     };
   }, []);
 

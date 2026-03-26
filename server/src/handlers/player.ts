@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { randomUUID } from "crypto";
 import {
   Direction,
+  Event,
   Input,
   MapName,
   PlayerConfig,
@@ -39,9 +40,9 @@ export const player = {
       if (isAuthority) world.setAuthority(player.map, player.id);
     }
 
-    socket.emit("player:create:local", player);
+    socket.emit(Event.PLAYER_CREATE_LOCAL, player);
     socket.emit(
-      "player:create:others",
+      Event.PLAYER_CREATE_OTHERS,
       world.players.getOthersOnMap(player.id, player.map),
     );
 
@@ -54,10 +55,10 @@ export const player = {
       player.y,
     );
 
-    socket.to(`map:${player.map}`).emit("player:create", player);
-    socket.emit("party:list", world.parties.getLobbies());
-    socket.emit("world:time", world.getTime());
-    socket.emit("economy:update", world.economy.getSnapshot());
+    socket.to(`map:${player.map}`).emit(Event.PLAYER_CREATE, player);
+    socket.emit(Event.PARTY_LIST, world.parties.getLobbies());
+    socket.emit(Event.WORLD_TIME, world.getTime());
+    socket.emit(Event.ECONOMY_UPDATE, world.economy.getSnapshot());
   },
 
   delete: (io: Server, socket: Socket, world: World) => {
@@ -68,7 +69,7 @@ export const player = {
 
     const keys = handlers.chunks.clear(socket, world, player.id);
     keys.forEach((key) => {
-      socket.to(`chunk:${key}`).emit("player:leave", player.id);
+      socket.to(`chunk:${key}`).emit(Event.PLAYER_LEAVE, player.id);
     });
 
     const wasAuthority = world.getAuthority(player.map) === player.id;
@@ -81,7 +82,7 @@ export const player = {
         const nextSocket = io.sockets.sockets.get(
           world.players.get(nextId)!.socketId,
         );
-        nextSocket?.emit("player:authority", true);
+        nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
       }
     }
   },
@@ -102,10 +103,10 @@ export const player = {
     });
 
     const key = world.chunks.toChunkKey(player.map, data.x, data.y);
-    socket.to(`chunk:${key}`).emit("player:input", data);
+    socket.to(`chunk:${key}`).emit(Event.PLAYER_INPUT, data);
 
     const party = world.parties.getByPlayerId(player.id);
-    if (party) socket.to(`party:${party.id}`).emit("player:input", data);
+    if (party) socket.to(`party:${party.id}`).emit(Event.PLAYER_INPUT, data);
 
     handlers.chunks.sync.player(
       socket,
@@ -138,7 +139,7 @@ export const player = {
       const nextSocket = io.sockets.sockets.get(
         world.players.get(nextId)!.socketId,
       );
-      nextSocket?.emit("player:authority", true);
+      nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
     }
 
     const isAuthority = !world.getAuthority(to);
@@ -155,17 +156,17 @@ export const player = {
 
     socket.leave(`map:${prev.map}`);
     socket.join(`map:${to}`);
-    socket.to(`map:${prev.map}`).emit("player:leave", playerId);
+    socket.to(`map:${prev.map}`).emit(Event.PLAYER_LEAVE, playerId);
 
     const updated = world.players.get(playerId);
     const others = world.players.getOthersOnMap(playerId, to);
 
-    socket.emit("player:transition", updated);
-    socket.emit("player:create:others", others);
+    socket.emit(Event.PLAYER_TRANSITION, updated);
+    socket.emit(Event.PLAYER_CREATE_OTHERS, others);
 
     handlers.chunks.sync.player(socket, world, playerId, to, x, y);
 
-    socket.to(`map:${to}`).emit("player:create", updated);
+    socket.to(`map:${to}`).emit(Event.PLAYER_CREATE, updated);
   },
 
   transition: (data: Transition, io: Server, socket: Socket, world: World) => {

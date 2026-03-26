@@ -1,4 +1,4 @@
-import { ComponentName, EntityName, Item } from "@server/types";
+import { ComponentName, EntityName, Event, Item } from "@server/types";
 import { Component } from "./Component";
 import EventBus from "../EventBus";
 import { configs } from "@server/configs";
@@ -71,6 +71,6 @@ export class InventoryComponent extends Component {
   }
 
   emit(): void {
-    EventBus.emit("inventory:update", [...this.items]);
+    EventBus.emit(Event.INVENTORY_UPDATE, [...this.items]);
   }
 }

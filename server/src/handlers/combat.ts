@@ -3,6 +3,7 @@ import {
   ComponentConfig,
   ComponentName,
   EntityConfig,
+  Event,
   Hit,
   Item,
   PlayerConfig,
@@ -53,13 +54,13 @@ export const combat = {
       };
 
       const key = world.chunks.toChunkKey(player.map, player.x, player.y);
-      if (key) socket.to(`chunk:${key}`).emit("player:hurt", event);
-      socket.emit("player:hurt", event);
+      if (key) socket.to(`chunk:${key}`).emit(Event.PLAYER_HURT, event);
+      socket.emit(Event.PLAYER_HURT, event);
 
       const party = world.parties.getByPlayerId(player.id);
       if (party) {
         const event = { id: player.id, x: player.x, y: player.y };
-        io.to(`party:${party.id}`).emit("player:death", event);
+        io.to(`party:${party.id}`).emit(Event.PLAYER_DEATH, event);
         handlers.party.wipe(party.id, io, world);
       }
     },
@@ -77,11 +78,11 @@ export const combat = {
       const caller = world.players.getBySocketId(socket.id);
       const party = caller && world.parties.getByPlayerId(caller.id);
 
-      if (party) io.to(`party:${party.id}`).emit("entity:destroy", entity.id);
+      if (party) io.to(`party:${party.id}`).emit(Event.ENTITY_DESTROY, entity.id);
       else {
         if (chunkKey)
-          socket.to(`chunk:${chunkKey}`).emit("entity:destroy", entity.id);
-        socket.emit("entity:destroy", entity.id);
+          socket.to(`chunk:${chunkKey}`).emit(Event.ENTITY_DESTROY, entity.id);
+        socket.emit(Event.ENTITY_DESTROY, entity.id);
       }
 
       const definition = configs.entities[entity.name];
@@ -108,11 +109,11 @@ export const combat = {
           world.entities.add(item.id, item);
           world.chunks.registerEntity(item.id, item.map, item.x, item.y);
 
-          if (party) io.to(`party:${party.id}`).emit("entity:create", item);
+          if (party) io.to(`party:${party.id}`).emit(Event.ENTITY_CREATE, item);
           else {
             const key = world.chunks.getChunkByEntity(item.id);
-            if (key) socket.to(`chunk:${key}`).emit("entity:create", item);
-            socket.emit("entity:create", item);
+            if (key) socket.to(`chunk:${key}`).emit(Event.ENTITY_CREATE, item);
+            socket.emit(Event.ENTITY_CREATE, item);
           }
         });
       }
@@ -157,7 +158,7 @@ export const combat = {
       attackerId: attacker.id,
     };
 
-    const emit = entity ? "entity:hurt" : "player:hurt";
+    const emit = entity ? Event.ENTITY_HURT : Event.PLAYER_HURT;
     const map = player?.map || entity?.map;
     const key = map
       ? world.chunks.toChunkKey(map, target.x, target.y)
@@ -190,7 +191,7 @@ export const combat = {
       y: reviver.y,
     });
 
-    socket.emit("player:mana", reviver.mana - REVIVE_MANA);
+    socket.emit(Event.PLAYER_MANA, reviver.mana - REVIVE_MANA);
 
     const reviveEvent = {
       id: target.id,
@@ -199,7 +200,7 @@ export const combat = {
       health: 100,
     };
 
-    socket.emit("player:mana", reviver.mana - REVIVE_MANA);
-    io.to(`party:${party.id}`).emit("player:revive", reviveEvent);
+    socket.emit(Event.PLAYER_MANA, reviver.mana - REVIVE_MANA);
+    io.to(`party:${party.id}`).emit(Event.PLAYER_REVIVE, reviveEvent);
   },
 };

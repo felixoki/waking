@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import { configs } from "../configs";
 import { World } from "../World";
 import {
+  Event,
   NeedName,
   DialogueChoice,
   DialogueContext,
@@ -121,7 +122,7 @@ export const dialogue = {
         effects: choice!.effects,
       }));
 
-    socket.emit("entity:dialogue:response", {
+    socket.emit(Event.ENTITY_DIALOGUE_RESPONSE, {
       entityId,
       nodeId,
       text,

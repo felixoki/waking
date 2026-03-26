@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
+import { Event } from "@server/types";
 
 export function Stats() {
   const [health, setHealth] = useState(100);
   const [mana, setMana] = useState(100);
 
   useEffect(() => {
-    EventBus.on("player:health", setHealth);
-    EventBus.on("player:mana", setMana);
+    EventBus.on(Event.PLAYER_HEALTH, setHealth);
+    EventBus.on(Event.PLAYER_MANA, setMana);
 
     return () => {
-      EventBus.off("player:health", setHealth);
-      EventBus.off("player:mana", setMana);
+      EventBus.off(Event.PLAYER_HEALTH, setHealth);
+      EventBus.off(Event.PLAYER_MANA, setMana);
     };
   }, []);
 

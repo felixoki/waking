@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
 import { tryCatch } from "../utils/tryCatch.js";
 import {
+  Event,
   Input,
   Hit,
   Item,
@@ -24,7 +25,7 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      * Player
      */
     {
-      event: "player:create",
+      event: Event.PLAYER_CREATE,
       handler: () => handlers.player.create(socket, world),
     },
     {
@@ -32,16 +33,16 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
       handler: () => handlers.player.delete(io, socket, world),
     },
     {
-      event: "player:input",
+      event: Event.PLAYER_INPUT,
       handler: (data: Input) => handlers.player.input(data, socket, world),
     },
     {
-      event: "player:transition",
+      event: Event.PLAYER_TRANSITION,
       handler: (data: Transition) =>
         handlers.player.transition(data, io, socket, world),
     },
     {
-      event: "player:spectate",
+      event: Event.PLAYER_SPECTATE,
       handler: (data: { targetId: string }) =>
         handlers.player.spectate(data, socket, world),
     },
@@ -49,29 +50,34 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      * Entity
      */
     {
-      event: "entity:create",
+      event: Event.ENTITY_CREATE,
       handler: (data: Omit<EntityConfig, "id">) =>
         handlers.entity.create(data, socket, world),
     },
     {
-      event: "entity:input",
+      event: Event.ENTITY_INPUT,
       handler: (data: Partial<Input>) =>
         handlers.entity.input(data, socket, world),
     },
     {
-      event: "entity:pickup",
+      event: Event.ENTITY_PICKUP,
       handler: (data: string) => handlers.entity.pickup(data, socket, world),
     },
     {
-      event: "entity:spotted:player",
+      event: Event.ENTITY_SPOTTED_PLAYER,
       handler: (data: Spot) => handlers.entity.spot(data, socket, world),
     },
     {
-      event: "entity:flee",
+      event: Event.ENTITY_FLEE,
       handler: (data: string) => handlers.entity.flee(data, socket, world),
     },
     {
-      event: "entity:dialogue:iterate",
+      event: Event.ENTITY_FELL,
+      handler: (data: { id: string; x: number; y: number }) =>
+        handlers.entity.fell(data, socket, world),
+    },
+    {
+      event: Event.ENTITY_DIALOGUE_ITERATE,
       handler: (data: { entityId: string; nodeId: NodeId }) =>
         handlers.dialogue.iterate(data.entityId, socket, world, data.nodeId),
     },
@@ -79,32 +85,32 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      * Items
      */
     {
-      event: "item:collect",
+      event: Event.ITEM_COLLECT,
       handler: (data: Item) => handlers.item.collect(data, socket, world),
     },
     /**
      * Farming
      */
     {
-      event: "entity:plant",
+      event: Event.ENTITY_PLANT,
       handler: (data: any) => handlers.farming.plant(data, socket, world),
     },
     {
-      event: "entity:harvest",
+      event: Event.ENTITY_HARVEST,
       handler: (data: any) => handlers.farming.harvest(data, socket, world),
     },
     /**
      * Shared
      */
     {
-      event: "hit",
+      event: Event.HIT,
       handler: (data: Hit) => handlers.combat.hit(data, socket, io, world),
     },
     /**
      * Death
      */
     {
-      event: "player:revive",
+      event: Event.PLAYER_REVIVE,
       handler: (data: Revive) =>
         handlers.combat.revive(data, socket, io, world),
     },
@@ -112,19 +118,19 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      * Party
      */
     {
-      event: "party:create",
+      event: Event.PARTY_CREATE,
       handler: () => handlers.party.create(socket, world),
     },
     {
-      event: "party:join",
+      event: Event.PARTY_JOIN,
       handler: (data: string) => handlers.party.join(data, socket, world),
     },
     {
-      event: "party:leave",
+      event: Event.PARTY_LEAVE,
       handler: () => handlers.party.leave(socket, io, world),
     },
     {
-      event: "party:start",
+      event: Event.PARTY_START,
       handler: () => handlers.party.start(socket, io, world),
     },
   ];
