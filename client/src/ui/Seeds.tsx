@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { EntityName, Event, seeds } from "@server/types";
 import EventBus from "../game/EventBus";
+import { configs } from "@server/configs";
 
 const available = Object.keys(seeds) as EntityName[];
 
@@ -15,18 +16,44 @@ export function Seeds() {
   };
 
   return (
-    <ul className="flex gap-1">
-      {available.map((seed) => (
-        <li
-          key={seed}
-          onClick={() => pick(seed)}
-          className={`flex items-center justify-center rounded-lg text-xs w-16 aspect-square bg-gray-200 hover:bg-gray-300 ${
-            seed === active ? "text-blue-600" : ""
-          }`}
-        >
-          {seed}
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col gap-2 bg-black/25 rounded-lg p-4">
+      <h3 className="text-white">Seeds</h3>
+      <ul className="flex gap-1">
+        {available.map((seed) => (
+          <Seed
+            key={seed}
+            name={seed}
+            onClick={() => pick(seed)}
+            active={seed === active}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Seed({
+  name,
+  onClick,
+  active,
+}: {
+  name: EntityName;
+  onClick: () => void;
+  active: boolean;
+}) {
+  const config = name ? configs.entities[name] : null;
+
+  return (
+    <li>
+      <button
+        title={config?.metadata?.description || name || ""}
+        className={`relative flex items-center justify-center rounded-lg text-xs w-16 aspect-square ${
+          active ? "text-blue-600 bg-blue-100" : "bg-gray-200"
+        }`}
+        onClick={onClick}
+      >
+        {config?.metadata?.displayName || name || ""}
+      </button>
+    </li>
   );
 }

@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Event, MapName } from "../types";
 import { World } from "../World";
 
@@ -11,12 +11,15 @@ export const chunks = {
       map: MapName,
       x: number,
       y: number,
+      io?: Server,
+      partyId?: string,
     ) => {
       const { activated, deactivated } = world.chunks.updatePlayerChunks(
         playerId,
         map,
         x,
         y,
+        partyId,
       );
 
       activated.forEach((key) => socket.join(`chunk:${key}`));
@@ -28,7 +31,22 @@ export const chunks = {
           .map((id) => world.entities.get(id))
           .filter(Boolean);
 
-        if (entities.length) socket.emit(Event.ENTITY_CREATE_ALL, entities);
+        if (entities.length) {
+          socket.emit(Event.ENTITY_CREATE_ALL, entities);
+
+          if (io) {
+            const authorityId = world.authority.get(map, partyId);
+
+            if (authorityId && authorityId !== playerId) {
+              const authority = world.players.get(authorityId);
+
+              if (authority) {
+                const authoritySocket = io.sockets.sockets.get(authority.socketId);
+                authoritySocket?.emit(Event.ENTITY_CREATE_ALL, entities);
+              }
+            }
+          }
+        }
       }
 
       if (deactivated.length) {

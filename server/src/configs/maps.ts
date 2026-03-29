@@ -65,6 +65,18 @@ const animals: Spritesheet[] = [
     frameHeight: 32,
   },
   {
+    key: "goose-idle",
+    file: "goose_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "goose-walking",
+    file: "goose_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
     key: "fox-idle",
     file: "fox_idle_with_shadow.png",
     frameWidth: 32,
@@ -262,8 +274,104 @@ const citizens: Spritesheet[] = [
     frameHeight: 32,
   },
   {
+    key: "citizen4-idle",
+    file: "citizen4_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen5-idle",
+    file: "citizen5_idle.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen6-idle",
+    file: "citizen6_idle.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen7-idle",
+    file: "citizen7_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen7-walking",
+    file: "citizen7_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen8-idle",
+    file: "citizen8_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen9-idle",
+    file: "citizen9_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen10-idle",
+    file: "citizen10_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen11-idle",
+    file: "citizen11_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen12-idle",
+    file: "citizen12_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen12-walking",
+    file: "citizen12_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen13-idle",
+    file: "citizen13_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "citizen13-walking",
+    file: "citizen13_walking_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "baker-idle",
+    file: "baker_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "beverage_saler-idle",
+    file: "beverage_saler_idle_with_shadow.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
     key: "greengrocer-idle",
     file: "greengrocer_idle.png",
+    frameWidth: 32,
+    frameHeight: 32,
+  },
+  {
+    key: "host-idle",
+    file: "host_idle.png",
     frameWidth: 32,
     frameHeight: 32,
   },
@@ -298,6 +406,10 @@ const creatures: Spritesheet[] = [
   { key: "orc1-walking", file: "orc1_walking_with_shadow.png" },
   { key: "orc1-running", file: "orc1_running_with_shadow.png" },
   { key: "orc1-slashing", file: "orc1_slashing_with_shadow.png" },
+  { key: "goblin1-idle", file: "goblin1_idle_with_shadow.png" },
+  { key: "goblin1-walking", file: "goblin1_walking_with_shadow.png" },
+  { key: "goblin1-running", file: "goblin1_running_with_shadow.png" },
+  { key: "goblin1-slashing", file: "goblin1_slashing_with_shadow.png" },
 ];
 
 export const maps: Record<MapName, MapConfig> = {
@@ -313,6 +425,7 @@ export const maps: Record<MapName, MapConfig> = {
       ...buildings,
       ...citizens,
       ...icons,
+      ...creatures,
       {
         key: "village_home",
         file: "village_home.png",
@@ -386,6 +499,13 @@ export const maps: Record<MapName, MapConfig> = {
       {
         key: "water_detilazation",
         file: "water_detilazation.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "water_lilis",
+        file: "water_lilis.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
@@ -540,6 +660,29 @@ export const maps: Record<MapName, MapConfig> = {
       },
     ],
   },
+  [MapName.FISHING_HUT]: {
+    id: MapName.FISHING_HUT,
+    spawn: { x: 144, y: 272 },
+    json: "fishing_hut.json",
+    isIndoor: true,
+    spritesheets: [
+      ...player,
+      {
+        key: "village_fishing_dock_house_walls_floor",
+        file: "village_fishing_dock_house_walls_floor.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "village_fishing_dock_interior",
+        file: "village_fishing_dock_interior.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+    ],
+  },
   [MapName.HOME]: {
     id: MapName.HOME,
     spawn: { x: 184, y: 168 },
@@ -570,6 +713,7 @@ export const maps: Record<MapName, MapConfig> = {
     isIndoor: true,
     spritesheets: [
       ...player,
+      ...citizens,
       {
         key: "village_tavern_interior",
         file: "village_tavern_interior.png",

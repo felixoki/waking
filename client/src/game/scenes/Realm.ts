@@ -31,4 +31,26 @@ export default class RealmScene extends Scene {
 
     this.cameraManager.fitZoom();
   }
+
+  teardown(): void {
+    this.children.removeAll(true);
+    this.tileManager.destroy();
+    this.tileManager = undefined!;
+    this.cache.tilemap.remove(MapName.REALM);
+  }
+
+  rebuild(tilemap: any): void {
+    super.create();
+
+    this.cache.tilemap.add(MapName.REALM, {
+      format: Phaser.Tilemaps.Formats.TILED_JSON,
+      data: tilemap,
+    });
+
+    const map = MapFactory.create(this, MapName.REALM);
+    this.tileManager = new TileManager(map);
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+    this.cameraManager.fitZoom();
+  }
 }

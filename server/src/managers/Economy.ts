@@ -1,7 +1,7 @@
 import { configs } from "../configs";
 import { DAY } from "../globals";
 import { ItemsStore } from "../stores/Items";
-import { NeedConfig, NeedName } from "../types";
+import { EconomySnapshot, NeedConfig, NeedName } from "../types";
 
 export class EconomyManager {
   private needs: Map<NeedName, NeedConfig> = new Map();
@@ -71,11 +71,18 @@ export class EconomyManager {
     return this.getSupply(need) < threshold * 0.3;
   }
 
-  getSnapshot(): Record<string, number> {
-    const snapshot: Record<string, number> = {};
+  getSnapshot(): EconomySnapshot {
+    const snapshot: EconomySnapshot = [];
 
     this.needs.forEach((need) => {
-      snapshot[need.name] = Math.floor(this.getSupply(need));
+      const items = need.items
+        .filter((tier) => tier.tier <= this.tier)
+        .map((tier) => ({
+          item: tier.item,
+          quantity: Math.floor(this.supply.get(tier.item)),
+        }));
+
+      snapshot.push({ name: need.name, items });
     });
 
     return snapshot;

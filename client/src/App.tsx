@@ -35,14 +35,18 @@ function App() {
       <div id="game" className="w-screen h-screen"></div>
       <Loading />
       <Entities />
+      <div className="fixed top-4 right-4 bg-black/25 rounded-lg p-4 min-w-75">
+        <Party />
+      </div>
       <Stats />
       <Economy />
-      <div className="fixed top-0 left-0 flex flex-col gap-4 p-4">
-        <Hotbar />
-        <Inventory />
+      <div className="fixed top-4 left-4 flex flex-col gap-4">
+        <div className="bg-black/25 rounded-lg p-4">
+          <Hotbar />
+          <Inventory />
+        </div>
         <Dialogue />
         <Collection />
-        <Party />
         <Seeds />
       </div>
     </div>

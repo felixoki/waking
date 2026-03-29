@@ -41,7 +41,7 @@ export class TileManager {
         anim.currentFrame = (anim.currentFrame + 1) % anim.frames.length;
 
         const frameGid = anim.frames[anim.currentFrame];
-        
+
         anim.positions.forEach(({ layer, x, y }) => {
           if (x >= minX && x <= maxX && y >= minY && y <= maxY)
             layer.putTileAt(frameGid, x, y);

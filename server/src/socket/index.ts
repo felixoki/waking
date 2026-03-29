@@ -34,7 +34,7 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: Event.PLAYER_INPUT,
-      handler: (data: Input) => handlers.player.input(data, socket, world),
+      handler: (data: Input) => handlers.player.input(data, socket, io, world),
     },
     {
       event: Event.PLAYER_TRANSITION,

@@ -23,10 +23,10 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.BODY,
         config: {
-          width: 8,
+          width: 16,
           height: 12,
-          offsetX: 28,
-          offsetY: 24,
+          offsetX: 8,
+          offsetY: 10,
           pushable: false,
         },
       },
@@ -62,9 +62,9 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.BODY,
         config: {
           width: 8,
-          height: 12,
-          offsetX: 28,
-          offsetY: 24,
+          height: 6,
+          offsetX: 12,
+          offsetY: 12,
           pushable: false,
         },
       },
@@ -88,9 +88,9 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.BODY,
         config: {
           width: 8,
-          height: 12,
-          offsetX: 28,
-          offsetY: 24,
+          height: 6,
+          offsetX: 12,
+          offsetY: 12,
           pushable: false,
         },
       },
@@ -113,10 +113,10 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.BODY,
         config: {
-          width: 8,
-          height: 12,
-          offsetX: 28,
-          offsetY: 24,
+          width: 14,
+          height: 10,
+          offsetX: 10,
+          offsetY: 12,
           pushable: false,
         },
       },
@@ -137,7 +137,8 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
     moving: [],
     components: [
       { name: ComponentName.ANIMATION },
-      { name: ComponentName.DAMAGEABLE,
+      {
+        name: ComponentName.DAMAGEABLE,
         config: {
           loot: [
             {
@@ -148,15 +149,15 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
             },
           ],
         },
-       },
+      },
       { name: ComponentName.BEHAVIOR_QUEUE },
       {
         name: ComponentName.BODY,
         config: {
-          width: 8,
-          height: 12,
-          offsetX: 28,
-          offsetY: 24,
+          width: 14,
+          height: 10,
+          offsetX: 10,
+          offsetY: 12,
           pushable: false,
         },
       },
@@ -169,6 +170,32 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
       },
       {
         name: BehaviorName.FLEE,
+      },
+    ],
+  },
+  [EntityName.GOOSE]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.ANIMATION },
+      { name: ComponentName.DAMAGEABLE },
+      { name: ComponentName.BEHAVIOR_QUEUE },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 14,
+          height: 10,
+          offsetX: 10,
+          offsetY: 12,
+          pushable: false,
+        },
+      },
+    ],
+    states: [StateName.IDLE, StateName.WALKING],
+    behaviors: [
+      {
+        name: BehaviorName.AMBLE,
+        config: { radius: 60, idle: { range: [10000, 20000] } },
       },
     ],
   },

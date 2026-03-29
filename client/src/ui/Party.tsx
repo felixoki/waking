@@ -68,16 +68,21 @@ export const PartyPanel = () => {
 
   if (party && inRealm && dead.size > 0) {
     return (
-      <div className="flex flex-col gap-2 rounded-lg bg-gray-200 p-4">
-        <p className="text-sm font-bold">Party</p>
+      <div className="flex flex-col gap-4">
+        <h3 className="text-white">Party</h3>
         <ul className="flex flex-col gap-1">
           {party.members.map((id) => (
-            <li key={id} className="flex items-center gap-2 text-sm">
-              {dead.has(id) ? <s>{id.slice(0, 8)}</s> : id.slice(0, 8)}
-              {id === playerId && " (you)"}
+            <li
+              key={id}
+              className="flex items-center justify-between text-white"
+            >
+              <span>
+                {dead.has(id) ? <s>{id.slice(0, 8)}</s> : id.slice(0, 8)}
+                {id === playerId && " (you)"}
+              </span>
               {dead.has(id) && !isDead && (
                 <button
-                  className="rounded bg-gray-300 px-2 py-0.5 text-xs hover:bg-gray-400"
+                  className="rounded bg-blue-600 px-2 py-1 text-xs text-white hover:bg-blue-700"
                   onClick={() => EventBus.emit(Event.PLAYER_REVIVE_REQUEST, id)}
                 >
                   Revive ({REVIVE_MANA} mana)
@@ -88,36 +93,45 @@ export const PartyPanel = () => {
         </ul>
         {isDead && alive.length > 0 && (
           <button
-            className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
+            className="rounded bg-black/25 px-2 py-1 text-sm text-white hover:bg-black/50"
             onClick={spectateNext}
           >
             Spectate{spectating ? ` (${spectating.slice(0, 8)})` : ""}
           </button>
         )}
+        <button
+          className="rounded bg-black/25 px-2 py-1 text-white hover:bg-black/50"
+          onClick={() => EventBus.emit(Event.PARTY_LEAVE_REQUEST)}
+        >
+          Leave
+        </button>
       </div>
     );
   }
 
   if (party) {
     return (
-      <div className="flex flex-col gap-2 rounded-lg bg-gray-200 p-4">
-        <p className="text-sm font-bold">Party</p>
+      <div className="flex flex-col gap-4">
+        <h3 className="text-white">Party</h3>
         <ul className="flex flex-col gap-1">
           {party.members.map((id) => (
-            <li key={id} className="text-sm">{id.slice(0, 8)}</li>
+            <li key={id} className="text-sm text-white">
+              {id.slice(0, 8)}
+              {id === playerId && " (you)"}
+            </li>
           ))}
         </ul>
         <div className="flex gap-2">
-          {party.leader === playerId && (
+          {party.leader === playerId && !inRealm && (
             <button
-              className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
+              className="rounded text-white bg-blue-600 px-2 py-1 hover:bg-blue-700"
               onClick={() => EventBus.emit(Event.PARTY_START_REQUEST)}
             >
               Start
             </button>
           )}
           <button
-            className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
+            className="rounded bg-black/25 px-2 py-1 text-white hover:bg-black/50"
             onClick={() => EventBus.emit(Event.PARTY_LEAVE_REQUEST)}
           >
             Leave
@@ -128,28 +142,36 @@ export const PartyPanel = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-gray-200 p-4">
+    <div className="flex flex-col gap-4">
+      {lobbies.length > 0 ? (
+        <>
+          <h3 className="text-white">Parties</h3>
+          <ul className="flex flex-col gap-2">
+            {lobbies.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center justify-between text-sm text-white"
+              >
+                {p.id.slice(0, 8)} ({p.members.length})
+                <button
+                  className="rounded bg-black/25 px-2 py-1 text-xs text-white hover:bg-black/50"
+                  onClick={() => EventBus.emit(Event.PARTY_JOIN_REQUEST, p.id)}
+                >
+                  Join
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <span className="text-white">No parties available</span>
+      )}
       <button
-        className="rounded bg-gray-300 px-2 py-1 text-sm hover:bg-gray-400"
+        className="rounded bg-blue-600 px-2 py-1 text-white font-medium hover:bg-blue-700"
         onClick={() => EventBus.emit(Event.PARTY_CREATE_REQUEST)}
       >
         Create party
       </button>
-      {lobbies.length > 0 && (
-        <ul className="flex flex-col gap-1">
-          {lobbies.map((p) => (
-            <li key={p.id} className="flex items-center gap-2 text-sm">
-              {p.id.slice(0, 8)} ({p.members.length})
-              <button
-                className="rounded bg-gray-300 px-2 py-1 text-xs hover:bg-gray-400"
-                onClick={() => EventBus.emit(Event.PARTY_JOIN_REQUEST, p.id)}
-              >
-                Join
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 };

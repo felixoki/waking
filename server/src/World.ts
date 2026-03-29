@@ -9,6 +9,7 @@ import { DAY, PHASE_STARTS } from "./globals";
 import { PartyStore } from "./stores/Party";
 import { Server } from "socket.io";
 import { ChunkManager } from "./managers/Chunk";
+import { AuthorityManager } from "./managers/Authority";
 
 export class World {
   private time: TimeState = { current: 0, days: 0, phase: TimePhase.DAWN };
@@ -19,10 +20,9 @@ export class World {
   public readonly items: ItemsStore;
   public readonly parties: PartyStore;
   public readonly chunks: ChunkManager;
+  public readonly authority: AuthorityManager;
 
   public economy: EconomyManager;
-
-  private authority = new Map<MapName, string>();
 
   constructor(server: Server) {
     this.server = server;
@@ -32,6 +32,7 @@ export class World {
     this.items = new ItemsStore();
     this.parties = new PartyStore();
     this.chunks = new ChunkManager();
+    this.authority = new AuthorityManager();
 
     this.economy = new EconomyManager(this.items);
 
@@ -79,35 +80,6 @@ export class World {
 
   getTime(): TimeState {
     return { ...this.time };
-  }
-
-  getAuthority(map: MapName): string | undefined {
-    return this.authority.get(map);
-  }
-
-  setAuthority(map: MapName, playerId: string): void {
-    this.authority.set(map, playerId);
-  }
-
-  clearAuthority(map: MapName): void {
-    this.authority.delete(map);
-  }
-
-  transferAuthority(map: MapName, from: string, exclude: string[] = []): string | undefined {
-    if (this.authority.get(map) !== from) return undefined;
-
-    const next = this.players
-      .getByMap(map)
-      .find((p) => p.id !== from && !exclude.includes(p.id));
-
-    if (next) {
-      this.authority.set(map, next.id);
-      this.players.update(next.id, { isAuthority: true });
-      return next.id;
-    }
-
-    this.authority.delete(map);
-    return undefined;
   }
 
   private _getPhase(current: number): TimePhase {

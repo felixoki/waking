@@ -38,6 +38,18 @@ export const crops: Partial<Record<EntityName, EntityDefinition>> = {
     states: [],
     behaviors: [],
   },
+  [EntityName.CARROT_SEED]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Carrot Seed",
+      description: "Plant to grow a carrot.",
+      stackable: true,
+    },
+  },
   [EntityName.CARROT]: {
     facing: Direction.DOWN,
     moving: [],
@@ -106,6 +118,18 @@ export const crops: Partial<Record<EntityName, EntityDefinition>> = {
     metadata: {
       displayName: "Carrot",
       description: "A crunchy orange root vegetable.",
+      stackable: true,
+    },
+  },
+  [EntityName.TOMATO_SEED]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Tomato Seed",
+      description: "Plant to grow a tomato.",
       stackable: true,
     },
   },
@@ -178,6 +202,18 @@ export const crops: Partial<Record<EntityName, EntityDefinition>> = {
     metadata: {
       displayName: "Tomato",
       description: "A plump red fruit.",
+      stackable: true,
+    },
+  },
+  [EntityName.CABBAGE_SEED]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Cabbage Seed",
+      description: "Plant to grow a cabbage.",
       stackable: true,
     },
   },

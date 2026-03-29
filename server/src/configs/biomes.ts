@@ -114,18 +114,18 @@ export const forest: BiomeConfig = {
       spacing: 4,
     },
     {
-      entities: [EntityName.ORC1],
+      entities: [EntityName.ORC1, EntityName.GOBLIN1],
       terrain: [TerrainName.GRASS, TerrainName.GROUND],
       density: 0.005,
       spacing: 15,
-      group: { min: 1, max: 2, radius: 3 },
+      group: { min: 0, max: 2, radius: 3 },
     },
     {
       entities: [EntityName.BOAR],
       terrain: [TerrainName.GRASS, TerrainName.GROUND],
       density: 0.01,
       spacing: 15,
-      group: { min: 1, max: 2, radius: 3 },
+      group: { min: 0, max: 2, radius: 3 },
     },
     {
       entities: [EntityName.DEER],

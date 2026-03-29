@@ -33,4 +33,11 @@ export interface SpellConfig {
     height: number;
   };
   combo?: ComboStep[];
+  metadata?: SpellMetadata;
+}
+
+export interface SpellMetadata {
+  displayName?: string;
+  description?: string;
+  icon?: string;
 }

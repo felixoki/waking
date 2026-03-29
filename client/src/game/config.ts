@@ -11,6 +11,7 @@ import RealmScene from "./scenes/Realm";
 import { BlacksmithScene } from "./scenes/Blacksmith";
 import { TavernScene } from "./scenes/Tavern";
 import { GlassblowerScene } from "./scenes/Glassblower";
+import { FishingHutScene } from "./scenes/FishingHut";
 
 export const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -29,7 +30,8 @@ export const config: Phaser.Types.Core.GameConfig = {
     RealmScene,
     BlacksmithScene,
     TavernScene,
-    GlassblowerScene
+    GlassblowerScene,
+    FishingHutScene,
   ],
   physics: {
     default: "arcade",

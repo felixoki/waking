@@ -16,3 +16,8 @@ export interface NeedConfig {
   consumption: Record<number, number>;
   threshold: Record<number, number>;
 }
+
+export type EconomySnapshot = {
+  name: NeedName;
+  items: { item: EntityName; quantity: number }[];
+}[];

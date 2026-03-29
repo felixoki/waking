@@ -2,6 +2,7 @@ import { EntityManager } from "../managers/Entity";
 import { PlayerManager } from "../managers/Player";
 import SocketManager from "../managers/Socket";
 import {
+  EconomySnapshot,
   EntityConfig,
   PlayerConfig,
   Input,
@@ -27,6 +28,7 @@ import { effects } from "../effects";
 import { AmbienceManager } from "../managers/Ambience";
 import { ChunkManager } from "../managers/Chunk";
 import { Player } from "../Player";
+import type RealmScene from "./Realm";
 
 export class MainScene extends Phaser.Scene {
   public playerManager!: PlayerManager;
@@ -65,6 +67,7 @@ export class MainScene extends Phaser.Scene {
       MapName.BLACKSMITH_HOUSE,
       MapName.TAVERN,
       MapName.GLASSBLOWER_HOUSE,
+      MapName.FISHING_HUT,
     ];
     const ready = new Set<string>();
 
@@ -145,11 +148,14 @@ export class MainScene extends Phaser.Scene {
       EventBus.emit(Event.PLAYER_MANA, player.mana);
     });
 
-    this.socketManager.on(Event.PLAYER_CREATE_OTHERS, (data: PlayerConfig[]) => {
-      data.forEach((config) => {
-        this.playerManager.add(config, false);
-      });
-    });
+    this.socketManager.on(
+      Event.PLAYER_CREATE_OTHERS,
+      (data: PlayerConfig[]) => {
+        data.forEach((config) => {
+          this.playerManager.add(config, false);
+        });
+      },
+    );
 
     this.socketManager.on(Event.PLAYER_CREATE, (data: PlayerConfig) => {
       this.playerManager.add(data, false);
@@ -338,7 +344,7 @@ export class MainScene extends Phaser.Scene {
     /**
      * Economy
      */
-    this.socketManager.on(Event.ECONOMY_UPDATE, (data: Record<string, number>) => {
+    this.socketManager.on(Event.ECONOMY_UPDATE, (data: EconomySnapshot) => {
       EventBus.emit(Event.ECONOMY_UPDATE, data);
     });
 
@@ -364,16 +370,9 @@ export class MainScene extends Phaser.Scene {
         entities: EntityConfig[];
         players: PlayerConfig[];
       }) => {
-        this.cache.tilemap.add(MapName.REALM, {
-          format: Phaser.Tilemaps.Formats.TILED_JSON,
-          data: data.tilemap,
-        });
+        const realm = this.scene.get(MapName.REALM) as RealmScene;
 
-        this.scene.launch(MapName.REALM);
-
-        const scene = this.scene.get(MapName.REALM);
-
-        scene.events.once(Phaser.Scenes.Events.CREATE, () => {
+        const onReady = () => {
           this.entityManager.batch(data.entities);
 
           const localId = this.playerManager.player?.id;
@@ -382,14 +381,28 @@ export class MainScene extends Phaser.Scene {
           if (config) {
             this.scene.bringToTop(MapName.REALM);
             handlers.player.transition(config, this);
-          } else scene.scene.setVisible(false);
+          } else realm.scene.setVisible(false);
 
           data.players
             .filter((p) => p.id !== localId)
             .forEach((config) => this.playerManager.add(config, false));
 
           EventBus.emit(Event.PARTY_START_READY);
+        };
+
+        if (realm.scene.isActive()) {
+          realm.rebuild(data.tilemap);
+          onReady();
+          return;
+        }
+        
+        this.cache.tilemap.add(MapName.REALM, {
+          format: Phaser.Tilemaps.Formats.TILED_JSON,
+          data: data.tilemap,
         });
+
+        this.scene.launch(MapName.REALM);
+        realm.events.once(Phaser.Scenes.Events.CREATE, onReady);
       },
     );
 

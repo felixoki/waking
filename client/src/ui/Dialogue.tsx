@@ -54,13 +54,13 @@ export const Dialogue = () => {
   if (!isOpen || !data) return null;
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg max-w-135 bg-gray-200 p-4">
-      <p>{data.text as string}</p>
+    <div className="fixed bottom-1/5 left-1/2 transform -translate-x-1/2 flex flex-col gap-8 rounded-lg w-175 bg-black/25 p-4">
+      <p className="text-white text-lg">{data.text as string}</p>
       <ul className="flex flex-col gap-2">
         {data.choices.map((choice, i) => (
           <li key={i}>
             <button
-              className="rounded bg-gray-300 px-2 py-1 hover:bg-gray-400"
+              className="rounded bg-black/25 px-3 py-2 text-white text-lg hover:bg-black/50"
               onClick={() => choose(choice)}
             >
               {choice.text as string}

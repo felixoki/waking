@@ -80,4 +80,7 @@ export enum Event {
 
   /** Camera */
   CAMERA_FOLLOW = "camera_follow",
+
+  /** UI */
+  UI_TOGGLE = "ui_toggle",
 }

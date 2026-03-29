@@ -44,6 +44,10 @@ export class MapFactory {
           (prop) => prop.name === "collides" && prop.value === true,
         );
 
+        const isForeground = properties?.some(
+          (prop) => prop.name === "foreground" && prop.value === true,
+        );
+
         const layer = tilemap.createLayer(currentIndex, tilesets, 0, 0);
 
         if (!layer) return;
@@ -53,7 +57,7 @@ export class MapFactory {
           this.createCollisions(scene, layer);
         }
 
-        layer.setDepth(depth);
+        layer.setDepth(isForeground ? 10000 + depth : depth);
       }
 
       if (rawLayer.type === "objectgroup") {
@@ -70,10 +74,16 @@ export class MapFactory {
           (prop) => prop.name === "renders" && prop.value === true,
         );
 
+        const isForeground = properties.some(
+          (prop) => prop.name === "foreground" && prop.value === true,
+        );
+
         const texture = properties.find((prop) => prop.name === "texture");
 
+        const layerDepth = isForeground ? 10000 + depth : depth;
+
         if (render && texture)
-          this.createStaticLayer(scene, tilemap, layer, texture.value, depth);
+          this.createStaticLayer(scene, tilemap, layer, texture.value, layerDepth);
       }
     });
 

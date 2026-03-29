@@ -1,10 +1,278 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="22" height="14" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="16">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="22" height="14" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="21">
+ <editorsettings>
+  <export target="../client/public/assets/maps/tavern.json" format="json"/>
+ </editorsettings>
  <tileset firstgid="1" name="village_tavern_interior" tilewidth="16" tileheight="16" tilecount="462" columns="21">
   <image source="../client/public/assets/sprites/village_tavern_interior.png" width="336" height="352"/>
+  <tile id="50">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="-4" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="59">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="71">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="-4" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="80">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="20" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="92">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="-4" y="0" width="20" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="93">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="94">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="95">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="96">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="97">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="98">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="99">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="101">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="20" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="126">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="3" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="127">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="3" width="16" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="147">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="2"/>
+   </objectgroup>
+  </tile>
+  <tile id="148">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="2"/>
+   </objectgroup>
+  </tile>
+  <tile id="192">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="9" width="8" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="193">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="9" width="16" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="194">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="9" width="8" height="7"/>
+   </objectgroup>
+  </tile>
+  <tile id="213">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="8" y="0" width="8" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="214">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="215">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="8" height="8"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <tileset firstgid="463" name="village_tavern_walls_floor" tilewidth="16" tileheight="16" tilecount="180" columns="10">
   <image source="../client/public/assets/sprites/village_tavern_walls_floor.png" width="160" height="288"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="5" y="5" width="11" height="11"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="5" width="16" height="11"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="5" width="11" height="11"/>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="5" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="33">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="34">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="5" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="43">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="44">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="63">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="64">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="70">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="71">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="73">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="74">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="5" y="0" width="11" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="101">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="102">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="103">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="104">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="105">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="106">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="107">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="108">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="109">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="155">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="5" width="16" height="11"/>
+   </objectgroup>
+  </tile>
+  <tile id="157">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="5" width="16" height="11"/>
+   </objectgroup>
+  </tile>
  </tileset>
  <layer id="2" name="floor" width="22" height="14">
   <data encoding="csv">
@@ -60,25 +328,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="5" name="interior2" width="22" height="14">
-  <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,207,208,209,210,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,228,229,230,231,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
  <layer id="1" name="walls" width="22" height="14">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 613,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,614,615,
 623,476,523,524,556,557,558,556,557,558,559,558,557,558,557,558,558,559,560,561,517,625,
@@ -92,11 +345,14 @@
 623,475,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,473,625,
 623,475,136,0,0,139,463,464,464,618,619,619,620,464,464,465,0,0,139,0,473,625,
 623,475,0,158,0,0,473,616,634,628,629,629,630,634,617,475,158,0,0,0,473,625,
-623,546,464,464,464,464,507,625,474,474,474,474,474,474,623,506,464,464,464,464,507,625,
+623,506,464,464,464,464,507,625,474,474,474,474,474,474,623,506,464,464,464,464,507,625,
 633,634,634,634,634,634,634,635,474,474,474,474,474,474,633,634,634,634,634,634,634,635
 </data>
  </layer>
  <layer id="7" name="bar" width="22" height="14">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,10,11,12,13,0,0,0,0,0,0,0,0,
@@ -115,6 +371,9 @@
 </data>
  </layer>
  <layer id="9" name="tables" width="22" height="14">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -123,11 +382,33 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,171,172,171,172,171,172,171,172,171,172,171,172,171,172,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,214,215,216,0,0,0,0,0,0,0,0,0,0,0,0,214,215,216,0,0,
+0,0,235,236,237,0,0,0,0,150,0,0,214,215,216,0,0,235,236,237,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,235,236,237,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="15" name="tables_foreground" width="22" height="14">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+   <property name="foreground" type="bool" value="true"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,193,194,195,0,0,0,0,0,0,0,0,0,0,0,0,193,194,195,0,0,
-0,0,214,215,216,0,0,127,128,129,0,0,193,194,195,0,0,214,215,216,0,0,
-0,0,235,236,237,0,0,148,149,150,0,0,214,215,216,0,0,235,236,237,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,235,236,237,0,207,208,209,210,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,228,229,230,231,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,193,194,195,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
@@ -135,17 +416,17 @@
  <objectgroup id="12" name="objects">
   <object id="1" gid="262" x="201.188" y="150.058" width="16" height="16"/>
   <object id="2" gid="286" x="292.39" y="136.835" width="16" height="16"/>
-  <object id="3" gid="308" x="292.729" y="183.623" width="16" height="16"/>
-  <object id="4" gid="266" x="68.6232" y="178.537" width="16" height="16"/>
-  <object id="5" gid="287" x="267.64" y="179.555" width="16" height="16"/>
-  <object id="6" gid="306" x="279.425" y="183.709" width="16" height="16"/>
   <object id="8" gid="267" x="272.047" y="89.0307" width="16" height="16"/>
   <object id="9" gid="286" x="205.596" y="93.4382" width="16" height="16"/>
   <object id="10" gid="264" x="286.287" y="133.445" width="16" height="16"/>
   <object id="11" gid="288" x="212.037" y="154.466" width="16" height="16"/>
   <object id="12" gid="264" x="44.2122" y="133.445" width="16" height="16"/>
-  <object id="14" gid="306" x="46.2465" y="181.928" width="16" height="16"/>
   <object id="15" name="Tavern_Exit" x="176" y="176" width="1" height="1"/>
+  <object id="16" name="Citizen4" x="110" y="116" width="1" height="1"/>
+  <object id="17" name="Citizen5" x="36" y="124" width="1" height="1"/>
+  <object id="18" name="Citizen6" x="238" y="88" width="1" height="1"/>
+  <object id="19" name="Host" x="176" y="79" width="1" height="1"/>
+  <object id="20" name="Citizen8" x="90" y="116" width="1" height="1"/>
  </objectgroup>
  <layer id="13" name="bottles" width="22" height="14">
   <data encoding="csv">
@@ -159,7 +440,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,232,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

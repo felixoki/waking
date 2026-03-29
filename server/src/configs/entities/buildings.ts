@@ -468,4 +468,51 @@ export const buildings: Partial<Record<EntityName, EntityDefinition>> = {
     states: [],
     behaviors: [],
   },
+  [EntityName.FISHING_HUT]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      {
+        name: ComponentName.TEXTURE,
+        config: {
+          spritesheet: "village_fishing_dock_house",
+          tileSize: 16,
+          tiles: [
+            { row: 1, start: 1, end: 8 },
+            { row: 2, start: 1, end: 8 },
+            { row: 3, start: 1, end: 8 },
+            { row: 4, start: 1, end: 8 },
+            { row: 5, start: 1, end: 8 },
+            { row: 6, start: 1, end: 8 },
+            { row: 7, start: 1, end: 8 },
+          ],
+        },
+        key: "fishing_dock_house_texture",
+      },
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 104,
+          height: 56,
+          offsetX: 18,
+          offsetY: 0,
+          static: true,
+        },
+      },
+      {
+        name: ComponentName.TRANSITION,
+        config: {
+          to: MapName.FISHING_HUT,
+          x: 144,
+          y: 260,
+          width: 16,
+          height: 16,
+          offsetX: 0,
+          offsetY: 64,
+        },
+      },
+    ],
+    states: [],
+    behaviors: [],
+  },
 };

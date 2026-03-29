@@ -50,6 +50,12 @@ export class ChunkManager {
     partyId?: string,
   ): boolean {
     const prev = this.chunkByEntity.get(id);
+
+    if (!partyId && prev) {
+      const parts = prev.split(":");
+      if (parts[0] === "realm" && parts.length === 4) partyId = parts[1];
+    }
+
     const next = this.toChunkKey(map, x, y, partyId);
     if (prev === next) return false;
 
@@ -122,5 +128,14 @@ export class ChunkManager {
       for (const key of chunks) all.add(key);
 
     return all;
+  }
+
+  getEntitiesByPrefix(prefix: string): string[] {
+    const result: string[] = [];
+
+    for (const [key, ids] of this.entitiesInChunk)
+      if (key.startsWith(prefix)) result.push(...ids);
+
+    return result;
   }
 }

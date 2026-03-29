@@ -18,7 +18,10 @@ export const needs: NeedConfig[] = [
   },
   {
     name: NeedName.RESOURCES,
-    items: [{ item: EntityName.QUARTZ1, tier: 1 }],
+    items: [
+      { item: EntityName.WOOD, tier: 1 },
+      { item: EntityName.QUARTZ1, tier: 1 },
+    ],
     consumption: {
       1: 0.5,
     },

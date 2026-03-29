@@ -17,9 +17,19 @@ export function Stats() {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 p-4 text-white text-sm font-mono flex flex-col gap-1">
-      <span>Health: {health}</span>
-      <span>Mana: {mana}</span>
+    <div className="fixed bottom-0 left-0 p-4 flex flex-col gap-3">
+      <div className="w-75 h-6 bg-gray-800 rounded-md overflow-hidden">
+        <div
+          className="h-full bg-green-600 rounded"
+          style={{ width: `${health}%` }}
+        />
+      </div>
+      <div className="w-75 h-6 bg-gray-800 rounded-md overflow-hidden">
+        <div
+          className="h-full bg-blue-600 rounded"
+          style={{ width: `${mana}%` }}
+        />
+      </div>
     </div>
   );
 }

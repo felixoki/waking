@@ -333,9 +333,22 @@
 - Add events enum ✅
 - Add fellable component ✅
 
+#### 27.3.2026
+
+- Refactor ui ✅
+
+#### 29.3.2026
+
+- Add goblin, goose, citizens and fishing hut ✅
+- Cannot leave party after one member died ✅
+- Health isn't reset after death ✅
+- Realm authority for multiple realm instances is broken ✅
+- Party menu in the realm has start button ✅
+- Cannot reenter realm with the same party ✅
+
 ### In progress
 
-- Refactor ui
+- Refactor server handlers
 
 ### Next up
 
@@ -347,12 +360,17 @@
 
 ### Bugs
 
+- Parties in realm are invisible even if they're back
 - Jumping down ignores collisions
-- Realm authority for multiple realm instances is broken
-- Cannot reenter realm with the same party
-- Cannot leave party after one member died
+- Dialogue doesn't close when walking away
+- Velocity doesn't reset for enemy entities
+- Depth sorting is broken for fences
+- Attack only if player coordinates are within hitbox
 
 ### Backlog
+
+- Multiplayer ⭐
+  - Global chat
 
 - Procedural generation ⭐
   - Detail layer

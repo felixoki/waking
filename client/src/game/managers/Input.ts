@@ -1,6 +1,7 @@
-import { Direction, HotbarDirection } from "@server/types";
+import { Direction, Event, HotbarDirection } from "@server/types";
 import { Scene } from "../scenes/Scene";
 import { handlers } from "../handlers";
+import EventBus from "../EventBus";
 
 type Key = Phaser.Input.Keyboard.Key;
 
@@ -16,6 +17,7 @@ export class InputManager {
     C: Key;
     SHIFT: Key;
     SPACE: Key;
+    TAB: Key;
   };
   private pointer: { x: number; y: number } = { x: 0, y: 0 };
   private target?: { x: number; y: number };
@@ -32,12 +34,16 @@ export class InputManager {
       C: Phaser.Input.Keyboard.KeyCodes.C,
       SHIFT: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      TAB: Phaser.Input.Keyboard.KeyCodes.TAB,
     }) as typeof this.keys;
 
     this.registerPointerEvents();
   }
 
   update(): void {
+    if (Phaser.Input.Keyboard.JustDown(this.keys.TAB))
+      EventBus.emit(Event.UI_TOGGLE);
+
     if (this.scene.input.activePointer) {
       const pointer = this.scene.input.activePointer;
       const point = this.scene.cameraManager.getWorldPoint(
@@ -52,7 +58,7 @@ export class InputManager {
     const dx = this.pointer.x - x;
     const dy = this.pointer.y - y;
     const angle = Math.atan2(dy, dx);
-    
+
     return handlers.direction.fromAngle(angle);
   }
 
