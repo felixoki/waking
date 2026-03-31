@@ -25,15 +25,18 @@ export function Entities() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-5xl h-5xl pointer-events-none">
+    <div className="fixed inset-0 pointer-events-none">
       {entities.map((e) => (
-        <span
+        <div
           key={e.id}
-          className="pointer-events-none absolute text-sm text-white"
-          style={{ left: e.x, top: e.y }}
+          className="w-12 h-2 bg-gray-800 rounded-xs overflow-hidden absolute"
+          style={{ left: e.x - 20, top: e.y - 40 }}
         >
-          {e.health}
-        </span>
+          <div
+            className={`h-full rounded-xs ${e.health < 30 ? "bg-red-600" : e.health < 70 ? "bg-yellow-600" : "bg-green-600"}`}
+            style={{ width: `${e.health}%` }}
+          />
+        </div>
       ))}
     </div>
   );

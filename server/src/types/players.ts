@@ -12,4 +12,5 @@ export interface PlayerConfig {
   mana: number;
   isAuthority: boolean;
   isDead: boolean;
+  locked?: string;
 }

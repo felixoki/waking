@@ -2,6 +2,7 @@ import { EntityManager } from "../managers/Entity";
 import { PlayerManager } from "../managers/Player";
 import SocketManager from "../managers/Socket";
 import {
+  Direction,
   EconomySnapshot,
   EntityConfig,
   PlayerConfig,
@@ -263,6 +264,30 @@ export class MainScene extends Phaser.Scene {
       handlers.behavior.react(entity, data.playerId);
     });
 
+    this.socketManager.on(
+      Event.ENTITY_LOCK,
+      (data: { entityId: string; facing?: Direction }) => {
+        const entity = this.entityManager.get(data.entityId);
+        if (!entity) return;
+
+        if (data.facing) entity.setFacing(data.facing);
+
+        entity.isLocked = true;
+        entity.moving = [];
+
+        if (entity.state !== StateName.IDLE)
+          entity.transitionTo(StateName.IDLE);
+        else entity.states?.get(StateName.IDLE)?.update(entity);
+      },
+    );
+
+    this.socketManager.on(Event.ENTITY_UNLOCK, (data: string) => {
+      const entity = this.entityManager.get(data);
+      if (!entity) return;
+
+      entity.isLocked = false;
+    });
+
     this.game.events.on(Event.ENTITY_INPUT, (data: Partial<Input>) => {
       this.socketManager.emit(Event.ENTITY_INPUT, data);
     });
@@ -286,12 +311,16 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
-    this.game.events.on(Event.ENTITY_DIALOGUE_START, (data: string) => {
-      this.socketManager.emit(Event.ENTITY_DIALOGUE_ITERATE, {
-        entityId: data,
-        nodeId: NodeId.GREETING,
-      });
-    });
+    this.game.events.on(
+      Event.ENTITY_DIALOGUE_START,
+      (data: { entityId: string; facing: Direction }) => {
+        this.socketManager.emit(Event.ENTITY_DIALOGUE_ITERATE, {
+          entityId: data.entityId,
+          nodeId: NodeId.GREETING,
+          facing: data.facing,
+        });
+      },
+    );
 
     this.game.events.on(Event.ENTITY_SPOTTED_PLAYER, (data: Spot) => {
       this.socketManager.emit(Event.ENTITY_SPOTTED_PLAYER, data);
@@ -307,6 +336,10 @@ export class MainScene extends Phaser.Scene {
         this.socketManager.emit(Event.ENTITY_DIALOGUE_ITERATE, data);
       },
     );
+
+    EventBus.on(Event.ENTITY_DIALOGUE_END, (data: string) => {
+      this.socketManager.emit(Event.ENTITY_DIALOGUE_END, data);
+    });
 
     EventBus.on(Event.ENTITY_COLLECTION_REQUEST, (data: string) => {
       const entity = this.entityManager.get(data);
@@ -395,7 +428,7 @@ export class MainScene extends Phaser.Scene {
           onReady();
           return;
         }
-        
+
         this.cache.tilemap.add(MapName.REALM, {
           format: Phaser.Tilemaps.Formats.TILED_JSON,
           data: data.tilemap,

@@ -42,18 +42,7 @@ export class Player extends Entity {
     isAuthority: boolean,
     isControllable: boolean,
   ) {
-    super(
-      scene,
-      x,
-      y,
-      texture,
-      id,
-      name,
-      health,
-      facing,
-      moving,
-      states,
-    );
+    super(scene, x, y, texture, id, name, health, facing, moving, states);
 
     this.mana = mana;
     this.socketId = socketId;
@@ -101,7 +90,18 @@ export class Player extends Entity {
 
     const input = remoteInput || this._getInput();
 
-    if (!input || this.isLocked) return;
+    if (!input) return;
+
+    if (this.isLocked) {
+      if (input.moving) this.moving = input.moving;
+      if (input.facing) this.setFacing(input.facing);
+
+      this.states?.get(this.state)?.update(this);
+      if (this.isControllable)
+        this.scene.game.events.emit(Event.PLAYER_INPUT, input);
+
+      return;
+    }
 
     const prev = {
       state: this.state,
@@ -133,10 +133,11 @@ export class Player extends Entity {
       this.setPosition(x, y);
     }
 
-    if (this.isControllable) this.scene.game.events.emit(Event.PLAYER_INPUT, input);
+    if (this.isControllable)
+      this.scene.game.events.emit(Event.PLAYER_INPUT, input);
 
     const depthY = Math.round(this.y);
-    
+
     if (depthY !== this._depthY) {
       this._depthY = depthY;
       this.setDepth(1000 + this.y);

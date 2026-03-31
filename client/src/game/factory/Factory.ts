@@ -50,6 +50,8 @@ export class Factory {
 
     if (!hasTexture && !hasAnimation) entity.setVisible(false);
 
+    entity.transitionTo(StateName.IDLE);
+
     if (definition.behaviors && definition.behaviors.length) {
       const behaviorQueue = entity.getComponent<BehaviorQueue>(
         ComponentName.BEHAVIOR_QUEUE,

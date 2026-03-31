@@ -1,3 +1,5 @@
+import { authority } from "./authority.js";
+import { broadcast } from "./broadcast.js";
 import { chunks } from "./chunks.js";
 import { combat } from "./combat.js";
 import { dialogue } from "./dialogue.js";
@@ -9,6 +11,8 @@ import { party } from "./party.js";
 import { player } from "./player.js";
 
 export const handlers = {
+  authority,
+  broadcast,
   chunks,
   player,
   entity,

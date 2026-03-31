@@ -1,7 +1,10 @@
 import { Socket } from "socket.io";
 import { configs } from "../configs";
 import { World } from "../World";
+import { handlers } from ".";
 import {
+  BehaviorName,
+  Direction,
   Event,
   NeedName,
   DialogueChoice,
@@ -87,7 +90,13 @@ export const dialogue = {
     },
   },
 
-  iterate: (entityId: string, socket: Socket, world: World, nodeId: NodeId) => {
+  iterate: (
+    entityId: string,
+    socket: Socket,
+    world: World,
+    nodeId: NodeId,
+    facing?: Direction,
+  ) => {
     const entity = world.entities.get(entityId);
     if (!entity) return;
 
@@ -96,6 +105,32 @@ export const dialogue = {
 
     const player = world.players.getBySocketId(socket.id);
     if (!player) return;
+
+    if (nodeId === NodeId.GREETING) {
+      if (entity.isLocked) return;
+
+      entity.isLocked = true;
+      player.locked = entityId;
+
+      const stay = definition.behaviors?.some(
+        (b) => b.name === BehaviorName.STAY,
+      );
+
+      if (!stay && facing) entity.facing = facing;
+
+      handlers.broadcast.toChunk(
+        socket,
+        world,
+        Event.ENTITY_LOCK,
+        { entityId, facing: entity.facing },
+        entity.map,
+        entity.x,
+        entity.y,
+        true,
+      );
+    }
+
+    if (player.locked !== entityId) return;
 
     const context: DialogueContext = {
       world,
@@ -128,5 +163,30 @@ export const dialogue = {
       text,
       choices,
     });
+  },
+
+  end: (entityId: string, socket: Socket, world: World) => {
+    const entity = world.entities.get(entityId);
+    if (!entity) return;
+
+    const player = world.players.getBySocketId(socket.id);
+    if (!player) return;
+
+    if (player.locked !== entityId) return;
+
+    entity.isLocked = false;
+    entity.facing = undefined;
+    player.locked = undefined;
+
+    handlers.broadcast.toChunk(
+      socket,
+      world,
+      Event.ENTITY_UNLOCK,
+      entityId,
+      entity.map,
+      entity.x,
+      entity.y,
+      true,
+    );
   },
 };

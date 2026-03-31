@@ -24,12 +24,28 @@ export class Jumping implements State {
 
     handlers.move.getVelocity(entity, SPEED_JUMPING);
 
+    const baseOriginY = entity.displayOriginY;
+    const baseOffsetY = entity.body
+      ? (entity.body as Phaser.Physics.Arcade.Body).offset.y
+      : 0;
+
     entity.scene.tweens.add({
       targets: entity,
-      displayOriginY: entity.displayOriginY + HEIGHT_JUMPING,
+      displayOriginY: baseOriginY + HEIGHT_JUMPING,
       duration: DURATION_JUMPING / 2,
       yoyo: true,
       ease: "Sine.easeOut",
+      onUpdate: () => {
+        if (!entity.body) return;
+        const body = entity.body as Phaser.Physics.Arcade.Body;
+        const delta = entity.displayOriginY - baseOriginY;
+        body.offset.y = baseOffsetY + delta;
+      },
+      onComplete: () => {
+        if (!entity.body) return;
+        const body = entity.body as Phaser.Physics.Arcade.Body;
+        body.offset.y = baseOffsetY;
+      },
     });
 
     this.timer = entity.scene.time.delayedCall(DURATION_JUMPING, () => {
@@ -37,7 +53,9 @@ export class Jumping implements State {
     });
   }
 
-  update(_entity: Entity): void {}
+  update(entity: Entity): void {
+    handlers.move.getVelocity(entity, SPEED_JUMPING);
+  }
 
   exit(entity: Entity): void {
     if (this.timer) {

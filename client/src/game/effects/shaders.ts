@@ -16,14 +16,19 @@ export const shaders = {
   stretch: (entity: Entity, onComplete?: () => void) => {
     const game = entity.scene.game;
     const renderer = game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-    const pipeline = new StretchPipeline(game);
+    let pipeline = renderer.pipelines.get(PipelineName.STRETCH) as StretchPipeline;
 
-    renderer.pipelines.add(PipelineName.STRETCH, pipeline);
+    if (!pipeline) {
+      pipeline = new StretchPipeline(game);
+      renderer.pipelines.add(PipelineName.STRETCH, pipeline);
+    }
+
     pipeline.trigger();
 
     entity.setPipeline(PipelineName.STRETCH);
 
     entity.scene.time.delayedCall(200, () => {
+      if (!entity.scene) return;
       entity.scene.tweens.add({
         targets: entity,
         y: entity.y - 6,
@@ -33,8 +38,8 @@ export const shaders = {
     });
 
     entity.scene.time.delayedCall(600, () => {
+      if (!entity.scene) return;
       entity.resetPipeline();
-      renderer.pipelines.remove(PipelineName.STRETCH);
       onComplete?.();
     });
   },

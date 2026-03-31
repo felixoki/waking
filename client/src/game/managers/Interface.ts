@@ -43,7 +43,7 @@ export class InterfaceManager {
     const camera = this.scene.cameraManager;
 
     return entities
-      .filter((e) => e.active)
+      .filter((e) => e.active && e.health < 100)
       .map((e) => ({
         id: e.id,
         health: e.health,

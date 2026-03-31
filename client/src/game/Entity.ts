@@ -24,6 +24,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
   public mana: number = 100;
   public createdAt: number = 0;
   public target?: { x: number; y: number };
+  public knockback?: Phaser.Time.TimerEvent;
 
   protected _depthY: number = 0;
 

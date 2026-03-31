@@ -85,12 +85,27 @@ export class AttackBehavior extends Behavior {
           target.y,
         );
 
-        return {
-          facing: handlers.direction.fromAngle(angle),
-          moving: [],
-          isRunning: false,
-          state: StateName.SLASHING,
-        };
+        const facing = handlers.direction.fromAngle(angle);
+        const offset = handlers.direction.getDirectionalOffset(facing, 24);
+
+        const hitboxX = entity.x + offset.x;
+        const hitboxY = entity.y + offset.y;
+        const halfW = (config.hitbox?.width || 16) / 2;
+        const halfH = (config.hitbox?.height || 16) / 2;
+
+        const within =
+          target.x >= hitboxX - halfW &&
+          target.x <= hitboxX + halfW &&
+          target.y >= hitboxY - halfH &&
+          target.y <= hitboxY + halfH;
+
+        if (within)
+          return {
+            facing,
+            moving: [],
+            isRunning: false,
+            state: StateName.SLASHING,
+          };
       }
 
       if (handlers.path.stuck(entity, this.stuck, now, 2)) {

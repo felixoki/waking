@@ -346,9 +346,25 @@
 - Party menu in the realm has start button ✅
 - Cannot reenter realm with the same party ✅
 
+#### 30.3.2026
+
+- Refactor server handlers ✅
+- Velocity doesn't reset for enemy entities ✅
+- Attack only if player coordinates are within hitbox ✅
+- Dialogue doesn't close when walking away ✅
+
+#### 31.3.2026
+
+- Refactor entity knockback ✅
+- Fix pickup crash ✅
+- Refactor entity health bar ✅
+- Jumping down ignores collisions ✅
+- Lock entities during interaction ✅
+- Fix texture errors ✅
+- Parties returning from realm are not visible ✅
+
 ### In progress
 
-- Refactor server handlers
 
 ### Next up
 
@@ -360,13 +376,6 @@
 
 ### Bugs
 
-- Parties in realm are invisible even if they're back
-- Jumping down ignores collisions
-- Dialogue doesn't close when walking away
-- Velocity doesn't reset for enemy entities
-- Depth sorting is broken for fences
-- Attack only if player coordinates are within hitbox
-
 ### Backlog
 
 - Multiplayer ⭐
@@ -374,14 +383,13 @@
 
 - Procedural generation ⭐
   - Detail layer
-  - Worker for map generation
+  - Async worker for map generation
 
 - Magic ⭐
   - Aim assist spell
   - Catch animal spell
   - Water fountain
   - Absorb life
-  - Add spell impact preview
 
 - Effects ⭐
   - Add wet effect
@@ -390,16 +398,15 @@
 - Animal keeping ⭐
 
 - Game sounds ⭐
-  - Add music and ambience
+  - Add music, sound effects and ambience
 
-- Refactoring and improvement
+- Refactoring and improvement ⭐
   - Add throttling network updates and change detection
   - Update interpolation system
   - Add crafting behavior
   - Add idle-action state
-  - Lock entities during interaction
   - Add chest component
-  - Refactor entity health bar
+  - Depth sorting for fences
 
 ## Economy
 

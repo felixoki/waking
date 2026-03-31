@@ -33,19 +33,32 @@ export const party = {
       const memberSocket = io.sockets.sockets.get(member.socketId);
       if (!memberSocket) continue;
 
-      handlers.player.transfer(memberSocket, io, world, memberId, MapName.VILLAGE, village.spawn.x, village.spawn.y, {
-        health: 100,
-        isDead: false,
-      }, data.members, data.id);
+      handlers.player.transfer(
+        memberSocket,
+        io,
+        world,
+        memberId,
+        MapName.VILLAGE,
+        village.spawn.x,
+        village.spawn.y,
+        {
+          health: 100,
+          isDead: false,
+        },
+        data.members,
+        data.id,
+      );
 
       memberSocket.emit(Event.PARTY_WIPE);
     }
 
-    const firstSocket = io.sockets.sockets.get(world.players.get(data.members[0])!.socketId);
-    if (firstSocket) party.cleanup(firstSocket, world, data.id);
+    const firstMember = world.players.get(data.members[0]);
+    const firstSocket =
+      firstMember && io.sockets.sockets.get(firstMember.socketId);
+    if (firstSocket) party.cleanup(firstSocket, io, world, data.id);
   },
 
-  cleanup: (socket: Socket, world: World, id: string) => {
+  cleanup: (socket: Socket, io: Server, world: World, id: string) => {
     const data = world.parties.get(id);
     if (!data || data.status !== PartyStatus.IN_GAME) return;
 
@@ -58,14 +71,20 @@ export const party = {
       const entityIds = world.chunks.getEntitiesByPrefix(`realm:${data.id}`);
 
       for (const entityId of entityIds) {
-        world.chunks.removeEntity(entityId);
-        world.entities.remove(entityId);
+        handlers.entity.remove(
+          entityId,
+          Event.ENTITY_DESTROY,
+          socket,
+          io,
+          world,
+        );
       }
 
       data.status = PartyStatus.LOBBY;
       world.authority.clear(MapName.REALM, data.id);
 
       socket.to(`party:${data.id}`).emit(Event.PARTY_UPDATE, data);
+      party.broadcast(socket, world);
     }
   },
 
@@ -74,7 +93,8 @@ export const party = {
     const maps = Object.values(MapName).filter((m) => m !== MapName.REALM);
 
     socket.emit(Event.PARTY_LIST, list);
-    for (const map of maps) socket.to(`map:${map}`).emit(Event.PARTY_LIST, list);
+    for (const map of maps)
+      socket.to(`map:${map}`).emit(Event.PARTY_LIST, list);
   },
 
   create: (socket: Socket, world: World) => {
@@ -127,14 +147,25 @@ export const party = {
     if (data.status === PartyStatus.IN_GAME && player.map === MapName.REALM) {
       const village = configs.maps[MapName.VILLAGE];
 
-      handlers.player.transfer(socket, io, world, player.id, MapName.VILLAGE, village.spawn.x, village.spawn.y, {
-        isDead: false,
-        health: 100,
-      }, undefined, data.id);
+      handlers.player.transfer(
+        socket,
+        io,
+        world,
+        player.id,
+        MapName.VILLAGE,
+        village.spawn.x,
+        village.spawn.y,
+        {
+          isDead: false,
+          health: 100,
+        },
+        undefined,
+        data.id,
+      );
 
       socket.emit(Event.PLAYER_INVENTORY_WIPE);
 
-      party.cleanup(socket, world, data.id);
+      party.cleanup(socket, io, world, data.id);
     }
 
     if (!data.members.length) {
@@ -168,16 +199,17 @@ export const party = {
 
     data.status = PartyStatus.IN_GAME;
 
-    const entities: EntityConfig[] = biome.entities.map((entity) => {
+    const entities: EntityConfig[] = biome.entities.map((biomeEntity) => {
       const id = randomUUID();
       const config: EntityConfig = {
         id,
         map: MapName.REALM,
-        name: entity.name,
-        x: entity.x,
-        y: entity.y,
+        name: biomeEntity.name,
+        x: biomeEntity.x,
+        y: biomeEntity.y,
         health: 100,
         createdAt: Date.now(),
+        isLocked: false,
       };
 
       world.entities.add(id, config);
@@ -195,14 +227,10 @@ export const party = {
       const prev = member.map;
       handlers.chunks.clear(memberSocket, world, id);
 
-      const candidates = world.players.getByMap(prev).filter(p => !data.members.includes(p.id));
-      const nextId = world.authority.transfer(prev, id, candidates);
-
-      if (nextId) {
-        world.players.update(nextId, { isAuthority: true });
-        const nextSocket = io.sockets.sockets.get(world.players.get(nextId)!.socketId);
-        nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
-      }
+      const candidates = world.players
+        .getByMap(prev)
+        .filter((p) => !data.members.includes(p.id));
+      handlers.authority.transfer(io, world, prev, id, candidates);
 
       world.players.update(id, {
         map: MapName.REALM,
@@ -222,7 +250,7 @@ export const party = {
         MapName.REALM,
         biome.spawn.x,
         biome.spawn.y,
-        undefined,
+        io,
         data.id,
       );
     }

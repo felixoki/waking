@@ -38,6 +38,7 @@ export const DURATION_ROLLING = 800;
 export const DURATION_SLASHING = 800;
 
 export const RANGE_SLASHING = 40;
+export const RANGE_INTERACTING = 100;
 
 export const REVIVE_MANA = 30;
 

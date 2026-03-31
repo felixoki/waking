@@ -13,6 +13,8 @@ export interface EntityConfig {
   name: EntityName;
   health: number;
   createdAt: number;
+  isLocked: boolean;
+  facing?: Direction;
 }
 
 export interface EntityDefinition {

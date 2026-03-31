@@ -103,9 +103,6 @@ export class EntityManager {
         continue;
       }
 
-      const scene = this.main.scene.get(config.map) as Scene;
-      if (!scene?.managers?.physics) break;
-
       this.queue.shift();
       this.queued.delete(config.id);
       this._create(config);
@@ -119,9 +116,14 @@ export class EntityManager {
     if (!scene?.managers?.physics) return;
 
     const definition = configs.entities[config.name];
-    const entity = Factory.create(scene, { ...config, ...definition! });
+    
+    const merged = { ...definition!, ...config };
+    if (!config.facing) merged.facing = definition!.facing;
+
+    const entity = Factory.create(scene, merged);
 
     entity.map = config.map;
+    entity.isLocked = config.isLocked;
     this.entities.set(config.id, entity);
 
     if (entity.isStatic) this._registerStatic(entity, config, scene);

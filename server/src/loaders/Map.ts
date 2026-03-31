@@ -45,6 +45,7 @@ export class MapLoader {
       x: obj.x,
       y: obj.y,
       createdAt: Date.now(),
+      isLocked: false,
     };
   }
 }

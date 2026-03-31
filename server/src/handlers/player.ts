@@ -10,7 +10,6 @@ import {
 } from "../types/index.js";
 import { configs } from "../configs/index.js";
 import { World } from "../World.js";
-import { party } from "./party.js";
 import { handlers } from "./index.js";
 
 export const player = {
@@ -65,7 +64,24 @@ export const player = {
     const player = world.players.getBySocketId(socket.id);
     if (!player) return;
 
-    party.leave(socket, io, world);
+    if (player.locked) {
+      const entity = world.entities.get(player.locked);
+
+      if (entity) {
+        entity.isLocked = false;
+        handlers.broadcast.toChunk(
+          socket,
+          world,
+          Event.ENTITY_UNLOCK,
+          player.locked,
+          entity.map,
+          entity.x,
+          entity.y,
+        );
+      }
+    }
+
+    handlers.party.leave(socket, io, world);
 
     const keys = handlers.chunks.clear(socket, world, player.id);
     keys.forEach((key) => {
@@ -77,15 +93,7 @@ export const player = {
 
     if (wasAuthority) {
       const candidates = world.players.getByMap(player.map);
-      const nextId = world.authority.transfer(player.map, player.id, candidates);
-
-      if (nextId) {
-        world.players.update(nextId, { isAuthority: true });
-        const nextSocket = io.sockets.sockets.get(
-          world.players.get(nextId)!.socketId,
-        );
-        nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
-      }
+      handlers.authority.transfer(io, world, player.map, player.id, candidates);
     }
   },
 
@@ -93,7 +101,7 @@ export const player = {
     const player = world.players.getBySocketId(socket.id);
     if (!player || player.isDead) return;
 
-    world.players.update(data.id, {
+    world.players.update(player.id, {
       ...player,
       ...{
         x: data.x,
@@ -107,7 +115,12 @@ export const player = {
     const party = world.parties.getByPlayerId(player.id);
     const realmPartyId = player.map === MapName.REALM ? party?.id : undefined;
 
-    const key = world.chunks.toChunkKey(player.map, data.x, data.y, realmPartyId);
+    const key = world.chunks.toChunkKey(
+      player.map,
+      data.x,
+      data.y,
+      realmPartyId,
+    );
     socket.to(`chunk:${key}`).emit(Event.PLAYER_INPUT, data);
 
     if (party) socket.to(`party:${party.id}`).emit(Event.PLAYER_INPUT, data);
@@ -136,26 +149,33 @@ export const player = {
     exclude?: string[],
     partyId?: string,
   ) => {
-    const prev = world.players.get(playerId);
-    if (!prev) return;
+    const player = world.players.get(playerId);
+    if (!player) return;
+
+    const from = player.map;
 
     handlers.chunks.clear(socket, world, playerId);
 
-    const fromPartyId = prev.map === MapName.REALM ? partyId : undefined;
+    const fromPartyId = from === MapName.REALM ? partyId : undefined;
     const candidates = fromPartyId
       ? (world.parties.get(fromPartyId)?.members ?? [])
-          .map(id => world.players.get(id))
-          .filter((p): p is PlayerConfig => !!p && p.map === MapName.REALM && !(exclude ?? []).includes(p.id))
-      : world.players.getByMap(prev.map).filter(p => !(exclude ?? []).includes(p.id));
+          .map((id) => world.players.get(id))
+          .filter(
+            (p): p is PlayerConfig =>
+              !!p && p.map === MapName.REALM && !(exclude ?? []).includes(p.id),
+          )
+      : world.players
+          .getByMap(from)
+          .filter((p) => !(exclude ?? []).includes(p.id));
 
-    const nextId = world.authority.transfer(prev.map, playerId, candidates, fromPartyId);
-    if (nextId) {
-      world.players.update(nextId, { isAuthority: true });
-      const nextSocket = io.sockets.sockets.get(
-        world.players.get(nextId)!.socketId,
-      );
-      nextSocket?.emit(Event.PLAYER_AUTHORITY, true);
-    }
+    handlers.authority.transfer(
+      io,
+      world,
+      from,
+      playerId,
+      candidates,
+      fromPartyId,
+    );
 
     const isAuthority = !world.authority.get(to);
 
@@ -169,9 +189,9 @@ export const player = {
 
     if (isAuthority) world.authority.set(to, playerId);
 
-    socket.leave(`map:${prev.map}`);
+    socket.leave(`map:${from}`);
     socket.join(`map:${to}`);
-    socket.to(`map:${prev.map}`).emit(Event.PLAYER_LEAVE, playerId);
+    socket.to(`map:${from}`).emit(Event.PLAYER_LEAVE, playerId);
 
     const updated = world.players.get(playerId);
     const others = world.players.getOthersOnMap(playerId, to);
@@ -192,10 +212,21 @@ export const player = {
     const partyData = world.parties.getByPlayerId(p.id);
     const partyId = prev === MapName.REALM ? partyData?.id : undefined;
 
-    player.transfer(socket, io, world, p.id, data.to, data.x, data.y, undefined, undefined, partyId);
+    player.transfer(
+      socket,
+      io,
+      world,
+      p.id,
+      data.to,
+      data.x,
+      data.y,
+      undefined,
+      undefined,
+      partyId,
+    );
 
     if (partyData && prev === MapName.REALM)
-      handlers.party.cleanup(socket, world, partyData.id);
+      handlers.party.cleanup(socket, io, world, partyData.id);
   },
 
   spectate: (data: { targetId: string }, socket: Socket, world: World) => {

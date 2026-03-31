@@ -10,10 +10,16 @@ export const combat = {
 
     const isAuthority = entity.scene.managers.players?.player?.isAuthority;
 
+    const player = {
+      target: entity.scene.managers.players?.get(entity.id),
+      attacker: entity.scene.managers.players?.get(hitbox.ownerId),
+    };
+
     if (
       hitbox.ownerId === entity.id ||
       hitbox.hits.has(entity.id) ||
-      !isAuthority
+      !isAuthority ||
+      (player.target && player.attacker)
     )
       return;
 
@@ -55,8 +61,16 @@ export const combat = {
       body.velocity.x + knockback.x,
       body.velocity.y + knockback.y,
     );
-
     body.setDrag(800);
-    entity.scene.time.delayedCall(300, () => body.setDrag(0));
+
+    if (entity.knockback) entity.knockback.remove();
+
+    entity.knockback = entity.scene.time.delayedCall(300, () => {
+      body.setDrag(0);
+      body.setVelocity(0, 0);
+
+      entity.states?.get(entity.state)?.update(entity);
+      entity.knockback = undefined;
+    });
   },
 };

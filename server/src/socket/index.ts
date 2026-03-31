@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { handlers } from "../handlers/index.js";
 import { tryCatch } from "../utils/tryCatch.js";
 import {
+  Direction,
   Event,
   Input,
   Hit,
@@ -51,8 +52,8 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      */
     {
       event: Event.ENTITY_CREATE,
-      handler: (data: Omit<EntityConfig, "id">) =>
-        handlers.entity.create(data, socket, world),
+      handler: (data: Omit<EntityConfig, "id" | "createdAt">) =>
+        handlers.entity.create(data, socket, io, world),
     },
     {
       event: Event.ENTITY_INPUT,
@@ -61,7 +62,7 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: Event.ENTITY_PICKUP,
-      handler: (data: string) => handlers.entity.pickup(data, socket, world),
+      handler: (data: string) => handlers.entity.pickup(data, socket, io, world),
     },
     {
       event: Event.ENTITY_SPOTTED_PLAYER,
@@ -69,35 +70,40 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: Event.ENTITY_FLEE,
-      handler: (data: string) => handlers.entity.flee(data, socket, world),
+      handler: (data: string) => handlers.entity.flee(data, socket, io, world),
     },
     {
       event: Event.ENTITY_FELL,
       handler: (data: { id: string; x: number; y: number }) =>
-        handlers.entity.fell(data, socket, world),
+        handlers.entity.fell(data, socket, io, world),
     },
     {
       event: Event.ENTITY_DIALOGUE_ITERATE,
-      handler: (data: { entityId: string; nodeId: NodeId }) =>
-        handlers.dialogue.iterate(data.entityId, socket, world, data.nodeId),
+      handler: (data: { entityId: string; nodeId: NodeId; facing?: Direction }) =>
+        handlers.dialogue.iterate(data.entityId, socket, world, data.nodeId, data.facing),
+    },
+    {
+      event: Event.ENTITY_DIALOGUE_END,
+      handler: (data: string) =>
+        handlers.dialogue.end(data, socket, world),
     },
     /**
      * Items
      */
     {
       event: Event.ITEM_COLLECT,
-      handler: (data: Item) => handlers.item.collect(data, socket, world),
+      handler: (data: Item) => handlers.item.collect(data, socket, io, world),
     },
     /**
      * Farming
      */
     {
       event: Event.ENTITY_PLANT,
-      handler: (data: any) => handlers.farming.plant(data, socket, world),
+      handler: (data: any) => handlers.farming.plant(data, socket, io, world),
     },
     {
       event: Event.ENTITY_HARVEST,
-      handler: (data: any) => handlers.farming.harvest(data, socket, world),
+      handler: (data: any) => handlers.farming.harvest(data, socket, io, world),
     },
     /**
      * Shared

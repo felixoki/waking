@@ -52,7 +52,7 @@ export const direction = {
     if (deg >= -45 && deg < 45) return Direction.RIGHT;
     if (deg >= 45 && deg < 135) return Direction.DOWN;
     if (deg >= -135 && deg < -45) return Direction.UP;
-    
+
     return Direction.LEFT;
   },
 

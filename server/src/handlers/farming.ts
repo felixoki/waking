@@ -1,12 +1,13 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { EntityName, Event, Item, seeds } from "../types";
 import { World } from "../World";
-import { entity } from "./entity.js";
+import { handlers } from ".";
 
 export const farming = {
   plant: (
     data: { seed: EntityName; x: number; y: number },
     socket: Socket,
+    io: Server,
     world: World,
   ) => {
     const player = world.players.getBySocketId(socket.id);
@@ -15,16 +16,17 @@ export const farming = {
     const crop = seeds[data.seed];
     if (!crop) return;
 
-    entity.create(
+    handlers.entity.create(
       {
         name: crop,
         map: player.map,
         x: data.x,
         y: data.y,
         health: 1,
-        createdAt: Date.now(),
+        isLocked: false,
       },
       socket,
+      io,
       world,
     );
   },
@@ -32,16 +34,20 @@ export const farming = {
   harvest: (
     data: { entityId: string; yield: Item[] },
     socket: Socket,
+    io: Server,
     world: World,
   ) => {
-    world.entities.remove(data.entityId);
-    socket.broadcast.emit(Event.ENTITY_DESPAWN, data.entityId);
+    handlers.entity.remove(
+      data.entityId,
+      Event.ENTITY_DESPAWN,
+      socket,
+      io,
+      world,
+      false,
+    );
 
     for (const item of data.yield) world.items.add(item.name, item.quantity);
 
-    const snapshot = world.economy.getSnapshot();
-
-    socket.emit(Event.ECONOMY_UPDATE, snapshot);
-    socket.broadcast.emit(Event.ECONOMY_UPDATE, snapshot);
+    handlers.broadcast.economy(io, world);
   },
 };

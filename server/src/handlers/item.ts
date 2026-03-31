@@ -1,9 +1,10 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Event, Item } from "../types";
 import { World } from "../World";
+import { handlers } from ".";
 
 export const item = {
-  collect: (data: Item, socket: Socket, world: World) => {
+  collect: (data: Item, socket: Socket, io: Server, world: World) => {
     world.items.add(data.name, data.quantity);
 
     socket.emit(Event.ITEM_REMOVE, {
@@ -11,9 +12,6 @@ export const item = {
       quantity: data.quantity,
     });
 
-    const snapshot = world.economy.getSnapshot();
-    
-    socket.emit(Event.ECONOMY_UPDATE, snapshot);
-    socket.broadcast.emit(Event.ECONOMY_UPDATE, snapshot);
+    handlers.broadcast.economy(io, world);
   },
 };

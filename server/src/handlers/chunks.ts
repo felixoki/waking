@@ -41,7 +41,9 @@ export const chunks = {
               const authority = world.players.get(authorityId);
 
               if (authority) {
-                const authoritySocket = io.sockets.sockets.get(authority.socketId);
+                const authoritySocket = io.sockets.sockets.get(
+                  authority.socketId,
+                );
                 authoritySocket?.emit(Event.ENTITY_CREATE_ALL, entities);
               }
             }

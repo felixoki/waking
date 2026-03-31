@@ -14,11 +14,11 @@ export class ItemsStore {
 
   remove(name: EntityName, quantity: number): boolean {
     const current = this.items.get(name) || 0;
-    if (current <= quantity) return false;
+    if (current < quantity) return false;
 
     const remaining = current - quantity;
     
-    if (current === 0) {
+    if (remaining === 0) {
       this.items.delete(name);
       return true;
     }
