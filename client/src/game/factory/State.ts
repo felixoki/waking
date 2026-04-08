@@ -7,6 +7,7 @@ import { Jumping } from "../state/Jumping";
 import { Casting } from "../state/Casting";
 import { Slashing } from "../state/Slashing";
 import { Rolling } from "../state/Rolling";
+import { Dashing } from "../state/Dashing";
 import { Dead } from "../state/Dead";
 
 export class StateFactory {
@@ -19,6 +20,7 @@ export class StateFactory {
         [StateName.CASTING]: new Casting(),
         [StateName.SLASHING]: new Slashing(),
         [StateName.ROLLING]: new Rolling(),
+        [StateName.DASHING]: new Dashing(),
         [StateName.DEAD]: new Dead(),
       };
 

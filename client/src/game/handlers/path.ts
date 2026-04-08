@@ -242,4 +242,23 @@ export const path = {
 
     return null;
   },
+
+  isClear: (
+    entity: Entity,
+    dx: number,
+    dy: number,
+    distance: number,
+    steps: number = 4,
+  ): boolean => {
+    for (let i = 1; i <= steps; i++) {
+      const tile = entity.scene.tileManager.map.getTileAtWorldXY(
+        entity.x + dx * distance * (i / steps),
+        entity.y + dy * distance * (i / steps),
+      );
+
+      if (tile && tile.collides) return false;
+    }
+    
+    return true;
+  },
 };

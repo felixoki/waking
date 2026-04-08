@@ -13,6 +13,7 @@ export const SPEED_WALKING = 80;
 export const SPEED_RUNNING = 120;
 export const SPEED_JUMPING = 100;
 export const SPEED_ROLLING = 120;
+export const SPEED_DASHING = 1200;
 
 export const HEIGHT_JUMPING = 40;
 
@@ -32,10 +33,20 @@ export const PHASE_STARTS = [
 export const DURATION_CASTING = 800;
 export const DURATION_JUMPING = 800;
 export const DURATION_ROLLING = 800;
+export const DURATION_DASHING = 50;
 export const DURATION_SLASHING = 800;
 
 export const RANGE_SLASHING = 40;
 export const RANGE_INTERACTING = 100;
+export const RANGE_HITBOX_DETECTION = 100;
+
+export const DISTANCE_DASHING = (SPEED_DASHING * DURATION_DASHING) / 1000;
+
+export const DELAY_ATTACK = 150;
+
+export const DURATION_COMBO_LOCK = 400;
+export const DURATION_FINISHER_LOCK = 600;
+export const DURATION_COMBO_WINDOW = 400;
 
 export const REVIVE_MANA = 30;
 

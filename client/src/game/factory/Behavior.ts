@@ -2,6 +2,7 @@ import { BehaviorConfig, BehaviorName } from "@server/types";
 import { Behavior } from "../behavior/Behavior";
 import { PatrolBehavior } from "../behavior/Patrol";
 import { AttackBehavior } from "../behavior/Attack";
+import { DefendBehavior } from "../behavior/Defend";
 import { StayBehavior } from "../behavior/Stay";
 import { AmbleBehavior } from "../behavior/Amble";
 import { WanderBehavior } from "../behavior/Wander";
@@ -20,6 +21,9 @@ export class BehaviorFactory {
           break;
         case BehaviorName.ATTACK:
           be = new AttackBehavior();
+          break;
+        case BehaviorName.DEFEND:
+          be = new DefendBehavior(behavior.config);
           break;
         case BehaviorName.STAY:
           be = new StayBehavior();

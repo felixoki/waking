@@ -3,6 +3,7 @@ import { BehaviorQueue } from "../components/BehaviorQueue";
 import { Entity } from "../Entity";
 import { FleeBehavior } from "../behavior/Flee";
 import { AttackBehavior } from "../behavior/Attack";
+import { DefendBehavior } from "../behavior/Defend";
 
 export const behavior = {
   react: (entity: Entity, targetId: string) => {
@@ -16,6 +17,13 @@ export const behavior = {
     if (flee) {
       flee.start(targetId);
       queue.shiftTo(BehaviorName.FLEE);
+      return;
+    }
+
+    const defend = queue.get<DefendBehavior>(BehaviorName.DEFEND);
+
+    if (defend) {
+      queue.shiftTo(BehaviorName.DEFEND);
       return;
     }
 

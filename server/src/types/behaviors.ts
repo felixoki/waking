@@ -1,6 +1,7 @@
 export enum BehaviorName {
   PATROL = "patrol",
   ATTACK = "attack",
+  DEFEND = "defend",
   STAY = "stay",
   AMBLE = "amble",
   WANDER = "wander",
@@ -35,9 +36,16 @@ export interface FleeBehaviorConfig {
   repeat?: boolean;
 }
 
+export interface DefendBehaviorConfig {
+  vision?: number;
+  fov?: number;
+  repeat?: boolean;
+}
+
 export type BehaviorConfig =
   | { name: BehaviorName.PATROL; config?: PatrolBehaviorConfig }
   | { name: BehaviorName.ATTACK }
+  | { name: BehaviorName.DEFEND; config?: DefendBehaviorConfig }
   | { name: BehaviorName.STAY }
   | { name: BehaviorName.AMBLE; config?: AmbleBehaviorConfig }
   | { name: BehaviorName.WANDER; config?: WanderBehaviorConfig }

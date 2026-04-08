@@ -376,14 +376,13 @@
 #### 7.4.2026
 
 - Hosting ✅
+- Add shadow wanderer ✅
+- Add defend behavior ✅
 
 ### In progress
 
 - Add chest component
-- Add shadow wanderer
-- Add defend behavior
-- Add reflect damage spell
-- Add dark claw spell
+- Add spell book entity
 
 ### Bugs
 
@@ -405,6 +404,8 @@
   - Catch animal spell
   - Water fountain
   - Absorb life
+  - Add reflect damage spell
+  - Add dark claw spell
 
 - Effects ⭐
   - Add wet effect

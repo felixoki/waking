@@ -1,11 +1,58 @@
-import { ComponentName, Event, MapName, PlayerConfig } from "@server/types";
+import {
+  ComponentName,
+  Event,
+  MapName,
+  PlayerConfig,
+  StateName,
+} from "@server/types";
 import { InventoryComponent } from "../components/Inventory";
 import { HotbarComponent } from "../components/Hotbar";
 import type { MainScene } from "../scenes/Main";
 import type RealmScene from "../scenes/Realm";
+import { Entity } from "../Entity";
+import { handlers } from ".";
 import EventBus from "../EventBus";
 
 export const player = {
+  nearest: (
+    entity: Entity,
+    vision?: { distance: number; fov: number; rays?: number },
+  ): {
+    player: { x: number; y: number; id: string };
+    distance: number;
+  } | null => {
+    const players = entity.scene.managers.players.all.filter(
+      (p) => p && p.map === entity.map && p.state !== StateName.DEAD,
+    );
+
+    let nearest: { x: number; y: number; id: string } | null = null;
+    let nearestDist = Infinity;
+
+    for (const p of players) {
+      if (
+        vision &&
+        !handlers.vision.canSee(
+          entity.scene,
+          entity,
+          p,
+          vision.distance,
+          vision.fov,
+          vision.rays ?? 5,
+        )
+      )
+        continue;
+
+      const dist = Phaser.Math.Distance.Between(entity.x, entity.y, p.x, p.y);
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearest = p;
+      }
+    }
+
+    if (!nearest) return null;
+    return { player: nearest, distance: nearestDist };
+  },
+
   transition: (data: PlayerConfig, main: MainScene): void => {
     const current = main.playerManager.player;
     if (!current) return;

@@ -118,7 +118,7 @@ export const forest: BiomeConfig = {
       terrain: [TerrainName.GRASS, TerrainName.GROUND],
       density: 0.005,
       spacing: 15,
-      group: { min: 0, max: 2, radius: 3 },
+      group: { min: 0, max: 1, radius: 3 },
     },
     {
       entities: [EntityName.BOAR],
@@ -139,6 +139,12 @@ export const forest: BiomeConfig = {
       terrain: [TerrainName.GRASS, TerrainName.GROUND],
       density: 0.05,
       spacing: 30,
+    },
+    {
+      entities: [EntityName.SHADOW_WANDERER],
+      terrain: [TerrainName.GRASS, TerrainName.GROUND],
+      density: 0.001,
+      spacing: 90,
     },
   ],
 

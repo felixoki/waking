@@ -12,6 +12,16 @@ export const state = {
   ) => {
     const selectors = [
       {
+        condition: () => input.state === StateName.DASHING,
+        state: () => StateName.DASHING,
+        needsUpdate: false,
+      },
+      {
+        condition: () => input.state === StateName.CASTING,
+        state: () => StateName.CASTING,
+        needsUpdate: false,
+      },
+      {
         condition: () => input.state === StateName.SLASHING,
         state: () => StateName.SLASHING,
         needsUpdate: false,

@@ -4,6 +4,15 @@ import { ComponentConfig } from './components';
 import { StateName } from './states';
 import { BehaviorConfig } from './behaviors';
 import { Dialogue } from './dialogue';
+import { SpellName } from './spells';
+import { WeaponName } from './weapons';
+
+export interface AttackConfig {
+  state: StateName;
+  spell?: SpellName;
+  weapon?: WeaponName;
+  range?: number;
+}
 
 export interface EntityConfig {
   id: string;
@@ -23,6 +32,7 @@ export interface EntityDefinition {
   components: ComponentConfig[];
   states: StateName[];
   behaviors?: BehaviorConfig[];
+  attacks?: AttackConfig[];
   metadata?: EntityMetadata;
   dialogue?: Dialogue;
   offset?: { x?: number; y?: number };
@@ -102,7 +112,6 @@ export enum EntityName {
   HOUSE1_EXIT = "house1_exit",
   HOUSE2 = "house2",
   IRON_ORE = "iron_ore",
-  JUMP = "jump",
   MARKET_STAND1 = "market_stand1",
   MARKET_STAND2 = "market_stand2",
   MARKET_STAND3 = "market_stand3",
@@ -121,6 +130,7 @@ export enum EntityName {
   ROCKS3 = "rocks3",
   ROCKS5 = "rocks5",
   ROCKS6 = "rocks6",
+  SHADOW_WANDERER = "shadow_wanderer",
   STUMP1 = "stump1",
   STUMP2 = "stump2",
   SUNFLOWER = "sunflower",
