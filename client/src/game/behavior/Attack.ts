@@ -4,7 +4,6 @@ import {
   StateName,
   Stuck,
   Waypoint,
-  WeaponName,
 } from "@server/types";
 import { Behavior } from "./Behavior";
 import { Entity } from "../Entity";
@@ -74,8 +73,15 @@ export class AttackBehavior extends Behavior {
         target.y,
       );
 
-      const config = configs.weapons[WeaponName.SLASH];
-      const range = config.range;
+      const definition = configs.entities[entity.name];
+      const config = definition?.attacks?.[0];
+
+      if (!config) {
+        this.completed = true;
+        return {};
+      }
+
+      const range = config.range ?? 40;
 
       if (distance <= range) {
         const angle = Phaser.Math.Angle.Between(
@@ -86,25 +92,35 @@ export class AttackBehavior extends Behavior {
         );
 
         const facing = handlers.direction.fromAngle(angle);
-        const offset = handlers.direction.getDirectionalOffset(facing, 24);
 
-        const hitboxX = entity.x + offset.x;
-        const hitboxY = entity.y + offset.y;
-        const halfW = (config.hitbox?.width || 16) / 2;
-        const halfH = (config.hitbox?.height || 16) / 2;
+        if (config.weapon) {
+          const weapon = configs.weapons[config.weapon];
+          const offset = handlers.direction.getDirectionalOffset(facing, 24);
 
-        const within =
-          target.x >= hitboxX - halfW &&
-          target.x <= hitboxX + halfW &&
-          target.y >= hitboxY - halfH &&
-          target.y <= hitboxY + halfH;
+          const hitboxX = entity.x + offset.x;
+          const hitboxY = entity.y + offset.y;
+          const halfW = (weapon.hitbox?.width || 16) / 2;
+          const halfH = (weapon.hitbox?.height || 16) / 2;
 
-        if (within)
+          const within =
+            target.x >= hitboxX - halfW &&
+            target.x <= hitboxX + halfW &&
+            target.y >= hitboxY - halfH &&
+            target.y <= hitboxY + halfH;
+
+          if (within)
+            return {
+              facing,
+              moving: [],
+              isRunning: false,
+              state: config.state,
+            };
+        } else
           return {
             facing,
             moving: [],
             isRunning: false,
-            state: StateName.SLASHING,
+            state: config.state,
           };
       }
 

@@ -126,7 +126,7 @@ export class MapBuilder {
      * Jump point
      */
     const jump = this._findJumpPosition(terrain, spawn);
-    entities.push({ name: EntityName.JUMP, x: jump.x, y: jump.y });
+    entities.push({ name: EntityName.WELL, x: jump.x, y: jump.y });
 
     /**
      * Assemble final map

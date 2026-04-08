@@ -74,48 +74,17 @@ export const transitions: Partial<Record<EntityName, EntityDefinition>> = {
           static: true,
         },
       },
-    ],
-    states: [],
-    behaviors: [],
-  },
-  [EntityName.JUMP]: {
-    facing: Direction.DOWN,
-    moving: [],
-    components: [
-      {
-        name: ComponentName.BODY,
-        config: {
-          width: 32,
-          height: 32,
-          offsetX: 0,
-          offsetY: 0,
-          static: true,
-        },
-      },
       {
         name: ComponentName.TRANSITION,
         config: {
           to: MapName.VILLAGE,
-          x: 434,
+          x: 432,
           y: 608,
           width: 32,
-          height: 32,
+          height: 16,
           offsetX: 0,
-          offsetY: 0,
+          offsetY: 16,
         },
-      },
-      {
-        name: ComponentName.TEXTURE,
-        config: {
-          spritesheet: "village_home",
-          tileSize: 16,
-          tiles: [
-            { row: 35, start: 5, end: 7 },
-            { row: 36, start: 5, end: 7 },
-            { row: 37, start: 5, end: 7 },
-          ],
-        },
-        key: "jump_texture",
       },
     ],
     states: [],

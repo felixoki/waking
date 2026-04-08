@@ -117,6 +117,28 @@ export const animations: Partial<
       repeat: 0,
     },
   },
+  [EntityName.SHADOW_WANDERER]: {
+    [StateName.IDLE]: {
+      frameCount: 6,
+      frameRate: 8,
+      repeat: -1,
+    },
+    [StateName.WALKING]: {
+      frameCount: 4,
+      frameRate: 6,
+      repeat: -1,
+    },
+    [StateName.DASHING]: {
+      frameCount: 5,
+      frameRate: 7,
+      repeat: 0,
+    },
+    [StateName.CASTING]: {
+      frameCount: 6,
+      frameRate: 8,
+      repeat: 0,
+    },
+  },
   [EntityName.DRAKE]: {
     [StateName.IDLE]: {
       frameCount: 4,

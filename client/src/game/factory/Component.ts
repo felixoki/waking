@@ -20,6 +20,7 @@ import { TextureAnimationComponent } from "../components/TextureAnimation";
 import { GrowableComponent } from "../components/Growable";
 import { FarmableComponent } from "../components/Farmable";
 import { FellableComponent } from "../components/Fellable";
+import { AuraComponent } from "../components/Aura";
 
 export class ComponentFactory {
   static create(
@@ -92,6 +93,9 @@ export class ComponentFactory {
           break;
         case ComponentName.FELLABLE:
           comp = new FellableComponent(entity);
+          break;
+        case ComponentName.AURA:
+          comp = new AuraComponent(entity, component.config);
           break;
       }
 

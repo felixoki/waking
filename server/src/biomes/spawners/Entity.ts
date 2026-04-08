@@ -81,8 +81,8 @@ export class EntitySpawner {
     occupied: Set<number>,
   ) {
     const { width, height, tileWidth, tileHeight } = this.config;
-    const gen = handlers.generation;
     const { min, max, radius } = rule.group!;
+    const gen = handlers.generation;
     const count = min + (hash % (max - min + 1));
 
     for (let i = 0; i < count; i++) {

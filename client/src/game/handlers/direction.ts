@@ -66,4 +66,19 @@ export const direction = {
 
     return angles[dir] ?? 0;
   },
+
+  fromVector: (
+    dx: number,
+    dy: number,
+    threshold: number = 0.3,
+  ): Direction[] => {
+    const axes: [number, Direction, Direction][] = [
+      [dx, Direction.RIGHT, Direction.LEFT],
+      [dy, Direction.DOWN, Direction.UP],
+    ];
+
+    return axes
+      .filter(([v]) => Math.abs(v) > threshold)
+      .map(([v, pos, neg]) => (v > 0 ? pos : neg));
+  },
 };

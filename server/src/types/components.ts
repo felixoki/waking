@@ -24,6 +24,7 @@ export enum ComponentName {
   FARMABLE = "farmable",
   GROWABLE = "growable",
   FELLABLE = "fellable",
+  AURA = "aura",
 }
 
 export type ComponentConfig =
@@ -45,7 +46,16 @@ export type ComponentConfig =
   | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
   | { name: ComponentName.FARMABLE }
   | { name: ComponentName.GROWABLE; config: GrowableConfig }
-  | { name: ComponentName.FELLABLE };
+  | { name: ComponentName.FELLABLE }
+  | { name: ComponentName.AURA; config: AuraConfig };
+
+export interface AuraConfig {
+  tints: number[];
+  radius?: number;
+  quantity?: number;
+  frequency?: number;
+  lifespan?: number;
+}
 
 export interface BodyConfig {
   width: number;

@@ -410,6 +410,10 @@ const creatures: Spritesheet[] = [
   { key: "goblin1-walking", file: "goblin1_walking_with_shadow.png" },
   { key: "goblin1-running", file: "goblin1_running_with_shadow.png" },
   { key: "goblin1-slashing", file: "goblin1_slashing_with_shadow.png" },
+  { key: "shadow_wanderer-idle", file: "shadow_wanderer_idle_with_shadow.png" },
+  { key: "shadow_wanderer-walking", file: "shadow_wanderer_walking_with_shadow.png" },
+  { key: "shadow_wanderer-dashing", file: "shadow_wanderer_dashing_with_shadow.png" },
+  { key: "shadow_wanderer-casting", file: "shadow_wanderer_casting_with_shadow.png" },
 ];
 
 export const maps: Record<MapName, MapConfig> = {
