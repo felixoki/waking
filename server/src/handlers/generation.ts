@@ -1,5 +1,15 @@
+import { fork } from "child_process";
+import { fileURLToPath } from "url";
 import { TiledProperty } from "../types";
-import { Neighbors, TERRAIN_ORDER, TerrainName } from "../types/generation";
+import {
+  GeneratedMap,
+  Neighbors,
+  TERRAIN_ORDER,
+  TerrainName,
+} from "../types/generation";
+import { join, dirname } from "path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const generation = {
   toIndex: (x: number, y: number, width: number): number => {
@@ -156,4 +166,20 @@ export const generation = {
     y: 0,
     ...(properties ? { properties } : {}),
   }),
+
+  start: (biome: string, seed: string): Promise<GeneratedMap | null> => {
+    return new Promise((resolve, reject) => {
+      const worker = fork(join(__dirname, "../workers/generate.ts"), [], {
+        stdio: ["inherit", "inherit", "inherit", "ipc"],
+      });
+
+      worker.on("message", (result: GeneratedMap | null) => resolve(result));
+      worker.on("error", (err) => reject(err));
+      worker.on("exit", (code) => {
+        if (code !== 0) reject(new Error(`Worker exited with code ${code}`));
+      });
+
+      worker.send({ biome, seed });
+    });
+  },
 };

@@ -4,4 +4,5 @@ export const WORLD_ID = process.env.WORLD_ID || "default";
 
 export const DATABASE_URL =
   process.env.DATABASE_URL || "postgresql://waken:waken@localhost:5432/waken";
-export const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD || "waken";
+export const REDIS_URL = process.env.REDIS_URL || `redis://:${REDIS_PASSWORD}@localhost:6379`;

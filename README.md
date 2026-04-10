@@ -54,3 +54,23 @@ npm run server:restart   # Restart server
 npm run client:local     # Point to localhost
 npm run client:remote    # Point to production
 ```
+
+## Architecture
+
+```mermaid
+graph LR
+  Client["Client :3000"]
+  Lobby["Lobby :3100"]
+  World["World :3001+"]
+  PG[("Postgres :5432<br/>127.0.0.1")]
+  RD[("Redis :6379<br/>127.0.0.1")]
+
+  Client -- HTTP --> Lobby
+  Lobby -- spawn --> World
+  Client -- WebSocket --> World
+  World -- cache --> RD
+  World -- persist --> PG
+  Lobby -- read/write --> PG
+```
+
+Production: `178.104.59.213`
