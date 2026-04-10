@@ -2,7 +2,6 @@ import { Server, Socket } from "socket.io";
 import { World } from "../World";
 import { randomUUID } from "crypto";
 import { EntityConfig, Event, MapName, PartyStatus } from "../types";
-import { generateBiome } from "../biomes";
 import { BiomeName } from "../types/generation";
 import { configs } from "../configs/index.js";
 import { handlers } from ".";
@@ -180,7 +179,7 @@ export const party = {
     party.broadcast(socket, world);
   },
 
-  start: (socket: Socket, io: Server, world: World) => {
+  start: async (socket: Socket, io: Server, world: World) => {
     const player = world.players.getBySocketId(socket.id);
     if (!player) return;
 
@@ -193,7 +192,7 @@ export const party = {
     socket.emit(Event.PARTY_START_LOADING);
     socket.to(`party:${data.id}`).emit(Event.PARTY_START_LOADING);
 
-    const biome = generateBiome(BiomeName.FOREST, seed);
+    const biome = await handlers.generation.start(BiomeName.FOREST, seed);
 
     if (!biome) return;
 

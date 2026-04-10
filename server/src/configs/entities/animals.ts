@@ -5,6 +5,7 @@ import {
   EntityDefinition,
   EntityName,
   StateName,
+  WeaponName,
 } from "../../types";
 
 export const animals: Partial<Record<EntityName, EntityDefinition>> = {
@@ -36,6 +37,13 @@ export const animals: Partial<Record<EntityName, EntityDefinition>> = {
       StateName.WALKING,
       StateName.RUNNING,
       StateName.SLASHING,
+    ],
+    attacks: [
+      {
+        state: StateName.SLASHING,
+        weapon: WeaponName.SLASH,
+        range: 40,
+      },
     ],
     behaviors: [
       {

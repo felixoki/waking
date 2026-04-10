@@ -379,6 +379,10 @@
 - Add shadow wanderer ✅
 - Add defend behavior ✅
 
+#### 8.4.2026
+
+- Async worker for map generation ✅
+
 ### In progress
 
 - Add chest component
@@ -397,7 +401,6 @@
 
 - Procedural generation ⭐
   - Detail layer
-  - Async worker for map generation
 
 - Magic ⭐
   - Aim assist spell
