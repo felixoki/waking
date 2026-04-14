@@ -132,7 +132,14 @@ export const creatures: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.DAMAGEABLE,
         config: {
-          loot: [],
+          loot: [
+            {
+              name: EntityName.SPELL_BOOK_HURT_SHADOWS,
+              quantity: 1,
+              stackable: false,
+              chance: 1,
+            },
+          ],
         },
       },
       { name: ComponentName.BEHAVIOR_QUEUE },

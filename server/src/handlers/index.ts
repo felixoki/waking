@@ -9,6 +9,7 @@ import { generation } from "./generation.js";
 import { item } from "./item.js";
 import { party } from "./party.js";
 import { player } from "./player.js";
+import { spell } from "./spell.js";
 
 export const handlers = {
   authority,
@@ -22,4 +23,5 @@ export const handlers = {
   dialogue,
   generation,
   party,
+  spell,
 };

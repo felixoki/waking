@@ -2,8 +2,6 @@ import { MapName } from "@server/types";
 import { Scene } from "../scenes/Scene";
 import { configs } from "@server/configs";
 
-export const queued = new Set<string>();
-
 export class Preloader {
   static load(scene: Scene, map: MapName) {
     const config = configs.maps[map];
@@ -66,11 +64,7 @@ export class Preloader {
      * Tilesets and spritesheets - only load if not already loaded
      */
     config.spritesheets.forEach((spritesheet) => {
-      if (
-        !scene.textures.exists(spritesheet.key) &&
-        !queued.has(spritesheet.key)
-      ) {
-        queued.add(spritesheet.key);
+      if (!scene.textures.exists(spritesheet.key)) {
         scene.load.spritesheet(
           spritesheet.key,
           `assets/sprites/${spritesheet.file}`,

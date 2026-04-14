@@ -84,6 +84,17 @@ export enum Event {
   /** Camera */
   CAMERA_FOLLOW = "camera_follow",
 
+  /** Spells */
+  SPELL_LEARN = "spell_learn",
+  SPELL_LEARN_CONFIRM = "spell_learn_confirm",
+  SPELLS_SYNC = "spells_sync",
+  SPELL_EQUIP = "spell_equip",
+
   /** UI */
   UI_TOGGLE = "ui_toggle",
+
+  /** Transitions */
+  TRANSITION_START = "transition_start",
+  TRANSITION_LOAD = "transition_load",
+  TRANSITION_END = "transition_end",
 }

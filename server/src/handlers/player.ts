@@ -6,6 +6,7 @@ import {
   Input,
   MapName,
   PlayerConfig,
+  SpellName,
   Transition,
 } from "../types/index.js";
 import { configs } from "../configs/index.js";
@@ -39,6 +40,7 @@ export const player = {
         mana: 100000,
         isAuthority,
         isDead: false,
+        spells: (saved?.data?.spells as SpellName[]) || [],
       };
 
       world.players.add(player.id, player);
@@ -66,6 +68,7 @@ export const player = {
     socket.emit(Event.PARTY_LIST, world.parties.getLobbies());
     socket.emit(Event.WORLD_TIME, world.getTime());
     socket.emit(Event.ECONOMY_UPDATE, world.economy.getSnapshot());
+    socket.emit(Event.SPELLS_SYNC, player.spells);
   },
 
   delete: async (io: Server, socket: Socket, world: World) => {
@@ -80,6 +83,7 @@ export const player = {
         data: {
           map: player.map,
           facing: player.facing,
+          spells: player.spells,
         },
       });
 

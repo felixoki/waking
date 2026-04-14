@@ -3,13 +3,82 @@ import {
   Direction,
   DirectionVectors,
   Event,
+  SpellConfig,
+  SpellName,
+  StateName,
 } from "@server/types";
 import { DamageableComponent } from "../components/Damageable";
 import { Entity } from "../Entity";
 import { Hitbox } from "../Hitbox";
+import { HotbarComponent } from "../components/Hotbar";
+import { configs } from "@server/configs";
+import { DURATION_COMBO_LOCK, DURATION_FINISHER_LOCK } from "@server/globals";
 import { handlers } from ".";
+import EventBus from "../EventBus";
 
 export const combat = {
+  resolve: (entity: Entity): SpellConfig | null => {
+    const player = entity.scene.managers.players.get(entity.id);
+
+    if (player) {
+      const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+      const equipped = hotbar?.get();
+      if (!equipped) return null;
+      return configs.spells[equipped.name as SpellName] ?? null;
+    }
+
+    const definition = configs.entities[entity.name];
+    const attack = definition?.attacks?.find(
+      (a) => a.state === StateName.CASTING && a.spell,
+    );
+    if (!attack?.spell) return null;
+    return configs.spells[attack.spell] ?? null;
+  },
+
+  consume: (entity: Entity, config: SpellConfig): boolean => {
+    const player = entity.scene.managers.players.get(entity.id);
+    if (!player) return true;
+
+    if (player.mana < config.mana) return false;
+
+    if (player.isControllable) {
+      player.mana -= config.mana;
+      EventBus.emit(Event.PLAYER_MANA, player.mana);
+    }
+
+    return true;
+  },
+
+  combo: (
+    config: SpellConfig,
+    step: number,
+  ): { stepConfig: SpellConfig; isFinisher: boolean; duration: number } => {
+    if (!config.combo)
+      return {
+        stepConfig: config,
+        isFinisher: false,
+        duration: DURATION_COMBO_LOCK,
+      };
+
+    const isFinisher = step >= config.combo.length;
+
+    let stepConfig: SpellConfig = config;
+    if (step > 0 && step <= config.combo.length) {
+      const comboStep = config.combo[step - 1];
+      stepConfig = {
+        ...config,
+        damage: comboStep.damage,
+        knockback: comboStep.knockback,
+        duration: comboStep.duration ?? config.duration,
+        hitbox: comboStep.hitbox,
+      };
+    }
+
+    const duration = isFinisher ? DURATION_FINISHER_LOCK : DURATION_COMBO_LOCK;
+
+    return { stepConfig, isFinisher, duration };
+  },
+
   hit: (obj1: any, obj2: any) => {
     const entity = obj1 as Entity;
     const hitbox = obj2 as Hitbox;

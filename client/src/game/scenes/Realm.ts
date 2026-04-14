@@ -3,7 +3,6 @@ import { Scene } from "./Scene";
 import { MapFactory } from "../factory/Map";
 import { TileManager } from "../managers/Tile";
 import { configs } from "@server/configs";
-import { queued } from "../loaders/Preloader";
 
 export default class RealmScene extends Scene {
   constructor() {
@@ -14,8 +13,7 @@ export default class RealmScene extends Scene {
     const config = configs.maps[MapName.REALM];
 
     config.spritesheets.forEach((sheet) => {
-      if (!this.textures.exists(sheet.key) && !queued.has(sheet.key)) {
-        queued.add(sheet.key);
+      if (!this.textures.exists(sheet.key)) {
         this.load.spritesheet(sheet.key, `assets/sprites/${sheet.file}`, {
           frameWidth: sheet.frameWidth || 64,
           frameHeight: sheet.frameHeight || 64,
@@ -36,7 +34,7 @@ export default class RealmScene extends Scene {
 
   teardown(): void {
     this.children.removeAll(true);
-    this.tileManager.destroy();
+    this.tileManager?.destroy();
     this.tileManager = undefined!;
     this.cache.tilemap.remove(MapName.REALM);
   }

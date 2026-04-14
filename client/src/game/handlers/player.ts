@@ -14,6 +14,8 @@ import { handlers } from ".";
 import EventBus from "../EventBus";
 
 export const player = {
+  _transitioning: false,
+
   nearest: (
     entity: Entity,
     vision?: { distance: number; fov: number; rays?: number },
@@ -53,7 +55,7 @@ export const player = {
     return { player: nearest, distance: nearestDist };
   },
 
-  transition: (data: PlayerConfig, main: MainScene): void => {
+  swap: (data: PlayerConfig, main: MainScene): void => {
     const current = main.playerManager.player;
     if (!current) return;
 
@@ -88,11 +90,6 @@ export const player = {
     scene.scene.setVisible(true);
     scene.input.enabled = true;
 
-    if (prev.map === MapName.REALM && data.map !== MapName.REALM) {
-      main.entityManager.removeByMap(MapName.REALM);
-      (main.scene.get(MapName.REALM) as RealmScene).teardown();
-    }
-
     main.game.events.emit(Event.CAMERA_FOLLOW, {
       key: data.map,
       player: updated,
@@ -100,5 +97,28 @@ export const player = {
 
     EventBus.emit(Event.PLAYER_HEALTH, updated.health);
     EventBus.emit(Event.PLAYER_MANA, updated.mana);
+
+    if (prev.map === MapName.REALM && data.map !== MapName.REALM)
+      setTimeout(() => {
+        main.entityManager.removeByMap(MapName.REALM);
+        (main.scene.get(MapName.REALM) as RealmScene).teardown();
+      }, 0);
+  },
+
+  transition: (data: PlayerConfig, main: MainScene): void => {
+    if (!main.playerManager.player) return;
+    if (player._transitioning) return;
+    player._transitioning = true;
+
+    EventBus.emit(Event.TRANSITION_START);
+
+    const onReady = () => {
+      EventBus.off(Event.TRANSITION_LOAD, onReady);
+      player._transitioning = false;
+      player.swap(data, main);
+      EventBus.emit(Event.TRANSITION_END);
+    };
+
+    EventBus.on(Event.TRANSITION_LOAD, onReady);
   },
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EntityName, Event, seeds } from "@server/types";
 import EventBus from "../game/EventBus";
 import { configs } from "@server/configs";
@@ -7,6 +7,19 @@ const available = Object.keys(seeds) as EntityName[];
 
 export function Seeds() {
   const [active, setActive] = useState<EntityName | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const toggle = () => setIsOpen((prev) => !prev);
+
+    EventBus.on(Event.UI_TOGGLE, toggle);
+
+    return () => {
+      EventBus.off(Event.UI_TOGGLE, toggle);
+    };
+  }, []);
+
+  if (!isOpen) return null;
 
   const pick = (seed: EntityName) => {
     const next = seed === active ? null : seed;
@@ -27,6 +40,9 @@ export function Seeds() {
             active={seed === active}
           />
         ))}
+        {!available.length && (
+          <li className="text-white text-sm">No seeds available</li>
+        )}
       </ul>
     </div>
   );

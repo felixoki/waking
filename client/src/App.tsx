@@ -12,6 +12,7 @@ import { Stats } from "./ui/Stats";
 import { Economy } from "./ui/Economy";
 import { Loading } from "./ui/Loading";
 import { Seeds } from "./ui/Seeds";
+import { Spells } from "./ui/Spells";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -47,6 +48,7 @@ function App() {
         </div>
         <Dialogue />
         <Collection />
+        <Spells />
         <Seeds />
       </div>
     </div>

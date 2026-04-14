@@ -132,6 +132,9 @@ export class Entity extends Phaser.GameObjects.Sprite {
   }
 
   destroy(fromScene?: boolean): void {
+    const state = this.states?.get(this.state);
+    state?.exit(this);
+
     this.components.forEach((component) => component.detach());
     this.components.clear();
 

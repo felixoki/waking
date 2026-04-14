@@ -118,6 +118,8 @@ export const spells: Record<SpellName, SpellHandler> = {
 
       entity.scene.time.delayedCall(delay, () => {
         effects.emitters.fall(entity.scene, impact, () => {
+          if (!entity.scene) return;
+
           if (!isShaking) {
             isShaking = true;
             entity.scene.cameras.main.shake(2000, 0.0004);
@@ -153,6 +155,8 @@ export const spells: Record<SpellName, SpellHandler> = {
       const delay = i * 80;
 
       scene.time.delayedCall(delay, () => {
+        if (!scene.sys) return;
+
         const dest = {
           x: target.x + Phaser.Math.Between(-radius, radius),
           y: target.y + Phaser.Math.Between(-radius, radius),

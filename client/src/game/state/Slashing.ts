@@ -8,7 +8,10 @@ import { Hitbox } from "../Hitbox";
 import { configs } from "@server/configs";
 
 export class Slashing implements State {
-  private timer: Phaser.Time.TimerEvent | null = null;
+  private timer: {
+    delay: Phaser.Time.TimerEvent;
+    duration: Phaser.Time.TimerEvent;
+  } | null = null;
   private hitbox: Hitbox | null = null;
   public name: StateName = StateName.SLASHING;
 
@@ -21,16 +24,22 @@ export class Slashing implements State {
     );
     anim?.play(this.name, entity.facing);
 
-    this.timer = entity.scene.time.delayedCall(DURATION_SLASHING, () => {
-      this.exit(entity);
-    });
+    this.timer = {
+      duration: entity.scene.time.delayedCall(DURATION_SLASHING, () => {
+        this.exit(entity);
+      }),
+      delay: entity.scene.time.delayedCall(DELAY_ATTACK, () => {
+        if (!entity.scene) return;
 
-    entity.scene.time.delayedCall(DELAY_ATTACK, () => {
-      const offset = handlers.direction.getDirectionalOffset(entity.facing, 24);
-      const config = configs.weapons[WeaponName.SLASH];
+        const offset = handlers.direction.getDirectionalOffset(
+          entity.facing,
+          24,
+        );
+        const config = configs.weapons[WeaponName.SLASH];
 
-      handlers.weapons[WeaponName.SLASH](entity, config, offset);
-    });
+        handlers.weapons[WeaponName.SLASH](entity, config, offset);
+      }),
+    };
   }
 
   update(_entity: Entity): void {}
@@ -39,7 +48,8 @@ export class Slashing implements State {
     this.hitbox?.destroy();
 
     if (this.timer) {
-      this.timer.destroy();
+      this.timer.delay.destroy();
+      this.timer.duration.destroy();
       this.timer = null;
     }
 

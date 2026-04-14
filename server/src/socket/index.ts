@@ -10,6 +10,7 @@ import {
   Transition,
   Spot,
   EntityConfig,
+  SpellName,
   Revive,
 } from "../types/index.js";
 import { World } from "../World.js";
@@ -138,6 +139,14 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     {
       event: Event.PARTY_START,
       handler: () => handlers.party.start(socket, io, world),
+    },
+    /**
+     * Spells
+     */
+    {
+      event: Event.SPELL_LEARN,
+      handler: (data: { spell: SpellName }) =>
+        handlers.spell.learn(data, socket, world),
     },
   ];
 

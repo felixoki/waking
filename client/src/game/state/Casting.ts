@@ -1,62 +1,34 @@
-import {
-  ComponentName,
-  Event,
-  SpellConfig,
-  SpellName,
-  StateName,
-} from "@server/types";
+import { ComponentName, StateName } from "@server/types";
 import { State } from "./State";
 import { Entity } from "../Entity";
 import { AnimationComponent } from "../components/Animation";
 import { handlers } from "../handlers";
-import { Player } from "../Player";
-import { HotbarComponent } from "../components/Hotbar";
-import { configs } from "@server/configs";
-import {
-  DELAY_ATTACK,
-  DURATION_COMBO_LOCK,
-  DURATION_FINISHER_LOCK,
-  DURATION_COMBO_WINDOW,
-} from "@server/globals";
-import EventBus from "../EventBus";
+import { DELAY_ATTACK, DURATION_COMBO_WINDOW } from "@server/globals";
 
 export class Casting implements State {
-  private timer: Phaser.Time.TimerEvent | null = null;
-  private comboStep: number = 0;
-  private comboTimer: Phaser.Time.TimerEvent | null = null;
+  private timer: {
+    delay: Phaser.Time.TimerEvent;
+    duration: Phaser.Time.TimerEvent;
+    combo?: Phaser.Time.TimerEvent;
+  } | null = null;
+  private step: number = 0;
 
   public name: StateName = StateName.CASTING;
 
   enter(entity: Entity): void {
-    const player = entity as Player;
-    const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
-    const equipped = hotbar?.get();
+    const config = handlers.combat.resolve(entity);
 
-    let spell: SpellName | undefined;
-
-    if (equipped) spell = equipped.name as SpellName;
-    else {
-      const definition = configs.entities[entity.name];
-      const config = definition?.attacks?.find(
-        (a) => a.state === StateName.CASTING && a.spell,
-      );
-      spell = config?.spell;
-    }
-
-    if (!spell) {
+    if (!config) {
       const reset = entity.states?.get(StateName.IDLE);
       if (reset) reset.enter(entity);
       return;
     }
 
-    const config = configs.spells[spell];
-
-    if (player.mana !== undefined && config)
-      if (player.mana < config.mana) {
-        const reset = entity.states?.get(StateName.IDLE);
-        if (reset) reset.enter(entity);
-        return;
-      }
+    if (!handlers.combat.consume(entity, config)) {
+      const reset = entity.states?.get(StateName.IDLE);
+      if (reset) reset.enter(entity);
+      return;
+    }
 
     entity.setState(this.name);
     entity.isLocked = true;
@@ -66,78 +38,61 @@ export class Casting implements State {
     );
     anim?.play(this.name, entity.facing);
 
-    if (player.isControllable) {
-      player.mana -= config.mana;
-      EventBus.emit(Event.PLAYER_MANA, player.mana);
-    }
-
     const direction = handlers.direction.getDirectionToPoint(
       entity,
       entity.target!,
     );
 
-    const step = config.combo ? this.comboStep : 0;
-    let stepConfig: SpellConfig = config;
+    const step = config.combo ? this.step : 0;
+    const { stepConfig, isFinisher, duration } = handlers.combat.combo(
+      config,
+      step,
+    );
 
-    if (config.combo && step > 0 && step <= config.combo.length) {
-      const comboStep = config.combo[step - 1];
-      stepConfig = {
-        ...config,
-        damage: comboStep.damage,
-        knockback: comboStep.knockback,
-        duration: comboStep.duration ?? config.duration,
-        hitbox: comboStep.hitbox,
-      };
-    }
+    if (this.timer?.combo) this.timer.combo.destroy();
 
-    entity.scene.time.delayedCall(DELAY_ATTACK, () => {
-      handlers.spells[config.name](
-        entity,
-        stepConfig,
-        entity.target!,
-        direction,
-        step,
-      );
-    });
+    this.timer = {
+      delay: entity.scene.time.delayedCall(DELAY_ATTACK, () => {
+        if (!entity.scene) return;
 
-    if (this.comboTimer) {
-      this.comboTimer.destroy();
-      this.comboTimer = null;
-    }
-
-    const isFinisher = config.combo && step >= config.combo.length;
-    const duration = config.combo
-      ? isFinisher
-        ? DURATION_FINISHER_LOCK
-        : DURATION_COMBO_LOCK
-      : DURATION_COMBO_LOCK;
-
-    this.timer = entity.scene.time.delayedCall(duration, () => {
-      this.exit(entity);
-
-      if (config.combo && !isFinisher) {
-        this.comboStep = step + 1;
-        this.comboTimer = entity.scene.time.delayedCall(
-          DURATION_COMBO_WINDOW,
-          () => {
-            this.comboStep = 0;
-            this.comboTimer = null;
-          },
+        handlers.spells[config.name](
+          entity,
+          stepConfig,
+          entity.target!,
+          direction,
+          step,
         );
+      }),
 
-        return;
-      }
+      duration: entity.scene.time.delayedCall(duration, () => {
+        this.exit(entity);
 
-      this.comboStep = 0;
-    });
+        if (config.combo && !isFinisher) {
+          this.step = step + 1;
+          this.timer!.combo = entity.scene.time.delayedCall(
+            DURATION_COMBO_WINDOW,
+            () => {
+              this.step = 0;
+              this.timer = null;
+            },
+          );
+
+          return;
+        }
+
+        this.step = 0;
+        this.timer = null;
+      }),
+    };
   }
 
   update(_entity: Entity): void {}
 
   exit(entity: Entity): void {
     if (this.timer) {
-      this.timer.destroy();
-      this.timer = null;
+      this.timer.delay?.destroy();
+      this.timer.duration?.destroy();
+      this.timer.combo?.destroy();
     }
 
     entity.isLocked = false;
