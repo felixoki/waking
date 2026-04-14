@@ -399,6 +399,13 @@ const icons: Spritesheet[] = [
     frameHeight: 16,
     asTileset: true,
   },
+  {
+    key: "icons4",
+    file: "icons4.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
 ];
 
 const creatures: Spritesheet[] = [

@@ -3,6 +3,7 @@ import { MapName } from "./maps";
 import { CollectorConfig } from "./collectors";
 import { LightConfig } from "./ambience";
 import { GrowthStageConfig } from "./farming";
+import { SpellName } from "./spells";
 
 export enum ComponentName {
   ANIMATION = "animation",
@@ -25,6 +26,7 @@ export enum ComponentName {
   GROWABLE = "growable",
   FELLABLE = "fellable",
   AURA = "aura",
+  LEARNABLE = "learnable",
 }
 
 export type ComponentConfig =
@@ -47,7 +49,8 @@ export type ComponentConfig =
   | { name: ComponentName.FARMABLE }
   | { name: ComponentName.GROWABLE; config: GrowableConfig }
   | { name: ComponentName.FELLABLE }
-  | { name: ComponentName.AURA; config: AuraConfig };
+  | { name: ComponentName.AURA; config: AuraConfig }
+  | { name: ComponentName.LEARNABLE; config: LearnableConfig };
 
 export interface AuraConfig {
   tints: number[];
@@ -55,6 +58,10 @@ export interface AuraConfig {
   quantity?: number;
   frequency?: number;
   lifespan?: number;
+}
+
+export interface LearnableConfig {
+  spell: SpellName;
 }
 
 export interface BodyConfig {

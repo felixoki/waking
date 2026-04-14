@@ -18,6 +18,7 @@ export class HotbarComponent extends Component {
   }
 
   attach(): void {
+    EventBus.on(Event.SPELL_EQUIP, this.add, this);
     this.emit();
   }
 
@@ -28,7 +29,9 @@ export class HotbarComponent extends Component {
     if (nav) this.navigate(nav);
   }
 
-  detach(): void {}
+  detach(): void {
+    EventBus.off(Event.SPELL_EQUIP, this.add, this);
+  }
 
   emit(): void {
     EventBus.emit(Event.HOTBAR_UPDATE, {
@@ -57,6 +60,26 @@ export class HotbarComponent extends Component {
     );
 
     if (i !== -1) this.active = i;
+
+    this.emit();
+  }
+
+  add(slot: HotbarSlot): void {
+    const exists = this.slots.findIndex(
+      (s) => s && s.type === slot.type && s.name === slot.name,
+    );
+
+    if (exists !== -1) {
+      this.active = exists;
+      this.emit();
+      return;
+    }
+
+    const empty = this.slots.findIndex((s) => s === null);
+    if (empty !== -1) {
+      this.slots[empty] = slot;
+      this.active = empty;
+    }
 
     this.emit();
   }

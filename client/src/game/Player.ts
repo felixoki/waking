@@ -72,12 +72,12 @@ export class Player extends Entity {
       new HotbarComponent(this, [
         { type: HotbarSlotType.SPELL, name: SpellName.SHARD },
         { type: HotbarSlotType.SPELL, name: SpellName.SLASH },
-        { type: HotbarSlotType.SPELL, name: SpellName.ILLUMINATE },
-        { type: HotbarSlotType.SPELL, name: SpellName.HURT_SHADOWS },
-        { type: HotbarSlotType.SPELL, name: SpellName.METEOR_SHOWER },
-        { type: HotbarSlotType.SPELL, name: SpellName.BUTTERFLY_EFFIGY },
         { type: HotbarSlotType.ENTITY, name: EntityName.AXE },
         { type: HotbarSlotType.ENTITY, name: EntityName.HOE },
+        { type: HotbarSlotType.SPELL, name: SpellName.HURT_SHADOWS },
+        null,
+        null,
+        null,
       ]),
     );
     this.addComponent(new DamageableComponent());
@@ -123,9 +123,6 @@ export class Player extends Entity {
     if (state !== this.state) this.transitionTo(state);
     if (needsUpdate) this.states?.get(this.state)?.update(this);
 
-    /**
-     * Do proper interpolation in the future
-     */
     if (remoteInput) {
       const x = Phaser.Math.Linear(this.x, input.x, 0.2);
       const y = Phaser.Math.Linear(this.y, input.y, 0.2);

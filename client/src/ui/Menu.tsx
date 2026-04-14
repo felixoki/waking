@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SocketManager from "../game/managers/Socket";
 import { tryCatch } from "@server/utils/tryCatch";
+import { MenuOverlay } from "./MenuOverlay";
 
 const LOBBY_URL = (
   import.meta.env.VITE_LOBBY_URL || "http://localhost:3100"
@@ -24,6 +25,9 @@ type World = {
   created_at: string;
 };
 
+type Modal = "new" | "join" | null;
+type Closing = "new" | "join" | "worlds" | null;
+
 export function Menu({ ready }: { ready: () => void }) {
   const [playerId] = useState(getPlayerId());
   const [worlds, setWorlds] = useState<World[]>([]);
@@ -32,6 +36,21 @@ export function Menu({ ready }: { ready: () => void }) {
   const [world, setWorld] = useState("");
   const [joinId, setJoinId] = useState("");
   const [showWorlds, setShowWorlds] = useState(false);
+  const [modal, setModal] = useState<Modal>(null);
+  const [closing, setClosing] = useState<Closing>(null);
+
+  const openModal = (m: Modal) => {
+    setError("");
+    setModal(m);
+  };
+
+  const closeModal = () => {
+    setClosing(modal as Closing);
+  };
+
+  const closeWorlds = () => {
+    setClosing("worlds");
+  };
 
   const create = async () => {
     if (!world.trim()) {
@@ -104,6 +123,7 @@ export function Menu({ ready }: { ready: () => void }) {
     setWorlds(dataResult.data);
     setShowWorlds(true);
     setLoading(false);
+    setError("");
   };
 
   const start = async (worldId: string) => {
@@ -188,104 +208,156 @@ export function Menu({ ready }: { ready: () => void }) {
     });
   };
 
-  if (showWorlds) {
-    return (
-      <div className="max-w-150 mx-auto flex flex-col justify-center items-center gap-7 h-screen">
-        <div className="flex flex-col gap-6 w-full bg-white/5 p-4 rounded-lg">
-          <h2 className="text-white text-2xl">Your worlds</h2>
-
-          {worlds.length === 0 ? (
-            <p className="text-gray-400">No worlds yet</p>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {worlds.map((world) => (
-                <div key={world.id} className="flex flex-row gap-1">
-                  <button
-                    onClick={() => start(world.id)}
-                    disabled={loading}
-                    className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25 disabled:opacity-50 flex-1"
-                  >
-                    {world.name}
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(world.id);
-                      setError("World ID copied!");
-                      setTimeout(() => setError(""), 2000);
-                    }}
-                    className="text-xs text-white/40 hover:text-white/60 text-left px-2"
-                  >
-                    Copy ID
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <button
-            onClick={() => setShowWorlds(false)}
-            className="rounded bg-black/25 px-2 py-1 text-white hover:bg-black/50"
-          >
-            Back
-          </button>
-
-          {error && <p className="text-white/40">{error}</p>}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-150 mx-auto flex flex-col justify-center items-center h-screen">
-      <div className="flex flex-col gap-6 w-full bg-white/5 p-4 rounded-lg">
-        <h1 className="text-white text-3xl mb-2">Waken</h1>
-
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="World name"
-            value={world}
-            onChange={(e) => setWorld(e.target.value)}
-            className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25"
-            disabled={loading}
-          />
-          <button
-            onClick={create}
-            disabled={loading || !world.trim()}
-            className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25 disabled:opacity-50"
-          >
-            {loading ? "Creating..." : "New game"}
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-2 pt-2">
-          <input
-            type="text"
-            placeholder="World ID"
-            value={joinId}
-            onChange={(e) => setJoinId(e.target.value)}
-            className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25"
-            disabled={loading}
-          />
-          <button
-            onClick={join}
-            disabled={loading || !joinId.trim()}
-            className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25 disabled:opacity-50"
-          >
-            {loading ? "Joining..." : "Join world"}
-          </button>
-        </div>
-
+    <div className="fixed inset-0 flex flex-col">
+      <div className={`absolute bottom-0 inset-x-0 flex gap-4 px-8 pb-8 transition-opacity duration-200 ${modal || showWorlds ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+        <button
+          onClick={() => openModal("new")}
+          className="flex-1 py-6 text-white text-xl font-semibold rounded-xl bg-black/40 hover:bg-black/60 transition-colors"
+        >
+          New game
+        </button>
+        <button
+          onClick={() => openModal("join")}
+          className="flex-1 py-6 text-white text-xl font-semibold rounded-xl bg-black/40 hover:bg-black/60 transition-colors"
+        >
+          Join
+        </button>
         <button
           onClick={load}
           disabled={loading}
-          className="rounded bg-black/15 px-2 py-1 text-white hover:bg-black/25 disabled:opacity-50 mt-2"
+          className="flex-1 py-6 text-white text-xl font-semibold rounded-xl bg-black/40 hover:bg-black/60 transition-colors disabled:opacity-50"
         >
-          {loading ? "Loading..." : "Load game"}
+          {loading ? "Loading..." : "Load"}
         </button>
-
-        {error && <p className="text-red-500">{error}</p>}
       </div>
+
+      {showWorlds && (
+        <MenuOverlay
+          closing={closing === "worlds"}
+          onClose={closeWorlds}
+          onExited={() => { setShowWorlds(false); setClosing(null); setError(""); }}
+        >
+          <div className="flex flex-col h-full px-16 py-16">
+            <h2 className="text-white text-3xl font-semibold mb-8">Load game</h2>
+            {worlds.length === 0 ? (
+              <p className="text-white/40">No worlds found.</p>
+            ) : (
+              <div className="flex-1 overflow-auto">
+                <table className="w-full text-white border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/10 text-white/40 text-sm text-left">
+                      <th className="pb-4 px-4 font-normal">Name</th>
+                      <th className="pb-4 px-4 font-normal">Created</th>
+                      <th className="pb-4 px-4 font-normal text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {worlds.map((w) => (
+                      <tr key={w.id} className="border-b border-white/5 hover:bg-white/5">
+                        <td className="py-4 px-4 text-lg">{w.name}</td>
+                        <td className="py-4 px-4 text-white/50">
+                          {new Date(w.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex gap-4 justify-end">
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(w.id);
+                                setError("World ID copied!");
+                                setTimeout(() => setError(""), 2000);
+                              }}
+                              className="text-white/40 hover:text-white/70 transition-colors"
+                            >
+                              Copy ID
+                            </button>
+                            <button
+                              onClick={() => start(w.id)}
+                              disabled={loading}
+                              className="rounded-xl bg-white/15 px-6 py-2 hover:bg-white/25 disabled:opacity-50 transition-colors"
+                            >
+                              {loading ? "Starting..." : "Play"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {error && <p className="text-white/50 mt-4 text-sm">{error}</p>}
+          </div>
+        </MenuOverlay>
+      )}
+
+      {modal === "new" && (
+        <MenuOverlay
+          closing={closing === "new"}
+          onClose={closeModal}
+          onExited={() => { setModal(null); setClosing(null); setError(""); setWorld(""); }}
+        >
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-4 w-full max-w-xl px-8">
+              <h2 className="text-white text-3xl font-semibold mb-4">New game</h2>
+              <div className="flex gap-3 w-full">
+                <input
+                  type="text"
+                  placeholder="World name"
+                  value={world}
+                  onChange={(e) => setWorld(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && create()}
+                  autoFocus
+                  className="flex-1 rounded-xl bg-white/10 px-5 py-4 text-white placeholder:text-white/25 outline-none focus:bg-white/15 transition-colors text-lg"
+                  disabled={loading}
+                />
+                <button
+                  onClick={create}
+                  disabled={loading || !world.trim()}
+                  className="rounded-xl bg-white/15 px-8 py-4 text-white hover:bg-white/25 disabled:opacity-40 transition-colors text-lg whitespace-nowrap"
+                >
+                  {loading ? "Creating..." : "Create"}
+                </button>
+              </div>
+              {error && <p className="text-red-400 text-sm self-start">{error}</p>}
+            </div>
+          </div>
+        </MenuOverlay>
+      )}
+
+      {modal === "join" && (
+        <MenuOverlay
+          closing={closing === "join"}
+          onClose={closeModal}
+          onExited={() => { setModal(null); setClosing(null); setError(""); setJoinId(""); }}
+        >
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-4 w-full max-w-xl px-8">
+              <h2 className="text-white text-3xl font-semibold mb-4">Join Game</h2>
+              <div className="flex gap-3 w-full">
+                <input
+                  type="text"
+                  placeholder="World ID"
+                  value={joinId}
+                  onChange={(e) => setJoinId(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && join()}
+                  autoFocus
+                  className="flex-1 rounded-xl bg-white/10 px-5 py-4 text-white placeholder:text-white/25 outline-none focus:bg-white/15 transition-colors text-lg"
+                  disabled={loading}
+                />
+                <button
+                  onClick={join}
+                  disabled={loading || !joinId.trim()}
+                  className="rounded-xl bg-white/15 px-8 py-4 text-white hover:bg-white/25 disabled:opacity-40 transition-colors text-lg whitespace-nowrap"
+                >
+                  {loading ? "Joining..." : "Join"}
+                </button>
+              </div>
+              {error && <p className="text-red-400 text-sm self-start">{error}</p>}
+            </div>
+          </div>
+        </MenuOverlay>
+      )}
     </div>
   );
 }

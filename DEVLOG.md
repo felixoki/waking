@@ -383,10 +383,16 @@
 
 - Async worker for map generation ✅
 
+#### 14.4.2026
+
+- Refactor start menu ✅
+- Add spell book entity and spell learning ✅
+- Refactor casting state ✅
+- Add scene transitions ✅
+
 ### In progress
 
 - Add chest component
-- Add spell book entity
 
 ### Bugs
 
@@ -396,14 +402,10 @@
 
 - Electron wrapper ⭐
 
-- Multiplayer ⭐
-  - Global chat
-
 - Procedural generation ⭐
   - Detail layer
 
 - Magic ⭐
-  - Aim assist spell
   - Catch animal spell
   - Water fountain
   - Absorb life

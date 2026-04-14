@@ -5,6 +5,7 @@ import {
   Direction,
   EconomySnapshot,
   EntityConfig,
+  EntityName,
   PlayerConfig,
   Input,
   Hit,
@@ -19,6 +20,7 @@ import {
   StateName,
   Death,
   Event,
+  SpellName,
 } from "@server/types";
 import EventBus from "../EventBus";
 import { handlers } from "../handlers";
@@ -376,6 +378,28 @@ export class MainScene extends Phaser.Scene {
     });
 
     /**
+     * Spells
+     */
+    EventBus.on(Event.SPELL_LEARN, (data: { entityName: EntityName; spell: SpellName }) => {
+      this.socketManager.emit(Event.SPELL_LEARN, { spell: data.spell });
+
+      const player = this.playerManager.player;
+
+      if (player) {
+        const inventory = player.getComponent<InventoryComponent>(
+          ComponentName.INVENTORY,
+        );
+        inventory?.remove(data.entityName);
+
+        EventBus.emit(Event.SPELL_LEARN_CONFIRM, data.spell);
+      }
+    });
+
+    this.socketManager.on(Event.SPELLS_SYNC, (spells: SpellName[]) => {
+      EventBus.emit(Event.SPELLS_SYNC, spells);
+    });
+
+    /**
      * Economy
      */
     this.socketManager.on(Event.ECONOMY_UPDATE, (data: EconomySnapshot) => {
@@ -393,7 +417,7 @@ export class MainScene extends Phaser.Scene {
      * Party
      */
     this.socketManager.on(Event.PARTY_START_LOADING, () => {
-      EventBus.emit(Event.PARTY_START_LOADING);
+      EventBus.emit(Event.TRANSITION_START, true);
     });
 
     this.socketManager.on(
@@ -414,7 +438,7 @@ export class MainScene extends Phaser.Scene {
 
           if (config) {
             this.scene.bringToTop(MapName.REALM);
-            handlers.player.transition(config, this);
+            handlers.player.swap(config, this);
           } else realm.scene.setVisible(false);
 
           data.players
@@ -422,6 +446,7 @@ export class MainScene extends Phaser.Scene {
             .forEach((config) => this.playerManager.add(config, false));
 
           EventBus.emit(Event.PARTY_START_READY);
+          EventBus.emit(Event.TRANSITION_END);
         };
 
         if (realm.scene.isActive()) {

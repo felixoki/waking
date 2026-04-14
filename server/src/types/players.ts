@@ -1,5 +1,6 @@
 import { Direction } from './directions';
 import { MapName } from './maps';
+import { SpellName } from './spells';
 
 export interface PlayerConfig {
   id: string;
@@ -13,4 +14,5 @@ export interface PlayerConfig {
   isAuthority: boolean;
   isDead: boolean;
   locked?: string;
+  spells: SpellName[];
 }
