@@ -37,6 +37,8 @@ export const farming = {
     io: Server,
     world: World,
   ) => {
+    const player = world.players.getBySocketId(socket.id);
+
     handlers.entity.remove(
       data.entityId,
       Event.ENTITY_DESPAWN,
@@ -46,8 +48,11 @@ export const farming = {
       false,
     );
 
-    for (const item of data.yield) world.items.add(item.name, item.quantity);
+    if (player) {
+      for (const item of data.yield)
+        player.inventory = handlers.storage.add(player.inventory, item);
 
-    handlers.broadcast.economy(io, world);
+      socket.emit(Event.INVENTORY_SYNC, player.inventory);
+    }
   },
 };

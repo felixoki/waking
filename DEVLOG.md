@@ -390,13 +390,20 @@
 - Refactor casting state ✅
 - Add scene transitions ✅
 
+#### 16.4.2026
+
+- Add chest component ✅
+- Animate chests ✅
+- Add inventory persistence ✅
+
 ### In progress
 
-- Add chest component
+- Use icons
 
 ### Bugs
 
 - Loading save games from realm is broken
+- Entities change direction too quickly
 
 ### Backlog
 
@@ -411,6 +418,7 @@
   - Absorb life
   - Add reflect damage spell
   - Add dark claw spell
+  - Refactor shard spell
 
 - Effects ⭐
   - Add wet effect
@@ -427,7 +435,6 @@
   - Add crafting behavior
   - Add idle-action state
   - Depth sorting for fences
-  - Inventory persistence
 
 ## Economy
 

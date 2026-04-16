@@ -7,50 +7,52 @@ import { SpellName } from "./spells";
 
 export enum ComponentName {
   ANIMATION = "animation",
+  AURA = "aura",
   BEHAVIOR_QUEUE = "behaviorQueue",
   BODY = "body",
-  POINTABLE = "pointable",
-  TEXTURE = "texture",
-  INVENTORY = "inventory",
-  PICKABLE = "pickable",
-  HOVERABLE = "hoverable",
-  HOTBAR = "hotbar",
-  DAMAGEABLE = "damageable",
-  TRANSITION = "transition",
-  INTERACTABLE = "interactable",
-  COLLECTOR = "collector",
   BOUNCE = "bounce",
-  LIGHT = "light",
-  TEXTURE_ANIMATION = "textureAnimation",
+  COLLECTOR = "collector",
+  DAMAGEABLE = "damageable",
   FARMABLE = "farmable",
-  GROWABLE = "growable",
   FELLABLE = "fellable",
-  AURA = "aura",
+  GROWABLE = "growable",
+  HOTBAR = "hotbar",
+  HOVERABLE = "hoverable",
+  INTERACTABLE = "interactable",
+  INVENTORY = "inventory",
   LEARNABLE = "learnable",
+  LIGHT = "light",
+  PICKABLE = "pickable",
+  POINTABLE = "pointable",
+  STORAGE = "storage",
+  TEXTURE = "texture",
+  TEXTURE_ANIMATION = "textureAnimation",
+  TRANSITION = "transition",
 }
 
 export type ComponentConfig =
   | { name: ComponentName.ANIMATION }
+  | { name: ComponentName.AURA; config: AuraConfig }
   | { name: ComponentName.BEHAVIOR_QUEUE }
   | { name: ComponentName.BODY; config: BodyConfig }
-  | { name: ComponentName.POINTABLE }
-  | { name: ComponentName.TEXTURE; config: TextureConfig; key: string }
-  | { name: ComponentName.INVENTORY }
-  | { name: ComponentName.PICKABLE }
-  | { name: ComponentName.HOVERABLE }
-  | { name: ComponentName.HOTBAR }
-  | { name: ComponentName.DAMAGEABLE; config?: DamageableConfig }
-  | { name: ComponentName.TRANSITION; config: TransitionConfig }
-  | { name: ComponentName.INTERACTABLE }
-  | { name: ComponentName.COLLECTOR; config: CollectorConfig }
   | { name: ComponentName.BOUNCE }
-  | { name: ComponentName.LIGHT; config: LightConfig }
-  | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
+  | { name: ComponentName.COLLECTOR; config: CollectorConfig }
+  | { name: ComponentName.DAMAGEABLE; config?: DamageableConfig }
   | { name: ComponentName.FARMABLE }
-  | { name: ComponentName.GROWABLE; config: GrowableConfig }
   | { name: ComponentName.FELLABLE }
-  | { name: ComponentName.AURA; config: AuraConfig }
-  | { name: ComponentName.LEARNABLE; config: LearnableConfig };
+  | { name: ComponentName.GROWABLE; config: GrowableConfig }
+  | { name: ComponentName.HOTBAR }
+  | { name: ComponentName.HOVERABLE }
+  | { name: ComponentName.INTERACTABLE }
+  | { name: ComponentName.INVENTORY }
+  | { name: ComponentName.LEARNABLE; config: LearnableConfig }
+  | { name: ComponentName.LIGHT; config: LightConfig }
+  | { name: ComponentName.PICKABLE }
+  | { name: ComponentName.POINTABLE }
+  | { name: ComponentName.STORAGE; config: StorageConfig }
+  | { name: ComponentName.TEXTURE; config: TextureConfig; key: string }
+  | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
+  | { name: ComponentName.TRANSITION; config: TransitionConfig };
 
 export interface AuraConfig {
   tints: number[];
@@ -111,6 +113,7 @@ export interface TextureAnimationConfig {
   direction: "horizontal" | "vertical";
   frameRate: number;
   repeat: number;
+  autoplay?: boolean;
 }
 
 export interface DamageableConfig {
@@ -125,4 +128,8 @@ export interface GrowableConfig {
   yield: Item[];
   regrows?: boolean;
   needsWater?: boolean;
+}
+
+export interface StorageConfig {
+  slots: number;
 }

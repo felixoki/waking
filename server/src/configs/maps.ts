@@ -408,6 +408,16 @@ const icons: Spritesheet[] = [
   },
 ];
 
+const interior: Spritesheet[] = [
+  {
+    key: "chests",
+    file: "chests.png",
+    frameWidth: 16,
+    frameHeight: 16,
+    asTileset: true,
+  },
+];
+
 const creatures: Spritesheet[] = [
   { key: "orc1-idle", file: "orc1_idle_with_shadow.png" },
   { key: "orc1-walking", file: "orc1_walking_with_shadow.png" },
@@ -418,9 +428,18 @@ const creatures: Spritesheet[] = [
   { key: "goblin1-running", file: "goblin1_running_with_shadow.png" },
   { key: "goblin1-slashing", file: "goblin1_slashing_with_shadow.png" },
   { key: "shadow_wanderer-idle", file: "shadow_wanderer_idle_with_shadow.png" },
-  { key: "shadow_wanderer-walking", file: "shadow_wanderer_walking_with_shadow.png" },
-  { key: "shadow_wanderer-dashing", file: "shadow_wanderer_dashing_with_shadow.png" },
-  { key: "shadow_wanderer-casting", file: "shadow_wanderer_casting_with_shadow.png" },
+  {
+    key: "shadow_wanderer-walking",
+    file: "shadow_wanderer_walking_with_shadow.png",
+  },
+  {
+    key: "shadow_wanderer-dashing",
+    file: "shadow_wanderer_dashing_with_shadow.png",
+  },
+  {
+    key: "shadow_wanderer-casting",
+    file: "shadow_wanderer_casting_with_shadow.png",
+  },
 ];
 
 export const maps: Record<MapName, MapConfig> = {
@@ -437,6 +456,7 @@ export const maps: Record<MapName, MapConfig> = {
       ...citizens,
       ...icons,
       ...creatures,
+      ...interior,
       {
         key: "village_home",
         file: "village_home.png",
@@ -751,6 +771,7 @@ export const maps: Record<MapName, MapConfig> = {
       ...animals,
       ...plants,
       ...creatures,
+      ...interior,
       {
         key: "village_home",
         file: "village_home.png",

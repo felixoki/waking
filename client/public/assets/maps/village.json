@@ -11178,6 +11178,17 @@
                  "width":1,
                  "x":432,
                  "y":704
+                }, 
+                {
+                 "height":1,
+                 "id":1437,
+                 "name":"Chest1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1,
+                 "x":560,
+                 "y":768
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -11186,7 +11197,7 @@
          "y":0
         }],
  "nextlayerid":40,
- "nextobjectid":1437,
+ "nextobjectid":1438,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

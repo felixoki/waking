@@ -37,7 +37,7 @@ export function Spells() {
 
   return (
     <div className="bg-black/25 rounded-lg p-4">
-      <h3 className="text-white text-sm mb-2">Spells</h3>
+      <h3 className="text-white mb-2">Spells</h3>
       <ul className="flex flex-wrap gap-1">
         {spells.map((spell) => (
           <Spell key={spell} name={spell} onClick={() => equip(spell)} />

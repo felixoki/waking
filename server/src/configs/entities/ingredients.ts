@@ -166,8 +166,8 @@ export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
     states: [],
     behaviors: [],
     metadata: {
-      displayName: "Belladonna",
-      description: "A poisonous plant with striking purple flowers.",
+      displayName: "Sunflower",
+      description: "A tall, bright flower that follows the sun.",
       stackable: true,
     },
   },

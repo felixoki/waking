@@ -2,6 +2,7 @@ import { ComponentName, EntityName, Event, Item } from "@server/types";
 import { Component } from "./Component";
 import EventBus from "../EventBus";
 import { configs } from "@server/configs";
+import { MAX_STACK } from "@server/globals";
 
 export class InventoryComponent extends Component {
   private items: (Item | null)[] = new Array(20).fill(null);
@@ -19,7 +20,7 @@ export class InventoryComponent extends Component {
 
     if (def.metadata.stackable) {
       const existing = this.items.findIndex(
-        (item) => item?.name === name && item.stackable && item.quantity < 50,
+        (item) => item?.name === name && item.stackable && item.quantity < MAX_STACK,
       );
 
       if (existing !== -1) {

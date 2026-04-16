@@ -10,6 +10,7 @@ import { item } from "./item.js";
 import { party } from "./party.js";
 import { player } from "./player.js";
 import { spell } from "./spell.js";
+import { storage } from "./storage.js";
 
 export const handlers = {
   authority,
@@ -24,4 +25,5 @@ export const handlers = {
   generation,
   party,
   spell,
+  storage,
 };

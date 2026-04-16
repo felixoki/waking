@@ -21,6 +21,7 @@ import { GrowableComponent } from "../components/Growable";
 import { FarmableComponent } from "../components/Farmable";
 import { FellableComponent } from "../components/Fellable";
 import { AuraComponent } from "../components/Aura";
+import { StorageComponent } from "../components/Storage";
 
 export class ComponentFactory {
   static create(
@@ -96,6 +97,9 @@ export class ComponentFactory {
           break;
         case ComponentName.AURA:
           comp = new AuraComponent(entity, component.config);
+          break;
+        case ComponentName.STORAGE:
+          comp = new StorageComponent(entity, component.config);
           break;
       }
 

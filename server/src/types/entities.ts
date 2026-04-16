@@ -1,6 +1,6 @@
 import { Direction } from './directions';
 import { MapName } from './maps';
-import { ComponentConfig } from './components';
+import { ComponentConfig, Item } from './components';
 import { StateName } from './states';
 import { BehaviorConfig } from './behaviors';
 import { Dialogue } from './dialogue';
@@ -23,7 +23,9 @@ export interface EntityConfig {
   health: number;
   createdAt: number;
   isLocked: boolean;
+  lockedBy?: string;
   facing?: Direction;
+  storing?: (Item | null)[];
 }
 
 export interface EntityDefinition {
@@ -73,6 +75,7 @@ export enum EntityName {
   CABBAGE_SEED = "cabbage_seed",
   CARROT = "carrot",
   CARROT_SEED = "carrot_seed",
+  CHEST1 = "chest1",
   CITIZEN1 = "citizen1",
   CITIZEN2 = "citizen2",
   CITIZEN3 = "citizen3",

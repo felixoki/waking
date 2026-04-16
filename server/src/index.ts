@@ -59,6 +59,22 @@ if (WORLD_ID)
       chunks: {},
       time: world.getTime(),
     });
+
+    await Promise.all(
+      world.players.all.map((player) =>
+        save.player(WORLD_ID, {
+          playerId: player.id,
+          position: { x: player.x, y: player.y },
+          health: player.health,
+          data: {
+            map: player.map,
+            facing: player.facing,
+            spells: player.spells,
+            inventory: player.inventory,
+          },
+        }),
+      ),
+    );
   }, AUTOSAVE_INTERVAL);
 
 server.listen(SERVER_PORT, "0.0.0.0", () => {

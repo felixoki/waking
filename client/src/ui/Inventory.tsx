@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ComponentName,
   EntityName,
@@ -15,6 +15,8 @@ export function Inventory() {
     Array(24).fill(null),
   );
   const [isOpen, setIsOpen] = useState(false);
+  const [storageEntityId, setStorageEntityId] = useState<string | null>(null);
+  const isOpenRef = useRef(false);
   const [menu, setMenu] = useState<{
     index: number;
     x: number;
@@ -25,16 +27,28 @@ export function Inventory() {
     const add = (items: (ItemInterface | null)[]) => setItems(items);
 
     const toggle = () => {
-      setIsOpen((prev) => !prev);
+      isOpenRef.current = !isOpenRef.current;
+      setIsOpen(isOpenRef.current);
       setMenu(null);
     };
 
+    const onStorageOpen = (data: { entityId: string }) => {
+      setStorageEntityId(data.entityId);
+      if (!isOpenRef.current) EventBus.emit(Event.UI_TOGGLE);
+    };
+
+    const onStorageClose = () => setStorageEntityId(null);
+
     EventBus.on(Event.INVENTORY_UPDATE, add);
     EventBus.on(Event.UI_TOGGLE, toggle);
+    EventBus.on(Event.STORAGE_OPEN, onStorageOpen);
+    EventBus.on(Event.STORAGE_CLOSE, onStorageClose);
 
     return () => {
       EventBus.off(Event.INVENTORY_UPDATE, add);
       EventBus.off(Event.UI_TOGGLE, toggle);
+      EventBus.off(Event.STORAGE_OPEN, onStorageOpen);
+      EventBus.off(Event.STORAGE_CLOSE, onStorageClose);
     };
   }, []);
 
@@ -43,7 +57,7 @@ export function Inventory() {
   const item = menu !== null ? items[menu.index] : null;
 
   const actions: ContextMenuAction[] = item
-    ? getActions(item.name).map((action) => ({
+    ? getActions(item.name, !!storageEntityId).map((action) => ({
         label: action,
         onClick: () => {
           if (action === "learn") {
@@ -53,6 +67,13 @@ export function Inventory() {
                 entityName: item.name,
                 spell,
               });
+          }
+
+          if (action === "deposit" && storageEntityId) {
+            EventBus.emit(Event.STORAGE_DEPOSIT, {
+              entityId: storageEntityId,
+              item,
+            });
           }
 
           setMenu(null);
@@ -70,7 +91,7 @@ export function Inventory() {
             onContextMenu={(e) => {
               e.preventDefault();
               if (!item) return;
-              const actions = getActions(item.name);
+              const actions = getActions(item.name, !!storageEntityId);
               if (actions.length === 0) return;
               setMenu({ index: i, x: e.clientX, y: e.clientY });
             }}
@@ -90,13 +111,15 @@ export function Inventory() {
   );
 }
 
-function getActions(name: EntityName): string[] {
+function getActions(name: EntityName, storageOpen = false): string[] {
   const def = configs.entities[name];
   if (!def) return [];
 
   const actions: string[] = [];
+  
   if (def.components.some((c) => c.name === ComponentName.LEARNABLE))
     actions.push("learn");
+  if (storageOpen) actions.push("deposit");
 
   return actions;
 }
@@ -106,6 +129,7 @@ function getSpell(name: EntityName): SpellName | null {
   const learnable = def?.components.find(
     (c) => c.name === ComponentName.LEARNABLE,
   );
+
   if (learnable && learnable.name === ComponentName.LEARNABLE)
     return learnable.config.spell;
   return null;

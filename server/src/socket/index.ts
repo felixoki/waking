@@ -28,7 +28,8 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
      */
     {
       event: Event.PLAYER_CREATE,
-      handler: (playerId?: string) => handlers.player.create(socket, world, playerId),
+      handler: (playerId?: string) =>
+        handlers.player.create(socket, world, playerId),
     },
     {
       event: "disconnect",
@@ -63,7 +64,8 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: Event.ENTITY_PICKUP,
-      handler: (data: string) => handlers.entity.pickup(data, socket, io, world),
+      handler: (data: string) =>
+        handlers.entity.pickup(data, socket, io, world),
     },
     {
       event: Event.ENTITY_SPOTTED_PLAYER,
@@ -80,13 +82,22 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
     },
     {
       event: Event.ENTITY_DIALOGUE_ITERATE,
-      handler: (data: { entityId: string; nodeId: NodeId; facing?: Direction }) =>
-        handlers.dialogue.iterate(data.entityId, socket, world, data.nodeId, data.facing),
+      handler: (data: {
+        entityId: string;
+        nodeId: NodeId;
+        facing?: Direction;
+      }) =>
+        handlers.dialogue.iterate(
+          data.entityId,
+          socket,
+          world,
+          data.nodeId,
+          data.facing,
+        ),
     },
     {
       event: Event.ENTITY_DIALOGUE_END,
-      handler: (data: string) =>
-        handlers.dialogue.end(data, socket, world),
+      handler: (data: string) => handlers.dialogue.end(data, socket, world),
     },
     /**
      * Items
@@ -147,6 +158,29 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
       event: Event.SPELL_LEARN,
       handler: (data: { spell: SpellName }) =>
         handlers.spell.learn(data, socket, world),
+    },
+    /**
+     * Storage
+     */
+    {
+      event: Event.STORAGE_OPEN,
+      handler: (data: { entityId: string }) =>
+        handlers.storage.open(data, socket, world),
+    },
+    {
+      event: Event.STORAGE_CLOSE,
+      handler: (data: { entityId: string }) =>
+        handlers.storage.close(data, socket, world),
+    },
+    {
+      event: Event.STORAGE_DEPOSIT,
+      handler: (data: { entityId: string; item: Item }) =>
+        handlers.storage.deposit(data, socket, world),
+    },
+    {
+      event: Event.STORAGE_WITHDRAW,
+      handler: (data: { entityId: string; item: Item }) =>
+        handlers.storage.withdraw(data, socket, world),
     },
   ];
 

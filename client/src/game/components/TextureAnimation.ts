@@ -21,8 +21,14 @@ export class TextureAnimationComponent extends Component {
     this._createFrames();
     this._createAnim();
 
-    this.entity.play(this.animKey);
     this.entity.setOrigin(0.5, 0.5);
+
+    if (!this.config.autoplay) {
+      this.entity.setTexture(`${this.animKey}_0`);
+      return;
+    }
+
+    this.entity.play(this.animKey);
   }
 
   private _createFrames(): void {
@@ -47,8 +53,10 @@ export class TextureAnimationComponent extends Component {
 
       tiles.forEach((r, rowIndex) => {
         for (let col = r.start; col <= r.end; col++) {
-          const row = direction === "vertical" ? r.row + f * tiles.length : r.row;
-          const c = direction === "horizontal" ? col + f * (r.end - r.start + 1) : col;
+          const row =
+            direction === "vertical" ? r.row + f * tiles.length : r.row;
+          const c =
+            direction === "horizontal" ? col + f * (r.end - r.start + 1) : col;
 
           const frameIndex = (row - 1) * columns + (c - 1);
           const destX = (col - r.start) * tileSize;
