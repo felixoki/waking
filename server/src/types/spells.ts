@@ -19,6 +19,12 @@ export interface ComboStep {
   };
 }
 
+export interface ChargeConfig {
+  duration: number;
+  min: number;
+  max: number;
+}
+
 export interface SpellConfig {
   name: SpellName;
   damage: number;
@@ -33,6 +39,8 @@ export interface SpellConfig {
     height: number;
   };
   combo?: ComboStep[];
+  charge?: ChargeConfig;
+  chargePercent?: number;
   metadata?: SpellMetadata;
 }
 

@@ -32,6 +32,7 @@ export const spells: Record<SpellName, SpellHandler> = {
       entity.scene,
       projectile.x,
       projectile.y,
+      config.chargePercent,
     );
     projectile.setEmitter(emitter);
   },

@@ -21,6 +21,7 @@ export class InputManager {
   };
   private pointer: { x: number; y: number } = { x: 0, y: 0 };
   private target?: { x: number; y: number };
+  private pointerdown: boolean = false;
 
   constructor(scene: Scene) {
     this.scene = scene;
@@ -105,8 +106,18 @@ export class InputManager {
     return t;
   }
 
+  isPointerDown(): boolean {
+    return this.pointerdown;
+  }
+
+  getPointer(): { x: number; y: number } {
+    return { x: this.pointer.x, y: this.pointer.y };
+  }
+
   registerPointerEvents(): void {
     this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      this.pointerdown = true;
+
       const target = this.scene.cameraManager.getWorldPoint(
         pointer.x,
         pointer.y,
@@ -117,9 +128,14 @@ export class InputManager {
         y: target.y,
       });
     });
+
+    this.scene.input.on("pointerup", () => {
+      this.pointerdown = false;
+    });
   }
 
   destroy(): void {
     this.scene.input.off("pointerdown");
+    this.scene.input.off("pointerup");
   }
 }

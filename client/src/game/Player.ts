@@ -95,6 +95,13 @@ export class Player extends Entity {
     if (this.isLocked) {
       if (input.moving) this.moving = input.moving;
       if (input.facing) this.setFacing(input.facing);
+      
+      this.pointerdown = input.pointerdown;
+
+      if (this.inputManager) {
+        this.target = this.inputManager.getPointer();
+        input.target = this.target;
+      } else this.target = input.target;
 
       this.states?.get(this.state)?.update(this);
       if (this.isControllable)
@@ -112,6 +119,7 @@ export class Player extends Entity {
     this.target = input.target;
     this.setFacing(input.facing);
     this.moving = input.moving;
+    this.pointerdown = input.pointerdown;
 
     const { state, needsUpdate } = handlers.state.resolve(input, prev);
 
@@ -147,6 +155,7 @@ export class Player extends Entity {
     const isRunning = this.inputManager?.isRunning();
     const isJumping = this.inputManager?.isJumping();
     const isRolling = this.inputManager?.isRolling();
+    const pointerdown = this.inputManager?.isPointerDown();
     const target = this.inputManager?.getTarget();
 
     const hotbar = this.getComponent<HotbarComponent>(ComponentName.HOTBAR);
@@ -161,6 +170,7 @@ export class Player extends Entity {
       isRunning: isRunning || false,
       isJumping: isJumping || false,
       isRolling: isRolling || false,
+      pointerdown: pointerdown || false,
       target: target,
       state: this.state,
       equipped: equipped,

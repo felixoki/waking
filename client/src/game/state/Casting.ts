@@ -1,4 +1,4 @@
-import { ComponentName, StateName } from "@server/types";
+import { ComponentName, SpellName, StateName } from "@server/types";
 import { State } from "./State";
 import { Entity } from "../Entity";
 import { AnimationComponent } from "../components/Animation";
@@ -12,6 +12,7 @@ export class Casting implements State {
     combo?: Phaser.Time.TimerEvent;
   } | null = null;
   private step: number = 0;
+  private charging: boolean = false;
 
   public name: StateName = StateName.CASTING;
 
@@ -37,6 +38,60 @@ export class Casting implements State {
       ComponentName.ANIMATION,
     );
     anim?.play(this.name, entity.facing);
+
+    if (config.charge) {
+      this.charging = true;
+      handlers.charge.start(entity, config);
+      return;
+    }
+
+    this.executeSpell(entity);
+  }
+
+  update(entity: Entity): void {
+    if (!this.charging) return;
+
+    if (!entity.pointerdown) this.releaseCharge(entity);
+  }
+
+  private releaseCharge(entity: Entity): void {
+    if (!this.charging) return;
+
+    this.charging = false;
+
+    const scaled = handlers.charge.release(entity);
+    if (!scaled) {
+      this.exit(entity);
+      return;
+    }
+
+    const direction = handlers.direction.getDirectionToPoint(
+      entity,
+      entity.target || { x: entity.x + 1, y: entity.y },
+    );
+
+    handlers.spells[scaled.name as SpellName](
+      entity,
+      scaled,
+      entity.target || { x: entity.x + direction.x, y: entity.y + direction.y },
+      direction,
+      0,
+    );
+
+    const { duration } = handlers.combat.combo(scaled, 0);
+
+    this.timer = {
+      delay: entity.scene.time.delayedCall(0, () => {}),
+      duration: entity.scene.time.delayedCall(duration, () => {
+        this.exit(entity);
+        this.timer = null;
+      }),
+    };
+  }
+
+  private executeSpell(entity: Entity): void {
+    const config = handlers.combat.resolve(entity);
+    if (!config) return;
 
     const direction = handlers.direction.getDirectionToPoint(
       entity,
@@ -86,13 +141,16 @@ export class Casting implements State {
     };
   }
 
-  update(_entity: Entity): void {}
-
   exit(entity: Entity): void {
     if (this.timer) {
       this.timer.delay?.destroy();
       this.timer.duration?.destroy();
       this.timer.combo?.destroy();
+    }
+
+    if (this.charging) {
+      handlers.charge.cleanup(entity);
+      this.charging = false;
     }
 
     entity.isLocked = false;

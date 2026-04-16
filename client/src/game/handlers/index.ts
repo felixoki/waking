@@ -11,12 +11,14 @@ import { vision } from "./vision";
 import { weapons } from "./weapons";
 import { collection } from "./collection";
 import { behavior } from "./behavior";
+import { charge } from "./charge";
 
 export const handlers = {
   state,
   move,
   direction,
   physics,
+  charge,
   combat,
   player,
   spells,
