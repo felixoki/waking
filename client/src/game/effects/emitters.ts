@@ -2,15 +2,16 @@ import { Entity } from "../Entity";
 import { Scene } from "../scenes/Scene";
 
 export const emitters = {
-  shard: (scene: Scene, x: number, y: number) => {
+  shard: (scene: Scene, x: number, y: number, chargePercent?: number) => {
+    const power = chargePercent ?? 1;
     const emitter = scene.add.particles(x, y, "particle_circle", {
       tint: [0x00ccff, 0xaaffff, 0xffffff],
       alpha: { start: 0.8, end: 0 },
-      scale: { start: 0.6, end: 0.2 },
+      scale: { start: 0.4, end: 0.15 },
       speed: { min: 20, max: 40 },
       lifespan: 400,
       frequency: 15,
-      quantity: 2,
+      quantity: Math.max(1, Math.round(2 * power)),
       blendMode: "ADD",
     });
     emitter.setDepth(1000);

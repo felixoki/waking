@@ -11,6 +11,7 @@ export interface Input {
   isRunning: boolean;
   isJumping: boolean;
   isRolling: boolean;
+  pointerdown: boolean;
   target?: { x: number; y: number };
   state: StateName;
   equipped: HotbarSlot | null | undefined;

@@ -12,9 +12,14 @@ export const spells: Record<SpellName, SpellConfig> = {
       width: 10,
       height: 10,
     },
+    charge: {
+      duration: 1500,
+      min: 0.25,
+      max: 1,
+    },
     metadata: {
       description:
-        "A basic magic projectile that can be cast in quick succession.",
+        "A chargeable magic projectile that grows stronger the longer you hold.",
       displayName: "Shard",
     },
   },
