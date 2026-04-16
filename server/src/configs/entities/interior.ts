@@ -288,4 +288,46 @@ export const interior: Partial<Record<EntityName, EntityDefinition>> = {
     states: [],
     behaviors: [],
   },
+  [EntityName.CHEST1]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      {
+        name: ComponentName.BODY,
+        config: {
+          width: 24,
+          height: 16,
+          offsetX: 4,
+          offsetY: 16,
+          static: true,
+          collides: true,
+        },
+      },
+      {
+        name: ComponentName.TEXTURE_ANIMATION,
+        config: {
+          spritesheet: "chests",
+          tileSize: 16,
+          tiles: [
+            { row: 1, start: 11, end: 12 },
+            { row: 2, start: 11, end: 12 },
+          ],
+          frames: 4,
+          direction: "vertical",
+          frameRate: 8,
+          repeat: 0,
+          autoplay: false,
+        },
+      },
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.HOVERABLE },
+      { name: ComponentName.STORAGE, config: { slots: 16 } },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Chest",
+      description: "A sturdy wooden chest.",
+    },
+  },
 };

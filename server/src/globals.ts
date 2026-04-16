@@ -50,6 +50,8 @@ export const DURATION_COMBO_WINDOW = 400;
 
 export const REVIVE_MANA = 30;
 
+export const MAX_STACK = 50;
+
 export const DIRECTIONS_CARDINAL = [
   { dx: 0, dy: -1 },
   { dx: 1, dy: 0 },

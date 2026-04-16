@@ -150,6 +150,11 @@ export class MainScene extends Phaser.Scene {
       EventBus.emit(Event.PLAYER_CREATE_LOCAL, data.id);
       EventBus.emit(Event.PLAYER_HEALTH, player.health);
       EventBus.emit(Event.PLAYER_MANA, player.mana);
+
+      const inventory = player.getComponent<InventoryComponent>(
+        ComponentName.INVENTORY,
+      );
+      if (inventory && data.inventory?.length) inventory.set(data.inventory);
     });
 
     this.socketManager.on(
@@ -373,6 +378,16 @@ export class MainScene extends Phaser.Scene {
       inventory.remove(data.name, data.quantity);
     });
 
+    this.socketManager.on(Event.INVENTORY_SYNC, (data: (Item | null)[]) => {
+      const player = this.playerManager.player;
+      if (!player) return;
+
+      const inventory = player.getComponent<InventoryComponent>(
+        ComponentName.INVENTORY,
+      );
+      inventory?.set(data);
+    });
+
     EventBus.on(Event.ITEM_COLLECT, (data: Item) => {
       this.socketManager.emit(Event.ITEM_COLLECT, data);
     });
@@ -380,24 +395,66 @@ export class MainScene extends Phaser.Scene {
     /**
      * Spells
      */
-    EventBus.on(Event.SPELL_LEARN, (data: { entityName: EntityName; spell: SpellName }) => {
-      this.socketManager.emit(Event.SPELL_LEARN, { spell: data.spell });
+    EventBus.on(
+      Event.SPELL_LEARN,
+      (data: { entityName: EntityName; spell: SpellName }) => {
+        this.socketManager.emit(Event.SPELL_LEARN, { spell: data.spell });
 
-      const player = this.playerManager.player;
+        const player = this.playerManager.player;
 
-      if (player) {
-        const inventory = player.getComponent<InventoryComponent>(
-          ComponentName.INVENTORY,
-        );
-        inventory?.remove(data.entityName);
+        if (player) {
+          const inventory = player.getComponent<InventoryComponent>(
+            ComponentName.INVENTORY,
+          );
+          inventory?.remove(data.entityName);
 
-        EventBus.emit(Event.SPELL_LEARN_CONFIRM, data.spell);
-      }
-    });
+          EventBus.emit(Event.SPELL_LEARN_CONFIRM, data.spell);
+        }
+      },
+    );
 
     this.socketManager.on(Event.SPELLS_SYNC, (spells: SpellName[]) => {
       EventBus.emit(Event.SPELLS_SYNC, spells);
     });
+
+    /**
+     * Storage
+     */
+    this.game.events.on(
+      Event.STORAGE_OPEN,
+      (data: { entityId: string; slots: number }) => {
+        this.socketManager.emit(Event.STORAGE_OPEN, {
+          entityId: data.entityId,
+        });
+        EventBus.emit(Event.STORAGE_OPEN, data);
+      },
+    );
+
+    EventBus.on(Event.STORAGE_CLOSE, (data: string) => {
+      this.socketManager.emit(Event.STORAGE_CLOSE, { entityId: data });
+      this.game.events.emit(Event.STORAGE_CLOSE, data);
+    });
+
+    EventBus.on(
+      Event.STORAGE_DEPOSIT,
+      (data: { entityId: string; item: Item }) => {
+        this.socketManager.emit(Event.STORAGE_DEPOSIT, data);
+      },
+    );
+
+    EventBus.on(
+      Event.STORAGE_WITHDRAW,
+      (data: { entityId: string; item: Item }) => {
+        this.socketManager.emit(Event.STORAGE_WITHDRAW, data);
+      },
+    );
+
+    this.socketManager.on(
+      Event.STORAGE_SYNC,
+      (data: { entityId: string; slots: (Item | null)[] }) => {
+        EventBus.emit(Event.STORAGE_SYNC, data);
+      },
+    );
 
     /**
      * Economy

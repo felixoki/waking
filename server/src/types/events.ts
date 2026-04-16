@@ -90,6 +90,15 @@ export enum Event {
   SPELLS_SYNC = "spells_sync",
   SPELL_EQUIP = "spell_equip",
 
+  /** Storage */
+  INVENTORY_SYNC = "inventory:sync",
+  STORAGE_OPEN = "storage:open",
+  STORAGE_CLOSE = "storage:close",
+  STORAGE_DEPOSIT = "storage:deposit",
+  STORAGE_WITHDRAW = "storage:withdraw",
+  STORAGE_SYNC = "storage:sync",
+  STORAGE_UPDATE = "storage:update",
+
   /** UI */
   UI_TOGGLE = "ui_toggle",
 

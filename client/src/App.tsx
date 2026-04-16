@@ -13,6 +13,7 @@ import { Economy } from "./ui/Economy";
 import { Loading } from "./ui/Loading";
 import { Seeds } from "./ui/Seeds";
 import { Spells } from "./ui/Spells";
+import { Storage } from "./ui/Storage";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -41,15 +42,18 @@ function App() {
       </div>
       <Stats />
       <Economy />
-      <div className="fixed top-4 left-4 flex flex-col gap-4">
-        <div className="bg-black/25 rounded-lg p-4">
-          <Hotbar />
-          <Inventory />
+      <div className="fixed top-4 left-4 flex flex-row gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="bg-black/25 rounded-lg p-4">
+            <Hotbar />
+            <Inventory />
+          </div>
+          <Dialogue />
+          <Collection />
+          <Spells />
+          <Seeds />
         </div>
-        <Dialogue />
-        <Collection />
-        <Spells />
-        <Seeds />
+        <Storage />
       </div>
     </div>
   );

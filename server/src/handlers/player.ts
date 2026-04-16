@@ -41,6 +41,7 @@ export const player = {
         isAuthority,
         isDead: false,
         spells: (saved?.data?.spells as SpellName[]) || [],
+        inventory: saved?.data?.inventory ?? new Array(20).fill(null),
       };
 
       world.players.add(player.id, player);
@@ -84,6 +85,7 @@ export const player = {
           map: player.map,
           facing: player.facing,
           spells: player.spells,
+          inventory: player.inventory,
         },
       });
 
@@ -103,6 +105,12 @@ export const player = {
         );
       }
     }
+
+    for (const entity of world.entities.all)
+      if (entity.lockedBy === player.id) {
+        entity.isLocked = false;
+        entity.lockedBy = undefined;
+      }
 
     handlers.party.leave(socket, io, world);
 

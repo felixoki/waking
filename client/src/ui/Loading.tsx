@@ -11,6 +11,7 @@ const tips = [
   "Shadow wanderers will only strike if you attack first.",
   "If you die or leave your party in the realm, you lose your inventory.",
   "Look for nearby caves if you come across trolls. They often stash treasure there.",
+  "The herbalist can help you reach deeper dream levels with potions."
 ];
 
 function randomTip(exclude?: string) {

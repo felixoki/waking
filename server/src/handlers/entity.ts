@@ -4,12 +4,14 @@ import {
   EntityName,
   Event,
   Input,
+  Item,
   MapName,
   Spot,
 } from "../types";
 import { randomUUID } from "crypto";
 import { World } from "../World";
 import { handlers } from ".";
+import { configs } from "../configs";
 
 export const entity = {
   create: (
@@ -115,7 +117,25 @@ export const entity = {
   },
 
   pickup: (data: string, socket: Socket, io: Server, world: World) => {
-    entity.remove(data, Event.ENTITY_DESTROY, socket, io, world, false);
+    const player = world.players.getBySocketId(socket.id);
+    const entity = world.entities.get(data);
+
+    if (player && entity) {
+      const stackable =
+        configs.entities[entity.name]?.metadata?.stackable ?? false;
+      const item: Item = { name: entity.name, quantity: 1, stackable };
+
+      player.inventory = handlers.storage.add(player.inventory, item);
+    }
+
+    handlers.entity.remove(
+      data,
+      Event.ENTITY_DESTROY,
+      socket,
+      io,
+      world,
+      false,
+    );
   },
 
   spot: (data: Spot, socket: Socket, world: World) => {

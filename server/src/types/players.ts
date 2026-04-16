@@ -1,3 +1,4 @@
+import { Item } from './components';
 import { Direction } from './directions';
 import { MapName } from './maps';
 import { SpellName } from './spells';
@@ -15,4 +16,5 @@ export interface PlayerConfig {
   isDead: boolean;
   locked?: string;
   spells: SpellName[];
+  inventory: (Item | null)[];
 }
