@@ -159,9 +159,11 @@ export const dialogue = {
         effects: choice!.effects,
       }));
 
-    const collectorConfig = definition.components
-      ?.find((c) => c.name === ComponentName.COLLECTOR)
-      ?.config as { accepts: string[] } | undefined;
+    const collectorConfig = definition.components?.find(
+      (c) => c.name === ComponentName.COLLECTOR,
+    )?.config as
+      | { accepts: string[]; recipes?: { tier: number }[] }
+      | undefined;
 
     if (collectorConfig) {
       const giveChoices = player.inventory
@@ -187,6 +189,18 @@ export const dialogue = {
         });
 
       choices.unshift(...giveChoices);
+
+      if (collectorConfig.recipes && collectorConfig.recipes.length)
+        choices.push({
+          text: "Show me what you can craft",
+          next: undefined,
+          effects: [
+            {
+              name: DialogueEffectName.COLLECTOR_OPEN,
+              params: { entityId, entityName: entity.name },
+            },
+          ],
+        });
     }
 
     socket.emit(Event.ENTITY_DIALOGUE_RESPONSE, {

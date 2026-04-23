@@ -37,4 +37,8 @@ export const broadcast = {
     const snapshot = world.economy.getSnapshot();
     io.emit(Event.ECONOMY_UPDATE, snapshot);
   },
+
+  store: (io: Server, world: World) => {
+    io.emit(Event.STORE_SYNC, world.items.snapshot());
+  },
 };

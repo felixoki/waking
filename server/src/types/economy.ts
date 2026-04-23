@@ -3,6 +3,7 @@ import { EntityName } from './entities';
 export enum NeedName {
   FOOD = 'food',
   RESOURCES = 'resources',
+  INGREDIENTS = 'ingredients',
 }
 
 export interface Tier {
@@ -18,6 +19,9 @@ export interface NeedConfig {
 }
 
 export type EconomySnapshot = {
-  name: NeedName;
-  items: { item: EntityName; quantity: number }[];
-}[];
+  tier: number;
+  needs: {
+    name: NeedName;
+    items: { item: EntityName; quantity: number }[];
+  }[];
+};

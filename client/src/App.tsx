@@ -13,6 +13,7 @@ import { Loading } from "./ui/Loading";
 import { Seeds } from "./ui/Seeds";
 import { Spells } from "./ui/Spells";
 import { Storage } from "./ui/Storage";
+import { Collector } from "./ui/Collector";
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -52,6 +53,7 @@ function App() {
           <Seeds />
         </div>
         <Storage />
+        <Collector />
       </div>
     </div>
   );

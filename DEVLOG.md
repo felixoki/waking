@@ -411,11 +411,16 @@
 - Add flowers to forest config ✅
 - Update collection dialogue ✅
 
+#### 23.4.2026
+
+- Add crafting system ✅
+- Add tier updates ✅
+
 ### In progress
 
+- Add effects, resistances and weaknesses
 
 ### Bugs
-
 
 ### Backlog
 
@@ -426,10 +431,7 @@
   - Absorb life
   - Add reflect damage spell
 
-- Effects ⭐
-  - Add wet effect, resistance and weakness
-
-- Animal keeping ⭐
+- Animal taming ⭐
 
 - Game sounds ⭐
   - Add music, sound effects and ambience
@@ -468,7 +470,7 @@
 **Blacksmith**
 
 - Collects: Wood, Iron, Glass
-- Produces: Axe, Pickaxe, Lantern, Hoe
+- Produces: Axe, Lantern, Hoe
 
 **Herbalist**
 

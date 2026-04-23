@@ -8077,8 +8077,6 @@
   <object id="490" name="Torch1" x="136" y="1210" width="1" height="1"/>
   <object id="491" name="Torch1" x="182" y="1210" width="1" height="1"/>
   <object id="493" name="Greengrocer" x="320" y="1120" width="1" height="1"/>
-  <object id="498" name="Belladonna" x="560.599" y="576.915" width="2.09179" height="2.9285"/>
-  <object id="499" name="Sunflower" x="576.188" y="588.875" width="1.99373" height="3.08122"/>
   <object id="501" name="Farmplot" x="744" y="72" width="1" height="1"/>
   <object id="502" name="Farmplot" x="760" y="72" width="1" height="1"/>
   <object id="504" name="Farmplot" x="776" y="72" width="1" height="1"/>

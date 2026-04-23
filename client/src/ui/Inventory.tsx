@@ -9,7 +9,7 @@ import {
 import EventBus from "../game/EventBus";
 import { configs } from "@server/configs";
 import { ContextMenu, ContextMenuAction } from "./ContextMenu";
-import { Icon } from "./Icon";
+import { Item } from "./Item";
 
 export function Inventory() {
   const [items, setItems] = useState<(ItemInterface | null)[]>(
@@ -40,16 +40,22 @@ export function Inventory() {
 
     const onStorageClose = () => setStorageEntityId(null);
 
+    const onCollectorOpen = () => {
+      if (!isOpenRef.current) EventBus.emit(Event.UI_TOGGLE);
+    };
+
     EventBus.on(Event.INVENTORY_UPDATE, add);
     EventBus.on(Event.UI_TOGGLE, toggle);
     EventBus.on(Event.STORAGE_OPEN, onStorageOpen);
     EventBus.on(Event.STORAGE_CLOSE, onStorageClose);
+    EventBus.on(Event.COLLECTOR_OPEN, onCollectorOpen);
 
     return () => {
       EventBus.off(Event.INVENTORY_UPDATE, add);
       EventBus.off(Event.UI_TOGGLE, toggle);
       EventBus.off(Event.STORAGE_OPEN, onStorageOpen);
       EventBus.off(Event.STORAGE_CLOSE, onStorageClose);
+      EventBus.off(Event.COLLECTOR_OPEN, onCollectorOpen);
     };
   }, []);
 
@@ -88,7 +94,9 @@ export function Inventory() {
         {items.map((item, i) => (
           <Item
             key={i}
-            item={item}
+            name={item?.name ?? null}
+            quantity={item?.quantity}
+            interactive
             onContextMenu={(e) => {
               e.preventDefault();
               if (!item) return;
@@ -117,7 +125,7 @@ function getActions(name: EntityName, storageOpen = false): string[] {
   if (!def) return [];
 
   const actions: string[] = [];
-  
+
   if (def.components.some((c) => c.name === ComponentName.LEARNABLE))
     actions.push("learn");
   if (storageOpen) actions.push("deposit");
@@ -134,31 +142,4 @@ function getSpell(name: EntityName): SpellName | null {
   if (learnable && learnable.name === ComponentName.LEARNABLE)
     return learnable.config.spell;
   return null;
-}
-
-function Item({
-  item,
-  onContextMenu,
-}: {
-  item: ItemInterface | null;
-  onContextMenu: (e: React.MouseEvent) => void;
-}) {
-  const config = item ? configs.entities[item.name] : null;
-
-  return (
-    <li>
-      <button
-        title={config?.metadata?.description || item?.name || ""}
-        className="relative flex items-center justify-center rounded-lg text-xs w-16 aspect-square bg-gray-200"
-        onContextMenu={onContextMenu}
-      >
-        {config?.metadata?.icon ? (
-          <Icon icon={config.metadata.icon} />
-        ) : (
-          config?.metadata?.displayName || item?.name || ""
-        )}
-        <span className="absolute bottom-1 right-1">{item?.quantity}</span>
-      </button>
-    </li>
-  );
 }

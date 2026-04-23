@@ -1,8 +1,7 @@
 import { EntityName, Event, HotbarSlot, SpellName } from "@server/types";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
-import { configs } from "@server/configs";
-import { Icon } from "./Icon";
+import { Item } from "./Item";
 
 export function Hotbar() {
   const [slots, setSlots] = useState<(HotbarSlot | null)[]>(() =>
@@ -29,36 +28,12 @@ export function Hotbar() {
   return (
     <ul className="flex flex-wrap gap-1">
       {slots.map((slot, i) => (
-        <Slot key={i} name={slot?.name || null} active={i === active} />
+        <Item
+          key={i}
+          name={(slot?.name as EntityName | SpellName) || null}
+          active={i === active}
+        />
       ))}
     </ul>
-  );
-}
-
-function Slot({
-  name,
-  active,
-}: {
-  name: EntityName | SpellName | null;
-  active: boolean;
-}) {
-  const config =
-    configs.entities[name as EntityName] ||
-    configs.spells[name as SpellName] ||
-    null;
-
-  return (
-    <button
-      title={config?.metadata?.description || name || ""}
-      className={`relative flex items-center justify-center rounded-lg text-xs w-16 aspect-square overflow-hidden ${
-        active ? "text-blue-600 bg-blue-100" : " bg-gray-200"
-      }`}
-    >
-      {config?.metadata?.icon ? (
-        <Icon icon={config.metadata.icon} />
-      ) : (
-        config?.metadata?.displayName || name || ""
-      )}
-    </button>
   );
 }

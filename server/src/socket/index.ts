@@ -182,6 +182,18 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
       handler: (data: { entityId: string; item: Item }) =>
         handlers.storage.withdraw(data, socket, world),
     },
+    /**
+     * Collector
+     */
+    {
+      event: Event.COLLECTOR_CRAFT,
+      handler: (data: { entityId: string; output: string }) =>
+        handlers.collector.craft(data as any, socket, io, world),
+    },
+    {
+      event: Event.COLLECTOR_TIER_UPGRADE,
+      handler: () => handlers.collector.upgrade(socket, io, world),
+    },
   ];
 
   events.forEach(({ event, handler }) => {

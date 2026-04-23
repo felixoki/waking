@@ -7,6 +7,7 @@ import {
   EntityDefinition,
   EntityName,
   NodeId,
+  Recipe,
   StateName,
 } from "../../types";
 
@@ -21,7 +22,37 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.COLLECTOR,
         config: {
-          accepts: [EntityName.FLYAMINATA1, EntityName.BASKETFERN],
+          accepts: [
+            EntityName.SUNFLOWER,
+            EntityName.DAFFODIL,
+            EntityName.BLUE_LOTUS,
+            EntityName.CLARY_SAGE,
+            EntityName.BELLADONNA,
+            EntityName.VIAL,
+          ],
+          recipes: [
+            {
+              tier: 1,
+              output: EntityName.DROP_OF_THE_BELLAN_TRAIL,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.VIAL, quantity: 1 },
+                { item: EntityName.BLUE_LOTUS, quantity: 2 },
+                { item: EntityName.DAFFODIL, quantity: 2 },
+                { item: EntityName.CLARY_SAGE, quantity: 2 },
+              ],
+            },
+            {
+              tier: 1,
+              output: EntityName.SUNGOLD_POTION,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.VIAL, quantity: 1 },
+                { item: EntityName.SUNFLOWER, quantity: 3 },
+                { item: EntityName.BELLADONNA, quantity: 1 },
+              ],
+            },
+          ] satisfies Recipe[],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -72,10 +103,38 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
         config: {
           accepts: [
             EntityName.WOOD,
-            EntityName.IRON_ORE,
             EntityName.IRON1,
             EntityName.GLASS,
           ],
+          recipes: [
+            {
+              tier: 1,
+              output: EntityName.AXE,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.WOOD, quantity: 2 },
+                { item: EntityName.IRON1, quantity: 1 },
+              ],
+            },
+            {
+              tier: 1,
+              output: EntityName.LANTERN,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.IRON1, quantity: 2 },
+                { item: EntityName.GLASS, quantity: 4 },
+              ],
+            },
+            {
+              tier: 1,
+              output: EntityName.HOE,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.WOOD, quantity: 2 },
+                { item: EntityName.IRON1, quantity: 1 },
+              ],
+            },
+          ] satisfies Recipe[],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -124,7 +183,33 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
       {
         name: ComponentName.COLLECTOR,
         config: {
-          accepts: [EntityName.QUARTZ1, EntityName.BONE],
+          accepts: [
+            EntityName.WOOD,
+            EntityName.QUARTZ1,
+            EntityName.BONE,
+            EntityName.GLASS,
+            EntityName.IRON1,
+          ],
+          recipes: [
+            {
+              tier: 1,
+              output: EntityName.VIAL,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.GLASS, quantity: 1 },
+                { item: EntityName.IRON1, quantity: 1 },
+              ],
+            },
+            {
+              tier: 1,
+              output: EntityName.GLASS,
+              quantity: 1,
+              ingredients: [
+                { item: EntityName.QUARTZ1, quantity: 4 },
+                { item: EntityName.BONE, quantity: 2 },
+              ],
+            },
+          ] satisfies Recipe[],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -174,6 +259,7 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.COLLECTOR,
         config: {
           accepts: [EntityName.VENISON_MEAT],
+          recipes: [],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -223,6 +309,7 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.COLLECTOR,
         config: {
           accepts: [],
+          recipes: [],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -272,6 +359,7 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.COLLECTOR,
         config: {
           accepts: [],
+          recipes: [],
         },
       },
       { name: ComponentName.ANIMATION },
@@ -436,7 +524,24 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
     ],
     dialogue: {
       [NodeId.GREETING]: {
-        ref: NodeId.GREETING,
+        text: "*breathes in* Ah, nothing better than the sea breeze.",
+        choices: [
+          {
+            text: "Tell me about your adventures.",
+            next: NodeId.STORY,
+          },
+          {
+            ref: ChoiceId.GOODBYE,
+          },
+        ],
+      },
+      [NodeId.STORY]: {
+        text: "I remember the first time I set foot on a ship, I was feverish with excitement at the crackling atmosphere in the air. In the coming months, I could already picture us sailing to distant shores.",
+        choices: [
+          {
+            ref: ChoiceId.GOODBYE,
+          },
+        ],
       },
     },
   },
@@ -629,7 +734,12 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
     ],
     dialogue: {
       [NodeId.GREETING]: {
-        ref: NodeId.GREETING,
+        text: "*sighs* How am I going to get another fishing hook...",
+        choices: [
+          {
+            ref: ChoiceId.GOODBYE,
+          },
+        ],
       },
     },
   },

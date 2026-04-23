@@ -442,6 +442,20 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
+    /**
+     * Collector
+     */
+    EventBus.on(
+      Event.COLLECTOR_CRAFT,
+      (data: { entityId: string; output: string }) => {
+        this.socketManager.emit(Event.COLLECTOR_CRAFT, data);
+      },
+    );
+
+    EventBus.on(Event.COLLECTOR_TIER_UPGRADE, () => {
+      this.socketManager.emit(Event.COLLECTOR_TIER_UPGRADE);
+    });
+
     this.socketManager.on(
       Event.STORAGE_SYNC,
       (data: { entityId: string; slots: (Item | null)[] }) => {
@@ -454,6 +468,10 @@ export class MainScene extends Phaser.Scene {
      */
     this.socketManager.on(Event.ECONOMY_UPDATE, (data: EconomySnapshot) => {
       EventBus.emit(Event.ECONOMY_UPDATE, data);
+    });
+
+    this.socketManager.on(Event.STORE_SYNC, (data: Record<string, number>) => {
+      EventBus.emit(Event.STORE_SYNC, data);
     });
 
     /**
