@@ -63,6 +63,15 @@ export class EconomyManager {
     }
   }
 
+  getTier(): number {
+    return this.tier;
+  }
+
+  upgradeTier(): void {
+    this.tier++;
+    this.dirty = true;
+  }
+
   isLow(name: NeedName): boolean {
     const need = this.needs.get(name);
     if (!need) return false;
@@ -72,7 +81,7 @@ export class EconomyManager {
   }
 
   getSnapshot(): EconomySnapshot {
-    const snapshot: EconomySnapshot = [];
+    const needs: EconomySnapshot["needs"] = [];
 
     this.needs.forEach((need) => {
       const items = need.items
@@ -82,9 +91,9 @@ export class EconomyManager {
           quantity: Math.floor(this.supply.get(tier.item)),
         }));
 
-      snapshot.push({ name: need.name, items });
+      needs.push({ name: need.name, items });
     });
 
-    return snapshot;
+    return { tier: this.tier, needs };
   }
 }

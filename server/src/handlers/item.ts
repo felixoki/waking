@@ -11,5 +11,6 @@ export const item = {
     world.items.add(data.name, data.quantity);
     socket.emit(Event.ITEM_REMOVE, data);
     handlers.broadcast.economy(io, world);
+    handlers.broadcast.store(io, world);
   },
 };

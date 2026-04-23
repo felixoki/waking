@@ -55,6 +55,12 @@ export enum Event {
   /** Economy */
   ECONOMY_UPDATE = "economy_update",
 
+  /** Collector */
+  COLLECTOR_OPEN = "collector_open",
+  COLLECTOR_CRAFT = "collector_craft",
+  COLLECTOR_TIER_UPGRADE = "collector_tier_upgrade",
+  STORE_SYNC = "store_sync",
+
   /** Entities (UI) */
   ENTITIES_UPDATE = "entities_update",
 

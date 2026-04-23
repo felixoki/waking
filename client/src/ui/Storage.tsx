@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Event, Item } from "@server/types";
+import { Event, Item as ItemType } from "@server/types";
 import EventBus from "../game/EventBus";
-import { configs } from "@server/configs";
-import { Icon } from "./Icon";
+import { Item } from "./Item";
 
 export function Storage() {
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState<string | null>(null);
-  const [slots, setSlots] = useState<(Item | null)[]>([]);
+  const [slots, setSlots] = useState<(ItemType | null)[]>([]);
   const ref = useRef<string | null>(null);
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export function Storage() {
       setIsOpen(true);
     };
 
-    const sync = (data: { entityId: string; slots: (Item | null)[] }) => {
+    const sync = (data: { entityId: string; slots: (ItemType | null)[] }) => {
       if (data.entityId === ref.current) setSlots(data.slots);
     };
 
@@ -44,7 +43,7 @@ export function Storage() {
     };
   }, []);
 
-  const withdraw = (item: Item) => {
+  const withdraw = (item: ItemType) => {
     if (!id) return;
     EventBus.emit(Event.STORAGE_WITHDRAW, { entityId: id, item });
   };
@@ -56,28 +55,12 @@ export function Storage() {
       <h3 className="text-white mb-2">Chest</h3>
       <ul className="flex flex-wrap gap-1 max-w-135">
         {slots.map((item, i) => (
-          <li key={i}>
-            <button
-              title={
-                configs.entities[item?.name!]?.metadata?.description ||
-                item?.name ||
-                ""
-              }
-              className="relative flex items-center justify-center rounded-lg text-xs w-16 aspect-square bg-gray-200"
-              onClick={() => item && withdraw(item)}
-            >
-              {item
-                ? configs.entities[item.name]?.metadata?.icon
-                  ? <Icon icon={configs.entities[item.name]!.metadata!.icon!} />
-                  : configs.entities[item.name]?.metadata?.displayName || item.name
-                : ""}
-              {item && (
-                <span className="absolute bottom-1 right-1">
-                  {item.quantity}
-                </span>
-              )}
-            </button>
-          </li>
+          <Item
+            key={i}
+            name={item?.name ?? null}
+            quantity={item?.quantity}
+            onClick={() => item && withdraw(item)}
+          />
         ))}
       </ul>
     </div>

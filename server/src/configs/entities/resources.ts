@@ -116,4 +116,38 @@ export const resources: Partial<Record<EntityName, EntityDefinition>> = {
       icon: { spritesheet: "icons2", row: 10, col: 19 },
     },
   },
+  [EntityName.GLASS]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.PICKABLE },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Glass",
+      description: "A piece of refined glass, smooth and transparent.",
+      stackable: true,
+      icon: { spritesheet: "icons2", row: 6, col: 19 },
+    },
+  },
+  [EntityName.VIAL]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.PICKABLE },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Vial",
+      description: "A small glass vial, useful for storing liquids.",
+      stackable: true,
+      icon: { spritesheet: "icons2", row: 4, col: 19 },
+    },
+  },
 };

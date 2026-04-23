@@ -16,7 +16,8 @@ export const Dialogue = () => {
   const handlers: Record<DialogueEffectName, (effect: DialogueEffect) => void> =
     {
       [DialogueEffectName.CONVERSATION_END]: () => {
-        if (data?.entityId) EventBus.emit(Event.ENTITY_DIALOGUE_END, data.entityId);
+        if (data?.entityId)
+          EventBus.emit(Event.ENTITY_DIALOGUE_END, data.entityId);
         setIsOpen(false);
         setData(null);
       },
@@ -24,6 +25,9 @@ export const Dialogue = () => {
         if (effect.params) {
           EventBus.emit(Event.ITEM_COLLECT, effect.params as Item);
         }
+      },
+      [DialogueEffectName.COLLECTOR_OPEN]: (effect: DialogueEffect) => {
+        if (effect.params) EventBus.emit(Event.COLLECTOR_OPEN, effect.params);
       },
     };
 

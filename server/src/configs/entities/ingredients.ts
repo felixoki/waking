@@ -408,4 +408,38 @@ export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
       icon: { spritesheet: "icons1", row: 18, col: 13 },
     },
   },
+  [EntityName.DROP_OF_THE_BELLAN_TRAIL]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.PICKABLE },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Drop of the Bellan Trail",
+      description: "A mysterious potion brewed from rare aquatic flowers and forest herbs.",
+      stackable: true,
+      icon: { spritesheet: "icons1", row: 4, col: 1 },
+    },
+  },
+  [EntityName.SUNGOLD_POTION]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      { name: ComponentName.POINTABLE },
+      { name: ComponentName.PICKABLE },
+      { name: ComponentName.HOVERABLE },
+    ],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Sungold Potion",
+      description: "A warm golden potion distilled from sunflowers and belladonna.",
+      stackable: true,
+      icon: { spritesheet: "icons1", row: 5, col: 1 },
+    },
+  },
 };

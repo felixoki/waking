@@ -31,4 +31,8 @@ export class ItemsStore {
     const current = this.items.get(name) || 0;
     return current >= quantity;
   }
+
+  snapshot(): Record<string, number> {
+    return Object.fromEntries(this.items);
+  }
 }
