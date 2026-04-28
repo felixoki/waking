@@ -6,6 +6,7 @@ import { combat } from "./combat.js";
 import { dialogue } from "./dialogue.js";
 import { entity } from "./entity.js";
 import { farming } from "./farming.js";
+import { fishing } from "./fishing.js";
 import { generation } from "./generation.js";
 import { item } from "./item.js";
 import { party } from "./party.js";
@@ -21,6 +22,7 @@ export const handlers = {
   player,
   entity,
   farming,
+  fishing,
   item,
   combat,
   dialogue,

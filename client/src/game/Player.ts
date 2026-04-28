@@ -76,7 +76,7 @@ export class Player extends Entity {
         { type: HotbarSlotType.ENTITY, name: EntityName.AXE },
         { type: HotbarSlotType.ENTITY, name: EntityName.LANTERN },
         { type: HotbarSlotType.ENTITY, name: EntityName.HOE },
-        null,
+        { type: HotbarSlotType.ENTITY, name: EntityName.FISHING_ROD },
         null,
       ]),
     );
@@ -145,8 +145,8 @@ export class Player extends Entity {
 
     const depthY = Math.round(this.y);
 
-    if (depthY !== this._depthY) {
-      this._depthY = depthY;
+    if (depthY !== this.depthY) {
+      this.depthY = depthY;
       this.setDepth(1000 + this.y);
     }
   }

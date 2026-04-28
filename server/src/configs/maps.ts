@@ -38,6 +38,30 @@ const player: Spritesheet[] = [
     frameHeight: 32,
   },
   {
+    key: "player-fishing",
+    file: "player_fishing.png",
+    frameWidth: 64,
+    frameHeight: 64,
+  },
+  {
+    key: "player-fishing-throw",
+    file: "player_fishing_throw.png",
+    frameWidth: 64,
+    frameHeight: 64,
+  },
+  {
+    key: "player-fishing-bite",
+    file: "player_fishing_bite.png",
+    frameWidth: 64,
+    frameHeight: 64,
+  },
+  {
+    key: "player-fishing-catch",
+    file: "player_fishing_catch.png",
+    frameWidth: 64,
+    frameHeight: 64,
+  },
+  {
     key: "player-idle-lantern",
     file: "player_idle_with_lantern.png",
     frameWidth: 32,
@@ -511,6 +535,13 @@ export const maps: Record<MapName, MapConfig> = {
         asTileset: true,
       },
       {
+        key: "village_home_smoke",
+        file: "village_home_smoke.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
         key: "village_farm_ground_grass",
         file: "village_farm_ground_grass.png",
         frameWidth: 16,
@@ -781,7 +812,7 @@ export const maps: Record<MapName, MapConfig> = {
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
-      },
+      }
     ],
   },
   [MapName.TAVERN]: {

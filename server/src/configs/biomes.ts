@@ -1,5 +1,6 @@
 import { EntityName } from "../types";
 import { BiomeConfig, BiomeName, TerrainName } from "../types/generation";
+import { groundStamps, grassStamps, flowerStamps } from "./details";
 
 export const forest: BiomeConfig = {
   id: BiomeName.FOREST,
@@ -156,4 +157,25 @@ export const forest: BiomeConfig = {
   ],
 
   exclusion: 0,
+
+  details: [
+    {
+      tileset: "ground_grass_details",
+      terrains: [TerrainName.GROUND],
+      density: 0.06,
+      stamps: groundStamps,
+    },
+    {
+      tileset: "ground_grass_details",
+      terrains: [TerrainName.GRASS],
+      density: 0.06,
+      stamps: grassStamps,
+    },
+    {
+      tileset: "village_home",
+      terrains: [TerrainName.GRASS],
+      density: 0.03,
+      stamps: flowerStamps,
+    },
+  ],
 };

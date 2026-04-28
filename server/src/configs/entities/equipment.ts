@@ -52,6 +52,18 @@ export const equipment: Partial<Record<EntityName, EntityDefinition>> = {
       icon: { spritesheet: "icons2", row: 12, col: 10 },
     },
   },
+  [EntityName.FISHING_ROD]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [],
+    states: [],
+    behaviors: [],
+    metadata: {
+      displayName: "Fishing rod",
+      description: "A simple wooden rod strung with line. Stand near water and cast.",
+      icon: { spritesheet: "icons1", row: 6, col: 19 },
+    },
+  },
   [EntityName.AXE]: {
     facing: Direction.DOWN,
     moving: [],

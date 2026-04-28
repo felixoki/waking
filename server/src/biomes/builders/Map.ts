@@ -10,6 +10,7 @@ import {
 import { BorderGenerator } from "../generators/Border";
 import { TerrainGenerator } from "../generators/Terrain";
 import { TerrainSmoother } from "../smoothers/Terrain";
+import { DetailSpawner } from "../spawners/Detail";
 import { EntitySpawner } from "../spawners/Entity";
 
 export class MapBuilder {
@@ -42,10 +43,12 @@ export class MapBuilder {
     }
 
     /**
-     * Build fill layers
+     * Build fill layers, interleaving per-terrain detail layers immediately after
+     * each fill so ground details render beneath the grass fill layer.
      */
     const tiledLayers: any[] = [];
     let layerId = 1;
+    const detailSpawner = new DetailSpawner();
 
     for (let i = 0; i < layers.length; i++) {
       const layerConfig = layers[i];
@@ -88,6 +91,37 @@ export class MapBuilder {
           data,
         ),
       );
+
+      for (const detailConfig of this.config.details ?? []) {
+        if (!detailConfig.terrains.includes(layerConfig.terrain)) continue;
+        const highestTerrain = detailConfig.terrains.reduce((best, t) => {
+          const bestIdx = layers.findIndex((l) => l.terrain === best);
+          const tIdx = layers.findIndex((l) => l.terrain === t);
+          return tIdx > bestIdx ? t : best;
+        });
+        if (highestTerrain !== layerConfig.terrain) continue;
+
+        const detailGid = firstgids.get(detailConfig.tileset);
+        if (detailGid === undefined) continue;
+
+        const detailData = detailSpawner.spawn(
+          terrain,
+          width,
+          height,
+          detailConfig,
+          detailGid,
+        );
+
+        tiledLayers.push(
+          handlers.generation.createLayer(
+            layerId++,
+            `${detailConfig.terrains.join("_")}_details`,
+            width,
+            height,
+            detailData,
+          ),
+        );
+      }
     }
 
     /**
@@ -95,7 +129,14 @@ export class MapBuilder {
      */
     const borderGenerator = new BorderGenerator(this.config, this.loader);
 
-    for (const border of borders) {
+    const elevate = (t: TerrainName): number =>
+      this.config.terrain.indexOf(t);
+
+    const sorted = [...borders].sort(
+      (a, b) => elevate(b.from) - elevate(a.from),
+    );
+
+    for (const border of sorted) {
       const gid = firstgids.get(border.tileset)!;
       const data = borderGenerator.generate(terrain, border, gid);
       const properties = border.collides
@@ -123,10 +164,12 @@ export class MapBuilder {
     const entities = spawner.spawn(terrain, spawn);
 
     /**
-     * Jump point
+     * Wells
      */
-    const jump = this._findJumpPosition(terrain, spawn);
-    entities.push({ name: EntityName.WELL, x: jump.x, y: jump.y });
+    const wells = this._findWellPositions(terrain, spawn, 5);
+
+    for (const pos of wells)
+      entities.push({ name: EntityName.WELL, x: pos.x, y: pos.y });
 
     /**
      * Assemble final map
@@ -182,6 +225,7 @@ export class MapBuilder {
 
     for (const layer of this.config.layers) names.add(layer.tileset);
     for (const border of this.config.borders) names.add(border.tileset);
+    for (const detail of this.config.details ?? []) names.add(detail.tileset);
 
     return Array.from(names);
   }
@@ -212,10 +256,11 @@ export class MapBuilder {
     );
   }
 
-  private _findJumpPosition(
+  private _findWellPositions(
     terrain: TerrainName[],
     spawn: { x: number; y: number },
-  ): { x: number; y: number } {
+    count: number,
+  ): { x: number; y: number }[] {
     const { width, height, tileWidth, tileHeight } = this.config;
     const gen = handlers.generation;
 
@@ -239,11 +284,18 @@ export class MapBuilder {
     }
 
     const seed = this.config.noise.seed ?? "default";
-    const hash = gen.spatialHash(candidates.length, 0, seed.length);
-    const pick = candidates.length
-      ? candidates[hash % candidates.length]
-      : { x: tile.x + min, y: tile.y + min };
+    const fallback = { x: tile.x + min, y: tile.y + min };
+    const positions: { x: number; y: number }[] = [];
 
-    return gen.tileToWorld(pick.x, pick.y, tileWidth, tileHeight);
+    for (let i = 0; i < count; i++) {
+      const start = Math.floor((i * candidates.length) / count);
+      const end = Math.floor(((i + 1) * candidates.length) / count);
+      const slice = candidates.slice(start, end);
+      const hash = gen.spatialHash(slice.length, i, seed.length);
+      const pick = slice.length ? slice[hash % slice.length] : fallback;
+      positions.push(gen.tileToWorld(pick.x, pick.y, tileWidth, tileHeight));
+    }
+
+    return positions;
   }
 }

@@ -14,6 +14,7 @@ export class GrowableComponent extends Component {
   private config: GrowableConfig;
   private elapsed: number = 0;
   private stageIndex: number = 0;
+  private isHarvesting = false;
 
   public name = ComponentName.GROWABLE;
 
@@ -53,8 +54,12 @@ export class GrowableComponent extends Component {
   }
 
   private harvest(): void {
+    if (this.isHarvesting) return;
+
     const last = this.config.stages[this.config.stages.length - 1];
     if (this.config.stages[this.stageIndex] !== last) return;
+
+    this.isHarvesting = true;
 
     this.entity.scene.game.events.emit(Event.ENTITY_HARVEST, {
       entityId: this.entity.id,

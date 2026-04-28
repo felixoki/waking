@@ -16,6 +16,7 @@ import { InteractableComponent } from "../components/Interactable";
 import { CollectorComponent } from "../components/Collector";
 import { BounceComponent } from "../components/Bounce";
 import { LightComponent } from "../components/Light";
+import { GlimmerComponent } from "../components/Glimmer";
 import { TextureAnimationComponent } from "../components/TextureAnimation";
 import { GrowableComponent } from "../components/Growable";
 import { FarmableComponent } from "../components/Farmable";
@@ -83,6 +84,9 @@ export class ComponentFactory {
           break;
         case ComponentName.LIGHT:
           comp = new LightComponent(entity, component.config);
+          break;
+        case ComponentName.GLIMMER:
+          comp = new GlimmerComponent(entity, component.config);
           break;
         case ComponentName.TEXTURE_ANIMATION:
           comp = new TextureAnimationComponent(entity, component.config);

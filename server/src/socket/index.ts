@@ -117,6 +117,10 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
       event: Event.ENTITY_HARVEST,
       handler: (data: any) => handlers.farming.harvest(data, socket, io, world),
     },
+    {
+      event: Event.ENTITY_FISH,
+      handler: (data: any) => handlers.fishing.catch(data, socket, io, world),
+    },
     /**
      * Shared
      */

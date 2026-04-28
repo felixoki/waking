@@ -145,14 +145,14 @@ export function Collector() {
             );
           })}
         {recipes.filter((r) => r.tier === activeTab).length === 0 && (
-          <p className="text-white/50 text-sm">No recipes at this tier.</p>
+          <p className="text-white/50 text-sm">No recipes at this tier</p>
         )}
       </ul>
 
       {activeTab === tier + 1 && upgradeConfig && (
-        <div className="mt-4 border-t border-white/20 pt-3">
+        <div className="mt-4 pt-3">
           <p className="text-white/70 text-sm mb-2">
-            Unlock Tier {tier + 1} — requires:
+            Unlock tier {tier + 1}:
           </p>
           <ul className="flex flex-wrap gap-1 mb-3">
             {upgradeConfig.requirements.map((req, i) => (

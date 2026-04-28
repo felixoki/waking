@@ -10,6 +10,7 @@ import { Rolling } from "../state/Rolling";
 import { Dashing } from "../state/Dashing";
 import { Dead } from "../state/Dead";
 import { Throwing } from "../state/Throwing";
+import { Fishing } from "../state/Fishing";
 
 export class StateFactory {
     static create(names: StateName[]): Map<StateName, State> {
@@ -23,6 +24,7 @@ export class StateFactory {
         [StateName.ROLLING]: new Rolling(),
         [StateName.DASHING]: new Dashing(),
         [StateName.THROWING]: new Throwing(),
+        [StateName.FISHING]: new Fishing(),
         [StateName.DEAD]: new Dead(),
       };
 

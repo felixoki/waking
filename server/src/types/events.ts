@@ -41,6 +41,7 @@ export enum Event {
   ENTITY_UNLOCK = "entity_unlock",
   ENTITY_PLANT = "entity_plant",
   ENTITY_HARVEST = "entity_harvest",
+  ENTITY_FISH = "entity:fish",
   ENTITY_OVERLAP = "entity_overlap",
 
   /** Item */

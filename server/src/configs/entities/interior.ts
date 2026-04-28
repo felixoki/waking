@@ -273,6 +273,7 @@ export const interior: Partial<Record<EntityName, EntityDefinition>> = {
         config: {
           spritesheet: "torch",
           tileSize: 16,
+          offset: { x: 0, y: -4 },
           tiles: [
             { row: 1, start: 1, end: 2 },
             { row: 2, start: 1, end: 2 },
@@ -330,5 +331,21 @@ export const interior: Partial<Record<EntityName, EntityDefinition>> = {
       displayName: "Chest",
       description: "A sturdy wooden chest used to store valuables.",
     },
+  },
+  [EntityName.GLIMMER]: {
+    facing: Direction.DOWN,
+    moving: [],
+    components: [
+      {
+        name: ComponentName.GLIMMER,
+        config: {
+          radius: 70,
+          intensity: 0.4,
+          color: 0xff9940,
+        },
+      },
+    ],
+    states: [],
+    behaviors: [],
   },
 };

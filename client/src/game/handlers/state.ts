@@ -1,5 +1,6 @@
 import {
   Direction,
+  EntityName,
   HotbarSlotType,
   Input,
   StateName,
@@ -29,6 +30,14 @@ export const state = {
       {
         condition: () => input.state === StateName.THROWING,
         state: () => StateName.THROWING,
+        needsUpdate: false,
+      },
+      {
+        condition: () =>
+          !!input.target &&
+          input.equipped?.type === HotbarSlotType.ENTITY &&
+          input.equipped?.name === EntityName.FISHING_ROD,
+        state: () => StateName.FISHING,
         needsUpdate: false,
       },
       {

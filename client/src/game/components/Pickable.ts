@@ -7,6 +7,7 @@ import { effects } from "../effects";
 
 export class PickableComponent extends Component {
   private entity: Entity;
+  private isPicking = false;
 
   public name = ComponentName.PICKABLE;
 
@@ -27,11 +28,15 @@ export class PickableComponent extends Component {
   }
 
   pickup(player: Player): void {
+    if (this.isPicking) return;
+
     const inventory = player.getComponent<InventoryComponent>(
       ComponentName.INVENTORY,
     );
 
     if (!inventory?.add(this.entity.name)) return;
+
+    this.isPicking = true;
 
     this.entity.scene.game.events.emit(Event.ENTITY_PICKUP, this.entity.id);
 

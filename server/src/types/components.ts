@@ -23,6 +23,7 @@ export enum ComponentName {
   INTERACTABLE = "interactable",
   INVENTORY = "inventory",
   LEARNABLE = "learnable",
+  GLIMMER = "glimmer",
   LIGHT = "light",
   PICKABLE = "pickable",
   POINTABLE = "pointable",
@@ -49,6 +50,7 @@ export type ComponentConfig =
   | { name: ComponentName.INTERACTABLE }
   | { name: ComponentName.INVENTORY }
   | { name: ComponentName.LEARNABLE; config: LearnableConfig }
+  | { name: ComponentName.GLIMMER; config: GlimmerConfig }
   | { name: ComponentName.LIGHT; config: LightConfig }
   | { name: ComponentName.PICKABLE }
   | { name: ComponentName.POINTABLE }
@@ -56,6 +58,12 @@ export type ComponentConfig =
   | { name: ComponentName.TEXTURE; config: TextureConfig; key: string }
   | { name: ComponentName.TEXTURE_ANIMATION; config: TextureAnimationConfig }
   | { name: ComponentName.TRANSITION; config: TransitionConfig };
+
+export interface GlimmerConfig {
+  radius: number;
+  intensity: number;
+  color: number;
+}
 
 export interface AuraConfig {
   tints: number[];
@@ -115,6 +123,7 @@ export interface TransitionConfig {
 export interface TextureAnimationConfig {
   spritesheet: string;
   tileSize: number;
+  offset?: { x: number; y: number };
   tiles: { row: number; start: number; end: number }[];
   frames: number;
   direction: "horizontal" | "vertical";
