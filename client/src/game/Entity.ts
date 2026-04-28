@@ -29,7 +29,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
   public pointerdown: boolean = false;
   public knockback?: Phaser.Time.TimerEvent;
 
-  protected _depthY: number = 0;
+  protected depthY: number = 0;
 
   public components = new Map<ComponentName, Component>();
   public effects = new Map<EffectName, Effect>();
@@ -67,7 +67,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
 
   private _init() {
     this.scene.add.existing(this);
-    this._depthY = this.y;
+    this.depthY = this.y;
     this.setDepth(1000 + this.y);
   }
 
@@ -107,12 +107,13 @@ export class Entity extends Phaser.GameObjects.Sprite {
 
     const scene = this.scene as Scene;
     const isAuthority = scene.managers.players?.player?.isAuthority;
-    if (isAuthority && input) this.scene.game.events.emit(Event.ENTITY_INPUT, input);
+    if (isAuthority && input)
+      this.scene.game.events.emit(Event.ENTITY_INPUT, input);
 
     const depthY = Math.round(this.y);
-    
-    if (depthY !== this._depthY) {
-      this._depthY = depthY;
+
+    if (depthY !== this.depthY) {
+      this.depthY = depthY;
       this.setDepth(1000 + this.y);
     }
   }
@@ -183,7 +184,7 @@ export class Entity extends Phaser.GameObjects.Sprite {
       this.components.delete(name);
     }
   }
-  
+
   /**
    * Effect management
    */

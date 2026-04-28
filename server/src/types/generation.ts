@@ -118,6 +118,7 @@ export interface BiomeConfig {
   terrain: TerrainName[];
   objects: SpawnRule[];
   exclusion: number;
+  details?: DetailConfig[];
 }
 
 export interface GeneratedMap {
@@ -133,6 +134,19 @@ export interface GroupConfig {
   min: number;
   max: number;
   radius: number;
+}
+
+export interface DetailStamp {
+  tiles: { dx: number; dy: number; tileId: number }[];
+  width: number;
+  height: number;
+}
+
+export interface DetailConfig {
+  tileset: string;
+  terrains: TerrainName[];
+  density: number;
+  stamps: DetailStamp[];
 }
 
 export interface SpawnRule {

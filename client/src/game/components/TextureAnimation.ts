@@ -23,6 +23,12 @@ export class TextureAnimationComponent extends Component {
 
     this.entity.setOrigin(0.5, 0.5);
 
+    if (this.config.offset) {
+      this.entity.setX(this.entity.x + this.config.offset.x);
+      this.entity.setY(this.entity.y + this.config.offset.y);
+    }
+    
+
     if (!this.config.autoplay) {
       this.entity.setTexture(`${this.animKey}_0`);
       return;

@@ -343,6 +343,10 @@ export class MainScene extends Phaser.Scene {
       this.socketManager.emit(Event.ENTITY_HARVEST, data);
     });
 
+    this.game.events.on(Event.ENTITY_FISH, (data: any) => {
+      this.socketManager.emit(Event.ENTITY_FISH, data);
+    });
+
     this.game.events.on(
       Event.ENTITY_FELL,
       (data: { id: string; x: number; y: number }) => {

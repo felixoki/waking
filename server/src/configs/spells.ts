@@ -129,7 +129,7 @@ export const spells: Record<SpellName, SpellConfig> = {
     },
     metadata: {
       description: "Strikes a single target with a bolt of high damage lightning.",
-      displayName: "Lightning Strike",
+      displayName: "Lightning strike",
       icon: { spritesheet: "icons5", row: 16, col: 18 },
     },
   },

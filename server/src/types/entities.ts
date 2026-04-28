@@ -118,7 +118,11 @@ export enum EntityName {
   FARMPLOT = "farmplot",
   FISHING_HUT = "fishing_hut",
   FISHING_HUT_EXIT = "fishing_hut_exit",
+  FISHING_ROD = "fishing_rod",
   FISH_STAND1 = "fish_stand1",
+  CARP = "carp",
+  PERCH = "perch",
+  TROUT = "trout",
   FLYAMINATA1 = "flyaminata1",
   FOX = "fox",
   GOBLIN1 = "goblin1",
@@ -127,6 +131,7 @@ export enum EntityName {
   GLASSBLOWER = "glassblower",
   GLASSBLOWER_EXIT = "glassblower_exit",
   GLASSBLOWER_HOUSE = "glassblower_house",
+  GLIMMER = "glimmer",
   GREENGROCER = "greengrocer",
   HENHOUSE = "henhouse",
   HERBALIST = "herbalist",
@@ -186,4 +191,10 @@ export enum EntityName {
   WELL = "well",
   WINDMILL = "windmill",
   WOOD = "wood",
+}
+
+export enum FishName {
+  CARP = "carp",
+  PERCH = "perch",
+  TROUT = "trout",
 }

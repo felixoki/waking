@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { EntityName, SpellName } from "@server/types";
+import { SpellConfig } from "@server/types/spells";
 import { Ingredient } from "@server/types/collectors";
 import { configs } from "@server/configs";
 import { Icon } from "./Icon";
@@ -113,6 +114,35 @@ export function Item({
             <p className="font-semibold leading-tight">{displayName}</p>
           </div>
           {description && <p className="text-gray-300 mt-1">{description}</p>}
+          {configs.spells[name as SpellName] && (() => {
+            const spell = configs.spells[name as SpellName] as SpellConfig;
+            return (
+              <div className="mt-2 flex flex-col gap-1 text-xs">
+                {spell.damage.amount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Damage</span>
+                    <span className="text-white">{spell.damage.amount}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-white/50">Mana</span>
+                  <span className="text-white">{spell.mana}</span>
+                </div>
+                {spell.knockback > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Knockback</span>
+                    <span className="text-white">{spell.knockback}</span>
+                  </div>
+                )}
+                {spell.range !== undefined && (
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Range</span>
+                    <span className="text-white">{spell.range}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           {recipe && recipe.length > 0 && (
             <div className="mt-2 flex flex-col gap-1.5">
               {recipe.map((ing, i) => {

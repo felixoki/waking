@@ -421,16 +421,29 @@
 
 - Add effects, resistances and weaknesses ✅
 - Add troll ✅
+
+#### 26.4.2026
+
 - Refactor entity spawn generation ✅
+- Clicking multiple times multiplies harvesting and picking up items ✅
+- Collectors don't know about items lost in the realm ✅
+- Detail layer for forest generation ✅
+
+#### 27.4.2026
+
+- Add fishing ✅
+
 
 ### In progress
 
-- Add fishing
+- Damage on hits ui
+- Add individual health
 
 ### Bugs
 
-- Clicking multiple times multiplies harvesting
 - Multiplayer healthbar sync is broken
+- Returning from realm is too close to home entrance
+- Outer borders are off in generation
 
 ### Backlog
 

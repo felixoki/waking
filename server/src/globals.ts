@@ -48,6 +48,8 @@ export const ROCK_ARC_HEIGHT = 60;
 export const ROCK_FLIGHT_DURATION = 500;
 export const ROCK_HITBOX_SIZE = 24;
 export const ROCK_HITBOX_DURATION = 200;
+export const ROCK_MAX_THROW_RANGE = 200;
+export const ROCK_INACCURACY_SCALE = 0.1;
 
 export const RANGE_SLASHING = 40;
 export const RANGE_INTERACTING = 100;
@@ -69,6 +71,17 @@ export const CRIT_CHANCE = 0.05;
 export const CRIT_MULTIPLIER = 2;
 export const RESISTANCE_MULTIPLIER = 0.5;
 export const WEAKNESS_MULTIPLIER = 2;
+
+/** Fishing */
+export const DURATION_FISHING_CAST = 1500;
+export const DURATION_FISHING_WAIT_MIN = 3000;
+export const DURATION_FISHING_WAIT_MAX = 8000;
+export const DURATION_FISHING_WINDOW = 1500;
+export const DURATION_FISHING_CATCH = 750;
+export const FISHING_ARC_HEIGHT = 48;
+export const FISHING_ARC_DURATION = 600;
+export const FISHING_SCAN_TILES = 6;
+export const FISHING_LANDING_DISTANCE = 100;
 
 /** Stats */
 export const MAX_HEALTH = 100;

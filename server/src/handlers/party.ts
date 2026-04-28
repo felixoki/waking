@@ -43,6 +43,7 @@ export const party = {
         {
           health: 100,
           isDead: false,
+          inventory: new Array(20).fill(null),
         },
         data.members,
         data.id,

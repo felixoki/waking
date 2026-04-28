@@ -34,6 +34,11 @@ export const animations: Partial<
       frameRate: 16,
       repeat: 0,
     },
+    [StateName.FISHING]: {
+      frameCount: 11,
+      frameRate: 10,
+      repeat: -1,
+    },
   },
   [EntityName.HERBALIST]: {
     [StateName.IDLE]: {

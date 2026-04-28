@@ -51,7 +51,7 @@ export const collector = {
       stackable,
     });
 
-    socket.emit(Event.INVENTORY_UPDATE, player.inventory);
+    socket.emit(Event.INVENTORY_SYNC, player.inventory);
     handlers.broadcast.store(io, world);
     handlers.broadcast.economy(io, world);
   },

@@ -10,6 +10,7 @@ import { configs } from "@server/configs";
 import { AmbiencePipeline } from "../pipelines/Ambience";
 import { PHASE_TRANSITION_DURATION } from "@server/globals";
 import { LightComponent } from "../components/Light";
+import { GlimmerComponent } from "../components/Glimmer";
 
 export class AmbienceManager {
   private scene: MainScene;
@@ -120,21 +121,31 @@ export class AmbienceManager {
     const entities = this.scene.entityManager.entities;
 
     for (const [_, entity] of entities) {
-      const component = entity.getComponent<LightComponent>(
-        ComponentName.LIGHT,
-      );
-      if (!component) continue;
+      const light = entity.getComponent<LightComponent>(ComponentName.LIGHT);
+      if (light) {
+        const target = light.intensity * multiplier;
+        if (animate)
+          this.scene.tweens.add({
+            targets: light.light,
+            intensity: light.active ? target : 0,
+            duration: PHASE_TRANSITION_DURATION,
+            ease: "Sine.easeInOut",
+          });
+        else light.light.intensity = light.active ? target : 0;
+      }
 
-      const target = component.intensity * multiplier;
-
-      if (animate)
-        this.scene.tweens.add({
-          targets: component.light,
-          intensity: component.active ? target : 0,
-          duration: PHASE_TRANSITION_DURATION,
-          ease: "Sine.easeInOut",
-        });
-      else component.light.intensity = component.active ? target : 0;
+      const glimmer = entity.getComponent<GlimmerComponent>(ComponentName.GLIMMER);
+      if (glimmer) {
+        const target = glimmer.intensity * multiplier;
+        if (animate)
+          this.scene.tweens.add({
+            targets: glimmer.light,
+            intensity: glimmer.active ? target : 0,
+            duration: PHASE_TRANSITION_DURATION,
+            ease: "Sine.easeInOut",
+          });
+        else glimmer.light.intensity = glimmer.active ? target : 0;
+      }
     }
   }
 }

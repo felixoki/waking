@@ -12,6 +12,8 @@ import {
   ROCK_FLIGHT_DURATION,
   ROCK_HITBOX_SIZE,
   ROCK_HITBOX_DURATION,
+  ROCK_MAX_THROW_RANGE,
+  ROCK_INACCURACY_SCALE,
 } from "@server/globals";
 import { Hitbox } from "../Hitbox";
 import { handlers } from "../handlers";
@@ -57,15 +59,22 @@ export class Throwing implements State {
 
     const player = entity.scene.managers.players.get(nearest.player.id);
     const flightSeconds = ROCK_FLIGHT_DURATION / 1000;
+    const distance = nearest.distance;
 
     let targetX = nearest.player.x;
     let targetY = nearest.player.y;
 
     if (player?.moving?.length) {
+      const anticipation = 1 - distance / ROCK_MAX_THROW_RANGE;
       const vel = handlers.direction.getDiagonalDirectionVector(player.moving);
-      targetX += vel.x * SPEED_RUNNING * flightSeconds;
-      targetY += vel.y * SPEED_RUNNING * flightSeconds;
+      targetX += vel.x * SPEED_RUNNING * flightSeconds * anticipation;
+      targetY += vel.y * SPEED_RUNNING * flightSeconds * anticipation;
     }
+
+    const scatter = distance * ROCK_INACCURACY_SCALE;
+    const scatterAngle = Math.random() * Math.PI * 2;
+    targetX += Math.cos(scatterAngle) * scatter * Math.random();
+    targetY += Math.sin(scatterAngle) * scatter * Math.random();
 
     const offset = ROCK_SPAWN_OFFSET[entity.facing] ?? { x: 0, y: 0 };
     const startX = entity.x + offset.x;
