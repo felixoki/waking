@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { config } from "./game/config";
 import Phaser from "phaser";
+
 import { Inventory } from "./ui/Inventory";
 import { Entities } from "./ui/Entities";
 import { Hotbar } from "./ui/Hotbar";
@@ -16,6 +17,29 @@ import { Storage } from "./ui/Storage";
 import { Collector } from "./ui/Collector";
 import { Effects } from "./ui/Effects";
 import { DamageNumbers } from "./ui/DamageNumbers";
+import { Settings } from "./ui/Settings";
+
+function FPS({ game }: { game: React.RefObject<Phaser.Game | null> }) {
+  const [fps, setFps] = useState(0);
+
+  useEffect(() => {
+    let id: number;
+    
+    const loop = () => {
+      if (game.current) setFps(Math.round(game.current.loop.actualFps));
+      id = requestAnimationFrame(loop);
+    };
+
+    id = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <div className="fixed top-1 right-1 text-white/60 text-xs font-mono pointer-events-none select-none">
+      {fps}
+    </div>
+  );
+}
 
 function App() {
   const game = useRef<Phaser.Game | null>(null);
@@ -59,6 +83,8 @@ function App() {
         <Storage />
         <Collector />
       </div>
+      <Settings />
+      <FPS game={game} />
     </div>
   );
 }

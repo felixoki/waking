@@ -29,7 +29,7 @@ import { handlers } from "../handlers";
 import { InventoryComponent } from "../components/Inventory";
 import { DialogueResponse, NodeId } from "@server/types/dialogue";
 import { DamageableComponent } from "../components/Damageable";
-import { effects } from "../effects";
+import { vfx } from "../vfx";
 import { AmbienceManager } from "../managers/Ambience";
 import { ChunkManager } from "../managers/Chunk";
 import { EffectFactory } from "../factory/Effect";
@@ -239,7 +239,7 @@ export class MainScene extends Phaser.Scene {
           ComponentName.DAMAGEABLE,
         );
 
-        if (damageable) effects.emitters.dissolve(entity);
+        if (damageable) vfx.emitters.dissolve(entity);
       }
 
       this.entityManager.remove(data);

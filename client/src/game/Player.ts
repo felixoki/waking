@@ -73,11 +73,11 @@ export class Player extends Entity {
         { type: HotbarSlotType.SPELL, name: SpellName.SHARD },
         { type: HotbarSlotType.SPELL, name: SpellName.SLASH },
         { type: HotbarSlotType.SPELL, name: SpellName.LIGHTNING_STRIKE },
+        { type: HotbarSlotType.SPELL, name: SpellName.GRASP },
         { type: HotbarSlotType.ENTITY, name: EntityName.AXE },
         { type: HotbarSlotType.ENTITY, name: EntityName.LANTERN },
         { type: HotbarSlotType.ENTITY, name: EntityName.HOE },
         { type: HotbarSlotType.ENTITY, name: EntityName.FISHING_ROD },
-        null,
       ]),
     );
     this.addComponent(new DamageableComponent());

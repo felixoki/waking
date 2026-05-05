@@ -2,7 +2,7 @@ import { SpellConfig, SpellName } from "@server/types";
 import { Entity } from "../Entity";
 import { Projectile } from "../Projectile";
 import { Hitbox } from "../Hitbox";
-import { effects } from "../effects";
+import { vfx } from "../vfx";
 
 type SpellHandler = (
   entity: Entity,
@@ -28,7 +28,7 @@ export const spells: Record<SpellName, SpellHandler> = {
       config,
     );
 
-    const { main, embers } = effects.emitters.shard(
+    const { main, embers } = vfx.emitters.shard(
       entity.scene,
       projectile.x,
       projectile.y,
@@ -59,9 +59,9 @@ export const spells: Record<SpellName, SpellHandler> = {
     );
 
     const emitters: Record<number, () => void> = {
-      0: () => effects.emitters.slash(entity.scene, entity, direction),
-      1: () => effects.emitters.backslash(entity.scene, entity, direction),
-      2: () => effects.emitters.stab(entity.scene, entity, direction),
+      0: () => vfx.emitters.slash(entity.scene, entity, direction),
+      1: () => vfx.emitters.backslash(entity.scene, entity, direction),
+      2: () => vfx.emitters.stab(entity.scene, entity, direction),
     };
 
     emitters[step]?.();
@@ -73,7 +73,7 @@ export const spells: Record<SpellName, SpellHandler> = {
     _target: { x: number; y: number },
     _direction: { x: number; y: number },
   ) => {
-    effects.shaders.illuminate(entity.scene, config.duration!);
+    vfx.shaders.illuminate(entity.scene, config.duration!);
   },
 
   [SpellName.HURT_SHADOWS]: (
@@ -92,7 +92,7 @@ export const spells: Record<SpellName, SpellHandler> = {
       config,
     );
 
-    effects.emitters.claw(
+    vfx.emitters.claw(
       entity.scene,
       target.x,
       target.y,
@@ -119,7 +119,7 @@ export const spells: Record<SpellName, SpellHandler> = {
       };
 
       entity.scene.time.delayedCall(delay, () => {
-        effects.emitters.fall(entity.scene, impact, () => {
+        vfx.emitters.fall(entity.scene, impact, () => {
           if (!entity.scene) return;
 
           if (!isShaking) {
@@ -137,7 +137,7 @@ export const spells: Record<SpellName, SpellHandler> = {
             config,
           );
 
-          effects.emitters.impact(entity.scene, impact);
+          vfx.emitters.impact(entity.scene, impact);
         });
       });
     }
@@ -182,7 +182,7 @@ export const spells: Record<SpellName, SpellHandler> = {
           { ...config, duration: flightDuration + 500 },
         );
 
-        const emitter = effects.emitters.butterfly(scene, startX, startY);
+        const emitter = vfx.emitters.butterfly(scene, startX, startY);
         emitter.setPosition(0, 0);
         emitter.startFollow(hitbox);
 
@@ -226,7 +226,7 @@ export const spells: Record<SpellName, SpellHandler> = {
       y: target.y - 350,
     };
 
-    effects.emitters.lightning(scene, source, target);
+    vfx.emitters.lightning(scene, source, target);
 
     scene.cameras.main.shake(200, 0.003);
     scene.cameras.main.flash(100, 200, 200, 255);
@@ -240,5 +240,26 @@ export const spells: Record<SpellName, SpellHandler> = {
       entity.id,
       config,
     );
+  },
+
+  [SpellName.GRASP]: (
+    entity: Entity,
+    config: SpellConfig,
+    target: { x: number; y: number },
+    _direction: { x: number; y: number },
+  ) => {
+    const scene = entity.scene;
+
+    vfx.emitters.grasp(scene, { x: entity.x, y: entity.y }, target, () => {
+      new Hitbox(
+        scene,
+        target.x,
+        target.y,
+        config.hitbox!.width,
+        config.hitbox!.height,
+        entity.id,
+        config,
+      );
+    });
   },
 };

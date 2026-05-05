@@ -17,7 +17,7 @@ import {
 } from "@server/globals";
 import { Hitbox } from "../Hitbox";
 import { handlers } from "../handlers";
-import { effects } from "../effects";
+import { vfx } from "../vfx";
 
 const ROCK_SPAWN_OFFSET: Record<Direction, { x: number; y: number }> = {
   [Direction.DOWN]: { x: 0, y: 16 },
@@ -99,7 +99,7 @@ export class Throwing implements State {
 
         if (!entity.scene) return;
 
-        effects.emitters.dust(entity.scene, targetX, targetY);
+        vfx.emitters.dust(entity.scene, targetX, targetY);
 
         new Hitbox(
           entity.scene,

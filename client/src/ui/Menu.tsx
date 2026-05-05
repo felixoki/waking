@@ -216,11 +216,11 @@ export function Menu({ ready }: { ready: () => void }) {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
-        src="/assets/videos/mountains.mp4"
+        src="./assets/videos/mountains.mp4"
       />
       <div className="absolute inset-0 bg-black/30" />
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-200 ${modal || showWorlds ? "!opacity-0" : ""}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-200 ${modal || showWorlds ? "opacity-0!" : ""}`}
       >
         <h1 className="font-arco text-white text-[10rem] leading-none animate-[fade-in-dream_3s_ease-out_forwards,dream-glow_4s_ease-in-out_3s_infinite] opacity-0 drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]">
           <span className="inline-block animate-[letter-drift_14s_ease-in-out_infinite]">

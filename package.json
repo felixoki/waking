@@ -25,7 +25,9 @@
     "server:stop": "ssh -i ./wakenssh -o IdentitiesOnly=yes root@178.104.59.213 \"pm2 stop waken-lobby\"",
     "server:clear": "ssh -i ./wakenssh -o IdentitiesOnly=yes root@178.104.59.213 \"cd /opt/waken && docker compose -f docker-compose.dev.yml exec -T postgres psql -U waken -d waken -c 'TRUNCATE worlds, world_members, player_data, world_state CASCADE;' && docker compose -f docker-compose.dev.yml exec -T redis redis-cli FLUSHALL && echo '✓ Database cleared!'\"",
     "client:local": "echo \"VITE_LOBBY_URL=http://localhost:3100\" > client/.env.local",
-    "client:remote": "echo \"VITE_LOBBY_URL=http://178.104.59.213:3100\" > client/.env.local"
+    "client:remote": "echo \"VITE_LOBBY_URL=http://178.104.59.213:3100\" > client/.env.local",
+    "dev:desktop": "npm run electron:dev --workspace=client",
+    "build:desktop": "npm run electron:make --workspace=client"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

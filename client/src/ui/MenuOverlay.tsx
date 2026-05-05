@@ -10,7 +10,7 @@ interface Props {
 export function MenuOverlay({ closing, onClose, onExited, children }: Props) {
   return (
     <div
-      className={`fixed inset-0 bg-black/70 ${
+      className={`fixed inset-0 bg-black/85 ${
         closing
           ? "animate-[shrink_0.2s_ease-in_forwards]"
           : "animate-[grow_0.2s_ease-out]"

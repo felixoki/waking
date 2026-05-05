@@ -3,7 +3,7 @@ import { Component } from "./Component";
 import { Entity } from "../Entity";
 import { Player } from "../Player";
 import { InventoryComponent } from "./Inventory";
-import { effects } from "../effects";
+import { vfx } from "../vfx";
 
 export class PickableComponent extends Component {
   private entity: Entity;
@@ -40,7 +40,7 @@ export class PickableComponent extends Component {
 
     this.entity.scene.game.events.emit(Event.ENTITY_PICKUP, this.entity.id);
 
-    effects.shaders.stretch(this.entity, () => {
+    vfx.shaders.stretch(this.entity, () => {
       this.entity.scene?.managers.entities.remove(this.entity.id);
     });
   }

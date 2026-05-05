@@ -18,6 +18,7 @@ export class InputManager {
     SHIFT: Key;
     SPACE: Key;
     TAB: Key;
+    ESC: Key;
   };
   private pointer: { x: number; y: number } = { x: 0, y: 0 };
   private target?: { x: number; y: number };
@@ -36,6 +37,7 @@ export class InputManager {
       SHIFT: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
       TAB: Phaser.Input.Keyboard.KeyCodes.TAB,
+      ESC: Phaser.Input.Keyboard.KeyCodes.ESC,
     }) as typeof this.keys;
 
     this.registerPointerEvents();
@@ -44,6 +46,9 @@ export class InputManager {
   update(): void {
     if (Phaser.Input.Keyboard.JustDown(this.keys.TAB))
       EventBus.emit(Event.UI_TOGGLE);
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.ESC))
+      EventBus.emit(Event.MENU_TOGGLE);
 
     if (this.scene.input.activePointer) {
       const pointer = this.scene.input.activePointer;

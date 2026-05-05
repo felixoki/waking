@@ -10,6 +10,7 @@ export enum SpellName {
   METEOR_SHOWER = "meteor_shower",
   BUTTERFLY_EFFIGY = "butterfly_effigy",
   LIGHTNING_STRIKE = "lightning_strike",
+  GRASP = "grasp",
 }
 
 export interface ComboStep {

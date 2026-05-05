@@ -9,7 +9,8 @@ const tips = [
   "Shadow wanderers will only strike if you attack first.",
   "If you die or leave your party in the realm, you lose your inventory.",
   "Look for nearby caves if you come across trolls. They often stash treasure there.",
-  "The herbalist can help you reach deeper dream levels with potions."
+  "The herbalist can help you reach deeper dream levels with potions.",
+  "You get vials from the glassblower. They can be used to store potions.",
 ];
 
 function randomTip(exclude?: string) {
@@ -25,9 +26,9 @@ export function Loading() {
 
   useEffect(() => {
     const show = (opts?: { tips?: boolean }) => {
-      const withTips = opts?.tips === true;
-      setShowTips(withTips);
-      if (withTips) setTip(randomTip());
+      const hasTips = opts?.tips === true;
+      setShowTips(hasTips);
+      if (hasTips) setTip(randomTip());
       setVisible(true);
     };
 
@@ -53,14 +54,24 @@ export function Loading() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-cover bg-center"
       style={{
         opacity: visible ? 1 : 0,
         transition: `opacity ${FADE_MS}ms ease-in-out`,
         pointerEvents: visible ? "auto" : "none",
+        backgroundImage: showTips
+          ? "url('/assets/images/forest_glade.png')"
+          : undefined,
       }}
     >
-      {showTips && visible && <p className="text-white text-2xl animate-pulse">{tip}</p>}
+      {showTips && visible && (
+        <p
+          className="px-8 py-4 text-white text-2xl text-center animate-pulse"
+          style={{ textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
+        >
+          {tip}
+        </p>
+      )}
     </div>
   );
 }

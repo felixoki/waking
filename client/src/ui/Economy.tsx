@@ -23,16 +23,16 @@ export function Economy() {
 
   if (!isOpen || !snapshot?.needs.length) return null;
 
+  const items = snapshot.needs.flatMap((need) => need.items);
+
   return (
-    <div className="fixed bottom-4 right-4 p-4 flex flex-col gap-2 max-w-135 bg-black/10 rounded-lg">
-      <h3 className="text-white">Economy</h3>
-      {snapshot.needs.map((need, i) => (
-        <ul key={i} className="grid grid-cols-4 gap-1">
-          {need.items.map((entry, j) => (
-            <Item key={j} name={entry.item} bar={entry.quantity} barLabel={`${entry.quantity}/${MAX_STACK}`} />
-          ))}
-        </ul>
-      ))}
+    <div className="fixed bottom-4 right-4 p-4 bg-black/10 rounded-lg">
+      <h3 className="text-white mb-2">Economy</h3>
+      <ul className="grid grid-cols-4 gap-1">
+        {items.map((entry, i) => (
+          <Item key={i} name={entry.item} bar={entry.quantity} barLabel={`${entry.quantity}/${MAX_STACK}`} />
+        ))}
+      </ul>
     </div>
   );
 }

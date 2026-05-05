@@ -454,6 +454,12 @@
 - Add game title to menu ✅
 - Multiplayer healthbar sync is broken ✅
 
+#### 5.5.2026
+
+- Add electron wrapper ✅
+- Add grasp spell ✅
+- Add in game menu ✅
+
 ### In progress
 
 
@@ -462,26 +468,27 @@
 
 ### Backlog
 
-- Electron wrapper ⭐
-
-- Magic ⭐
-  - Add catch animal spell
-  - Add absorb life spell
-  - Add reflect damage spell
-
 - Animal taming ⭐
 
 - Cooking ⭐
 
 - Building ⭐
 
+- Relationships ⭐
+
+- Character customization ⭐
+
+- Weather ⭐
+
 - Game sounds ⭐
   - Add music, sound effects and ambience
 
-- Refactoring and improvement ⭐
+- Refactoring and ideas ⭐
   - Add throttle network updates and change detection
   - Update interpolation system
   - Depth sorting for fences
+  - Add absorb life spell
+  - Add reflect damage effect
 
 ## Economy
 

@@ -1,7 +1,7 @@
 import { EffectName } from "@server/types";
 import { Entity } from "../Entity";
 import { Effect } from "./Effect";
-import { emitters } from "./emitters";
+import { emitters } from "../vfx/emitters";
 
 export class PoisonedEffect extends Effect {
   name = EffectName.POISONED;

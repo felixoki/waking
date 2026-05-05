@@ -7,7 +7,7 @@ import {
 import { Component } from "./Component";
 import { Entity } from "../Entity";
 import { TextureComponent } from "./Texture";
-import { effects } from "../effects";
+import { vfx } from "../vfx";
 
 export class GrowableComponent extends Component {
   private entity: Entity;
@@ -66,7 +66,7 @@ export class GrowableComponent extends Component {
       yield: this.config.yield,
     });
 
-    effects.shaders.stretch(this.entity, () => {
+    vfx.shaders.stretch(this.entity, () => {
       this.entity.scene.managers.entities.remove(this.entity.id);
     });
   }

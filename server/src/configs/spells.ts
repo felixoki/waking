@@ -20,7 +20,8 @@ export const spells: Record<SpellName, SpellConfig> = {
       max: 1,
     },
     metadata: {
-      description: "A chargeable projectile that grows stronger the longer you hold.",
+      description:
+        "A chargeable projectile that grows stronger the longer you hold.",
       displayName: "Shard",
       icon: { spritesheet: "icons5", row: 16, col: 9 },
     },
@@ -128,9 +129,27 @@ export const spells: Record<SpellName, SpellConfig> = {
       height: 40,
     },
     metadata: {
-      description: "Strikes a single target with a bolt of high damage lightning.",
+      description:
+        "Strikes a single target with a bolt of high damage lightning.",
       displayName: "Lightning strike",
       icon: { spritesheet: "icons5", row: 16, col: 18 },
+    },
+  },
+  [SpellName.GRASP]: {
+    name: SpellName.GRASP,
+    damage: { type: DamageType.PHYSICAL, amount: 60 },
+    knockback: 0,
+    mana: 1,
+    duration: 1200,
+    range: 120,
+    hitbox: {
+      width: 30,
+      height: 30,
+    },
+    metadata: {
+      description:
+        "A spectral hand rises from the ground, rushes forward and grasps enemies.",
+      displayName: "Grasp",
     },
   },
 };

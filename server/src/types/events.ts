@@ -114,6 +114,7 @@ export enum Event {
 
   /** UI */
   UI_TOGGLE = "ui_toggle",
+  MENU_TOGGLE = "menu_toggle",
 
   /** Transitions */
   LOADING_SHOW = "loading_show",

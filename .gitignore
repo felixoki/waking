@@ -1,9 +1,12 @@
 node_modules
 dist
 .DS_Store
+.vite
+out
 *.log
 .env
 .env.local
+.env.production
 ISSUES.md
 wakenshh
 wakenssh.pub

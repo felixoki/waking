@@ -110,6 +110,7 @@ export const forest: BiomeConfig = {
         EntityName.CLARY_SAGE,
         EntityName.BELLADONNA,
         EntityName.BEARDED_TOOTH_FUNGUS,
+        EntityName.RASPBERRY,
       ],
       terrain: [TerrainName.GRASS],
       density: 0.2,
