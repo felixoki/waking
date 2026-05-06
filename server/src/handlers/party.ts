@@ -159,6 +159,7 @@ export const party = {
         {
           isDead: false,
           health: MAX_HEALTH,
+          inventory: new Array(20).fill(null),
         },
         undefined,
         data.id,
@@ -202,7 +203,8 @@ export const party = {
 
     const entities: EntityConfig[] = biome.entities.map((biomeEntity) => {
       const id = randomUUID();
-      const maxHealth = configs.entities[biomeEntity.name]?.maxHealth ?? MAX_HEALTH;
+      const maxHealth =
+        configs.entities[biomeEntity.name]?.maxHealth ?? MAX_HEALTH;
       const config: EntityConfig = {
         id,
         map: MapName.REALM,

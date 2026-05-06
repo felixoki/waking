@@ -56,6 +56,7 @@ export const needs: NeedConfig[] = [
       { item: EntityName.CLARY_SAGE, tier: 1 },
       { item: EntityName.BELLADONNA, tier: 1 },
       { item: EntityName.BEARDED_TOOTH_FUNGUS, tier: 1 },
+      { item: EntityName.RASPBERRY, tier: 1 },
       { item: EntityName.VIAL, tier: 1 },
     ],
     consumption: {

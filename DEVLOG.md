@@ -468,7 +468,12 @@
 
 ### Backlog
 
+- Game sounds ⭐
+  - Add music, sound effects and ambience
+
 - Animal taming ⭐
+
+- Mining ⭐
 
 - Cooking ⭐
 
@@ -479,9 +484,6 @@
 - Character customization ⭐
 
 - Weather ⭐
-
-- Game sounds ⭐
-  - Add music, sound effects and ambience
 
 - Refactoring and ideas ⭐
   - Add throttle network updates and change detection
@@ -529,13 +531,10 @@
 
 #### Aggro entities
 
-- Goblin1 (Rat meat, bones)
-- Goblin2 (Rat meat, bones)
-- Orc1 (Iron ore, Quartz)
-
-#### Boss
-
-- Shadow wanderer
+- Goblin1 (Quartz, Bone)
+- Orc1 (Quartz, Iron)
+- Shadow wanderer (Spell book: Hurt shadows)
+- Troll (Amulet: Kro Dai)
 
 #### Plants
 
@@ -560,12 +559,10 @@
 
 #### Aggro entities
 
-- Goblin1 (Rat meat, bones)
-- Goblin2 (Rat meat, bones)
-- Goblin3 (Spell books)
-- Orc1 (Iron ore)
-- Orc2 (Iron ore)
+- Goblin1
+- Goblin2 (Rat meat, Bone)
+- Goblin3 (Spell book)
+- Orc1
+- Orc2 (Iron, Gold)
 
-#### Boss
-
-- Cave troll
+### Mountains

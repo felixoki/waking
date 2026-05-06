@@ -11,6 +11,7 @@ const tips = [
   "Look for nearby caves if you come across trolls. They often stash treasure there.",
   "The herbalist can help you reach deeper dream levels with potions.",
   "You get vials from the glassblower. They can be used to store potions.",
+  "If villagers aren't happy, they are less likely to give you quests or tell you important information.",
 ];
 
 function randomTip(exclude?: string) {
@@ -60,7 +61,7 @@ export function Loading() {
         transition: `opacity ${FADE_MS}ms ease-in-out`,
         pointerEvents: visible ? "auto" : "none",
         backgroundImage: showTips
-          ? "url('/assets/images/forest_glade.png')"
+          ? "url('./assets/images/forest_glade.png')"
           : undefined,
       }}
     >
