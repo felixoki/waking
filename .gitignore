@@ -8,5 +8,5 @@ out
 .env.local
 .env.production
 ISSUES.md
-wakenshh
-wakenssh.pub
+ssh
+ssh.pub
