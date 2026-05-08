@@ -124,7 +124,7 @@ export class AmbienceManager {
   }
 
   private _scaleLights(multiplier: number, animate: boolean) {
-    const entities = this.scene.entityManager.entities;
+    const entities = this.scene.managers.entities.entities;
 
     for (const [_, entity] of entities) {
       const light = entity.getComponent<LightComponent>(ComponentName.LIGHT);

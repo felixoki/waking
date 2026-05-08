@@ -63,7 +63,7 @@ export const player = {
   },
 
   swap: (data: PlayerConfig, main: MainScene): void => {
-    const current = main.playerManager.player;
+    const current = main.managers.players.player;
     if (!current) return;
 
     const prev = {
@@ -77,10 +77,10 @@ export const player = {
       scene: current.scene,
     };
 
-    main.playerManager.remove(current.id);
-    main.playerManager.add(data, true);
+    main.managers.players.remove(current.id);
+    main.managers.players.add(data, true);
 
-    const updated = main.playerManager.player!;
+    const updated = main.managers.players.player!;
 
     updated.isLocked = false;
     updated
@@ -105,9 +105,10 @@ export const player = {
     EventBus.emit(Event.PLAYER_HEALTH, updated.health);
     EventBus.emit(Event.PLAYER_MANA, updated.mana);
 
+    main.managers.entities.removeByMap(prev.map as MapName);
+
     if (prev.map === MapName.REALM && data.map !== MapName.REALM)
       setTimeout(() => {
-        main.entityManager.removeByMap(MapName.REALM);
         (main.scene.get(MapName.REALM) as RealmScene).teardown();
       }, 0);
   },
@@ -176,16 +177,16 @@ export const player = {
   },
 
   transition: (data: PlayerConfig, main: MainScene): void => {
-    if (!main.playerManager.player) return;
+    if (!main.managers.players.player) return;
 
-    EventBus.emit(Event.LOADING_SHOW);
+    main.managers.players.player.isLocked = true;
+    main.managers.players.player.isTransitioning = true;
+    handlers.ui.backdrop.show();
 
     setTimeout(() => {
-      try {
-        player.swap(data, main);
-      } finally {
-        EventBus.emit(Event.LOADING_HIDE);
-      }
+      main.managers.players.player!.isTransitioning = false;
+      player.swap(data, main);
+      handlers.ui.backdrop.hide(main, data.map);
     }, 300);
   },
 };

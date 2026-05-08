@@ -24,6 +24,7 @@ export class Player extends Entity {
   public socketId: string;
   public isAuthority: boolean;
   public isControllable: boolean;
+  public isTransitioning: boolean = false;
   public inputManager?: InputManager;
 
   constructor(

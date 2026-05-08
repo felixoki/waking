@@ -40,6 +40,10 @@ export class EntityManager {
     return [...this.entities.values()];
   }
 
+  get isPending(): boolean {
+    return !!this.queue.length;
+  }
+
   update(): void {
     this._drain();
 

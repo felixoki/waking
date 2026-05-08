@@ -20,7 +20,7 @@ function randomTip(exclude?: string) {
 }
 
 export function Loading() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [showTips, setShowTips] = useState(false);
   const [tip, setTip] = useState(randomTip);
   const interval = useRef<ReturnType<typeof setInterval>>();

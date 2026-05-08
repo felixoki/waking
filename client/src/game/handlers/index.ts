@@ -7,6 +7,7 @@ import { physics } from "./physics";
 import { player } from "./player";
 import { spells } from "./spells";
 import { state } from "./state";
+import { ui } from "./ui";
 import { vision } from "./vision";
 import { weapons } from "./weapons";
 import { behavior } from "./behavior";
@@ -26,4 +27,5 @@ export const handlers = {
   vision,
   path,
   behavior,
+  ui,
 };

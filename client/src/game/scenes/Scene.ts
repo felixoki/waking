@@ -17,10 +17,10 @@ export class Scene extends Phaser.Scene {
     const main = this.scene.get("main") as MainScene;
 
     return {
-      players: main.playerManager,
-      entities: main.entityManager,
-      socket: main.socketManager,
-      chunks: main.chunkManager,
+      players: main.managers.players,
+      entities: main.managers.entities,
+      socket: main.managers.socket,
+      chunks: main.managers.chunks,
       physics: this.physicsManager,
       tile: this.tileManager,
       camera: this.cameraManager,

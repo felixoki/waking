@@ -4,6 +4,8 @@ Waken is a multiplayer cozy game with adventurous elements. Players tend to a sm
 
 The player possesses a rare gift: Sleepwander. They can traverse dimensions within dreams and materialize treasures from them. Their mission is to defeat a cunning entity that has long plagued the villagers' sleep. But they aren't the only ones who can walk the dream world. A dangerous cult seeks to empower the evil being further. And the dreamy realms they inhabit can be just as perilous as the creature they're hunting.
 
+![Waken](client/public/assets/images/hero_mountains.png)
+
 ## Getting Started
 
 ### 1. Install dependencies
@@ -57,13 +59,15 @@ npm run client:remote    # Point to production
 
 ## Architecture
 
+The client connects to a lobby server over HTTP which spawns and assigns world instances. Each world maintains its own WebSocket connection to connected clients, caches live state in Redis, and persists player data to Postgres.
+
 ```mermaid
 graph LR
   Client["Client :3000"]
   Lobby["Lobby :3100"]
   World["World :3001+"]
-  PG[("Postgres :5432<br/>127.0.0.1")]
-  RD[("Redis :6379<br/>127.0.0.1")]
+  PG["Postgres :5432"]
+  RD["Redis :6379"]
 
   Client -- HTTP --> Lobby
   Lobby -- spawn --> World
@@ -74,3 +78,73 @@ graph LR
 ```
 
 Production: `178.104.59.213`
+
+## System design
+
+### Entity system
+
+All entities share a single `Entity` class. What an entity *is* is defined by its components, what it's *doing* by its current state, and what's *happening to it* by its effects, all attachable and detachable at runtime. Every entity produces the same input structure each tick (players from the keyboard, AI from a behavior queue), which is resolved into state transitions. Players broadcast their input over the network; the update loop makes no distinction between local and remote. Entity definitions are plain config objects shared between client and server; an orc and a tree use the same structure, just different fields.
+
+```mermaid
+classDiagram
+  class Entity {
+    components: Map~Component~
+    effects: Map~Effect~
+    states: Map~State~
+    update(input)
+    transitionTo(state)
+    addComponent() / removeComponent()
+    addEffect() / removeEffect()
+  }
+
+  class Player {
+    inputManager: InputManager
+    _getInput() → keyboard
+  }
+
+  class Component {
+    attach()
+    update()
+    detach()
+  }
+
+  class State {
+    enter(entity)
+    update(entity)
+    exit(entity)
+  }
+
+  class Behavior {
+    update(entity) → Input
+    reset()
+  }
+
+  class Effect {
+    attach()
+    update()
+    detach()
+  }
+
+  class BehaviorQueue {
+    add(behavior)
+    update() → Input
+  }
+
+  class StateResolver {
+    resolve(input, prev) → state
+  }
+
+  Player --|> Entity : extends
+  Entity *-- Component : attach / detach
+  Entity *-- State : enter / exit
+  Entity *-- Effect : attach / detach
+  Entity *-- BehaviorQueue
+  BehaviorQueue o-- Behavior : queues
+  StateResolver --> Entity : drives
+  Player ..> StateResolver : keyboard input
+  BehaviorQueue ..> StateResolver : AI input
+```
+
+### Handlers
+
+Handlers are stateless plain objects grouping pure functions by domain (`combat`, `move`, `state`, `player`, etc.). No classes, no instantiation, just `handlers.combat.resolve()`. Both client and server export a single `handlers` object; each handler operates on data passed in and calls sibling handlers as needed. This keeps game logic flat, composable, and free of hidden state.

@@ -7,6 +7,7 @@ import { MakerZIP } from "@electron-forge/maker-zip";
 const config: ForgeConfig = {
   packagerConfig: {
     name: "Waken",
+    icon: "./public/assets/images/icon",
   },
   makers: [
     new MakerSquirrel({ name: "Waken" }),

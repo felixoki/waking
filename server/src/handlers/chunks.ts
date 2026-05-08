@@ -58,8 +58,6 @@ export const chunks = {
 
         if (stale.length) socket.emit(Event.CHUNK_DEACTIVATE, stale);
       }
-
-      return { activated, deactivated };
     },
   },
 

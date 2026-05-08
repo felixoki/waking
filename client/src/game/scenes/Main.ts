@@ -89,7 +89,7 @@ export class MainScene extends Phaser.Scene {
         if (ready.size === scenes.length) {
           this._registerEvents();
           const playerId = localStorage.getItem("playerId");
-          this.socketManager.emit(Event.PLAYER_CREATE, playerId);
+          this.managers.socket.emit(Event.PLAYER_CREATE, playerId);
         }
       });
     });
@@ -102,52 +102,52 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(_time: number, _delta: number): void {
-    const player = this.playerManager.player;
+    const player = this.managers.players.player;
     const target = this.spectate || player;
 
     if (target) {
       const positions = [{ map: target.map, x: target.x, y: target.y }];
 
       if (player?.isAuthority)
-        for (const other of this.playerManager.others.values())
+        for (const other of this.managers.players.others.values())
           if (other.map === target.map)
             positions.push({ map: other.map, x: other.x, y: other.y });
 
-      const changed = this.chunkManager.updateFromPositions(positions);
+      const changed = this.managers.chunks.updateFromPositions(positions);
 
       if (changed && this.spectate)
-        this.socketManager.emit(Event.PLAYER_SPECTATE, {
+        this.managers.socket.emit(Event.PLAYER_SPECTATE, {
           targetId: this.spectate.id,
         });
     }
 
-    this.playerManager.update();
-    this.entityManager.update();
+    this.managers.players.update();
+    this.managers.entities.update();
   }
 
   private _registerEvents(): void {
     /**
      * World
      */
-    this.socketManager.on(Event.WORLD_TIME, (data: { phase: TimePhase }) => {
-      this.ambienceManager.setPhase(data.phase, false);
+    this.managers.socket.on(Event.WORLD_TIME, (data: { phase: TimePhase }) => {
+      this.managers.ambience.setPhase(data.phase, false);
     });
 
-    this.socketManager.on(Event.WORLD_PHASE, (data: TimePhase) => {
-      this.ambienceManager.setPhase(data, true);
+    this.managers.socket.on(Event.WORLD_PHASE, (data: TimePhase) => {
+      this.managers.ambience.setPhase(data, true);
     });
 
     /**
      * Players
      */
-    this.socketManager.on(Event.PLAYER_CREATE_LOCAL, (data: PlayerConfig) => {
-      this.playerManager.add(data, true);
+    this.managers.socket.on(Event.PLAYER_CREATE_LOCAL, (data: PlayerConfig) => {
+      this.managers.players.add(data, true);
 
       const map = this.scene.get(data.map);
       map.scene.setVisible(true);
       map.input.enabled = true;
 
-      const player = this.playerManager.player!;
+      const player = this.managers.players.player!;
 
       this.game.events.emit(Event.CAMERA_FOLLOW, { key: data.map, player });
 
@@ -160,79 +160,83 @@ export class MainScene extends Phaser.Scene {
         ComponentName.INVENTORY,
       );
       if (inventory && data.inventory?.length) inventory.set(data.inventory);
+
+      handlers.ui.backdrop.hide(this, data.map);
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.PLAYER_CREATE_OTHERS,
       (data: PlayerConfig[]) => {
         data.forEach((config) => {
-          this.playerManager.add(config, false);
+          this.managers.players.add(config, false);
         });
       },
     );
 
-    this.socketManager.on(Event.PLAYER_CREATE, (data: PlayerConfig) => {
-      this.playerManager.add(data, false);
+    this.managers.socket.on(Event.PLAYER_CREATE, (data: PlayerConfig) => {
+      this.managers.players.add(data, false);
     });
 
-    this.socketManager.on(Event.PLAYER_LEAVE, (data: string) => {
-      this.playerManager.remove(data);
+    this.managers.socket.on(Event.PLAYER_LEAVE, (data: string) => {
+      this.managers.players.remove(data);
     });
 
-    this.socketManager.on(Event.PLAYER_INPUT, (data: Input) => {
-      this.playerManager.updateOther(data);
+    this.managers.socket.on(Event.PLAYER_INPUT, (data: Input) => {
+      this.managers.players.updateOther(data);
     });
 
-    this.socketManager.on(Event.PLAYER_HURT, (data: Hurt) => {
+    this.managers.socket.on(Event.PLAYER_HURT, (data: Hurt) => {
       const player =
-        this.playerManager.others.get(data.id) || this.playerManager.player;
+        this.managers.players.others.get(data.id) || this.managers.players.player;
 
       if (!player) return;
 
       handlers.combat.hurt(player, data.health);
       handlers.combat.knockback(player, data.knockback);
 
-      if (player === this.playerManager.player)
+      if (player === this.managers.players.player)
         EventBus.emit(Event.PLAYER_HEALTH, player.health);
     });
 
-    this.socketManager.on(Event.PLAYER_TRANSITION, (data: PlayerConfig) => {
+    this.managers.socket.on(Event.PLAYER_TRANSITION, (data: PlayerConfig) => {
       handlers.player.transition(data, this);
     });
 
-    this.socketManager.on(Event.PLAYER_AUTHORITY, (data: boolean) => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.PLAYER_AUTHORITY, (data: boolean) => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       player.isAuthority = data;
     });
 
     this.game.events.on(Event.PLAYER_INPUT, (data: Input) => {
-      this.socketManager.emit(Event.PLAYER_INPUT, data);
+      const player = this.managers.players.player;
+      if (!player?.isTransitioning) this.managers.socket.emit(Event.PLAYER_INPUT, data);
     });
 
     this.game.events.on(Event.PLAYER_TRANSITION, (data: Transition) => {
-      const player = this.playerManager.player;
+      const player = this.managers.players.player;
       if (!player) return;
 
       player.isLocked = true;
+      player.isTransitioning = true;
 
-      this.socketManager.emit(Event.PLAYER_TRANSITION, data);
+      this.managers.socket.emit(Event.PLAYER_TRANSITION, data);
     });
 
     /**
      * Entities
      */
-    this.socketManager.on(Event.ENTITY_CREATE, (data: EntityConfig) => {
-      this.entityManager.add(data);
+    this.managers.socket.on(Event.ENTITY_CREATE, (data: EntityConfig) => {
+      this.managers.entities.add(data);
     });
 
-    this.socketManager.on(Event.ENTITY_CREATE_ALL, (data: EntityConfig[]) => {
-      this.entityManager.batch(data);
+    this.managers.socket.on(Event.ENTITY_CREATE_ALL, (data: EntityConfig[]) => {
+      this.managers.entities.batch(data);
     });
 
-    this.socketManager.on(Event.ENTITY_DESTROY, (data: string) => {
-      const entity = this.entityManager.entities.get(data);
+    this.managers.socket.on(Event.ENTITY_DESTROY, (data: string) => {
+      const entity = this.managers.entities.entities.get(data);
 
       if (entity) {
         const damageable = entity.getComponent<DamageableComponent>(
@@ -242,20 +246,20 @@ export class MainScene extends Phaser.Scene {
         if (damageable) vfx.emitters.dissolve(entity);
       }
 
-      this.entityManager.remove(data);
+      this.managers.entities.remove(data);
     });
 
-    this.socketManager.on(Event.ENTITY_DESPAWN, (data: string) => {
-      this.entityManager.remove(data);
+    this.managers.socket.on(Event.ENTITY_DESPAWN, (data: string) => {
+      this.managers.entities.remove(data);
     });
 
-    this.socketManager.on(Event.ENTITY_INPUT, (data: Partial<Input>) => {
-      const entity = this.entityManager.get(data.id!);
+    this.managers.socket.on(Event.ENTITY_INPUT, (data: Partial<Input>) => {
+      const entity = this.managers.entities.get(data.id!);
       entity?.update(data);
     });
 
-    this.socketManager.on(Event.ENTITY_HURT, (data: Hurt) => {
-      const entity = this.entityManager.entities.get(data.id);
+    this.managers.socket.on(Event.ENTITY_HURT, (data: Hurt) => {
+      const entity = this.managers.entities.entities.get(data.id);
       if (!entity) return;
 
       handlers.combat.damage(entity, data.health, data.isCritical);
@@ -264,63 +268,64 @@ export class MainScene extends Phaser.Scene {
       handlers.combat.knockback(entity, data.knockback);
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.EFFECT_APPLY,
       (data: { id: string; effect: ActiveEffect }) => {
         const target =
-          this.entityManager.entities.get(data.id) ||
-          this.playerManager.others.get(data.id) ||
-          (this.playerManager.player?.id === data.id
-            ? this.playerManager.player
+          this.managers.entities.entities.get(data.id) ||
+          this.managers.players.others.get(data.id) ||
+          (this.managers.players.player?.id === data.id
+            ? this.managers.players.player
             : undefined);
+            
         if (!target) return;
 
         target.addEffect(
           EffectFactory.create(data.effect.name as EffectName, target),
         );
 
-        if (this.playerManager.player?.id === data.id)
+        if (this.managers.players.player?.id === data.id)
           EventBus.emit(Event.EFFECT_APPLY, data.effect);
       },
     );
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.EFFECT_REMOVE,
       (data: { id: string; name: EffectName }) => {
         const target =
-          this.entityManager.entities.get(data.id) ||
-          this.playerManager.others.get(data.id) ||
-          (this.playerManager.player?.id === data.id
-            ? this.playerManager.player
+          this.managers.entities.entities.get(data.id) ||
+          this.managers.players.others.get(data.id) ||
+          (this.managers.players.player?.id === data.id
+            ? this.managers.players.player
             : undefined);
 
         if (!target) return;
 
         target.removeEffect(data.name);
 
-        if (this.playerManager.player?.id === data.id)
+        if (this.managers.players.player?.id === data.id)
           EventBus.emit(Event.EFFECT_REMOVE, data.name);
       },
     );
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.ENTITY_DIALOGUE_RESPONSE,
       (data: DialogueResponse) => {
         handlers.dialogue.start(data);
       },
     );
 
-    this.socketManager.on(Event.ENTITY_SPOTTED_PLAYER, (data: Spot) => {
-      const entity = this.entityManager.get(data.entityId);
+    this.managers.socket.on(Event.ENTITY_SPOTTED_PLAYER, (data: Spot) => {
+      const entity = this.managers.entities.get(data.entityId);
       if (!entity) return;
 
       handlers.behavior.react(entity, data.playerId);
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.ENTITY_LOCK,
       (data: { entityId: string; facing?: Direction }) => {
-        const entity = this.entityManager.get(data.entityId);
+        const entity = this.managers.entities.get(data.entityId);
         if (!entity) return;
 
         if (data.facing) entity.setFacing(data.facing);
@@ -334,44 +339,44 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
-    this.socketManager.on(Event.ENTITY_UNLOCK, (data: string) => {
-      const entity = this.entityManager.get(data);
+    this.managers.socket.on(Event.ENTITY_UNLOCK, (data: string) => {
+      const entity = this.managers.entities.get(data);
       if (!entity) return;
 
       entity.isLocked = false;
     });
 
     this.game.events.on(Event.ENTITY_INPUT, (data: Partial<Input>) => {
-      this.socketManager.emit(Event.ENTITY_INPUT, data);
+      this.managers.socket.emit(Event.ENTITY_INPUT, data);
     });
 
     this.game.events.on(Event.ENTITY_PICKUP, (data: string) => {
-      this.socketManager.emit(Event.ENTITY_PICKUP, data);
+      this.managers.socket.emit(Event.ENTITY_PICKUP, data);
     });
 
     this.game.events.on(Event.ENTITY_PLANT, (data: any) => {
-      this.socketManager.emit(Event.ENTITY_PLANT, data);
+      this.managers.socket.emit(Event.ENTITY_PLANT, data);
     });
 
     this.game.events.on(Event.ENTITY_HARVEST, (data: any) => {
-      this.socketManager.emit(Event.ENTITY_HARVEST, data);
+      this.managers.socket.emit(Event.ENTITY_HARVEST, data);
     });
 
     this.game.events.on(Event.ENTITY_FISH, (data: any) => {
-      this.socketManager.emit(Event.ENTITY_FISH, data);
+      this.managers.socket.emit(Event.ENTITY_FISH, data);
     });
 
     this.game.events.on(
       Event.ENTITY_FELL,
       (data: { id: string; x: number; y: number }) => {
-        this.socketManager.emit(Event.ENTITY_FELL, data);
+        this.managers.socket.emit(Event.ENTITY_FELL, data);
       },
     );
 
     this.game.events.on(
       Event.ENTITY_DIALOGUE_START,
       (data: { entityId: string; facing: Direction }) => {
-        this.socketManager.emit(Event.ENTITY_DIALOGUE_ITERATE, {
+        this.managers.socket.emit(Event.ENTITY_DIALOGUE_ITERATE, {
           entityId: data.entityId,
           nodeId: NodeId.GREETING,
           facing: data.facing,
@@ -380,36 +385,36 @@ export class MainScene extends Phaser.Scene {
     );
 
     this.game.events.on(Event.ENTITY_SPOTTED_PLAYER, (data: Spot) => {
-      this.socketManager.emit(Event.ENTITY_SPOTTED_PLAYER, data);
+      this.managers.socket.emit(Event.ENTITY_SPOTTED_PLAYER, data);
     });
 
     this.game.events.on(Event.ENTITY_FLEE, (data: string) => {
-      this.socketManager.emit(Event.ENTITY_FLEE, data);
+      this.managers.socket.emit(Event.ENTITY_FLEE, data);
     });
 
     EventBus.on(
       Event.ENTITY_DIALOGUE_CHOICE,
       (data: { entityId: string; nodeId: NodeId }) => {
-        this.socketManager.emit(Event.ENTITY_DIALOGUE_ITERATE, data);
+        this.managers.socket.emit(Event.ENTITY_DIALOGUE_ITERATE, data);
       },
     );
 
     EventBus.on(Event.ENTITY_DIALOGUE_END, (data: string) => {
-      this.socketManager.emit(Event.ENTITY_DIALOGUE_END, data);
+      this.managers.socket.emit(Event.ENTITY_DIALOGUE_END, data);
     });
 
     /**
      * Chunks
      */
-    this.socketManager.on(Event.CHUNK_DEACTIVATE, (data: string[]) => {
-      this.entityManager.deactivate(data);
+    this.managers.socket.on(Event.CHUNK_DEACTIVATE, (data: string[]) => {
+      this.managers.entities.deactivate(data);
     });
 
     /**
      * Items
      */
-    this.socketManager.on(Event.ITEM_REMOVE, (data: Item) => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.ITEM_REMOVE, (data: Item) => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       const inventory = player.getComponent<InventoryComponent>(
@@ -420,8 +425,8 @@ export class MainScene extends Phaser.Scene {
       inventory.remove(data.name, data.quantity);
     });
 
-    this.socketManager.on(Event.INVENTORY_SYNC, (data: (Item | null)[]) => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.INVENTORY_SYNC, (data: (Item | null)[]) => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       const inventory = player.getComponent<InventoryComponent>(
@@ -431,11 +436,11 @@ export class MainScene extends Phaser.Scene {
     });
 
     EventBus.on(Event.ITEM_COLLECT, (data: Item) => {
-      this.socketManager.emit(Event.ITEM_COLLECT, data);
+      this.managers.socket.emit(Event.ITEM_COLLECT, data);
     });
 
     EventBus.on(Event.ITEM_CONSUME, (data: { name: string }) => {
-      this.socketManager.emit(Event.ITEM_CONSUME, data);
+      this.managers.socket.emit(Event.ITEM_CONSUME, data);
     });
 
     /**
@@ -444,9 +449,9 @@ export class MainScene extends Phaser.Scene {
     EventBus.on(
       Event.SPELL_LEARN,
       (data: { entityName: EntityName; spell: SpellName }) => {
-        this.socketManager.emit(Event.SPELL_LEARN, { spell: data.spell });
+        this.managers.socket.emit(Event.SPELL_LEARN, { spell: data.spell });
 
-        const player = this.playerManager.player;
+        const player = this.managers.players.player;
 
         if (player) {
           const inventory = player.getComponent<InventoryComponent>(
@@ -459,7 +464,7 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
-    this.socketManager.on(Event.SPELLS_SYNC, (spells: SpellName[]) => {
+    this.managers.socket.on(Event.SPELLS_SYNC, (spells: SpellName[]) => {
       EventBus.emit(Event.SPELLS_SYNC, spells);
     });
 
@@ -469,7 +474,7 @@ export class MainScene extends Phaser.Scene {
     this.game.events.on(
       Event.STORAGE_OPEN,
       (data: { entityId: string; slots: number }) => {
-        this.socketManager.emit(Event.STORAGE_OPEN, {
+        this.managers.socket.emit(Event.STORAGE_OPEN, {
           entityId: data.entityId,
         });
         EventBus.emit(Event.STORAGE_OPEN, data);
@@ -477,21 +482,21 @@ export class MainScene extends Phaser.Scene {
     );
 
     EventBus.on(Event.STORAGE_CLOSE, (data: string) => {
-      this.socketManager.emit(Event.STORAGE_CLOSE, { entityId: data });
+      this.managers.socket.emit(Event.STORAGE_CLOSE, { entityId: data });
       this.game.events.emit(Event.STORAGE_CLOSE, data);
     });
 
     EventBus.on(
       Event.STORAGE_DEPOSIT,
       (data: { entityId: string; item: Item }) => {
-        this.socketManager.emit(Event.STORAGE_DEPOSIT, data);
+        this.managers.socket.emit(Event.STORAGE_DEPOSIT, data);
       },
     );
 
     EventBus.on(
       Event.STORAGE_WITHDRAW,
       (data: { entityId: string; item: Item }) => {
-        this.socketManager.emit(Event.STORAGE_WITHDRAW, data);
+        this.managers.socket.emit(Event.STORAGE_WITHDRAW, data);
       },
     );
 
@@ -501,15 +506,15 @@ export class MainScene extends Phaser.Scene {
     EventBus.on(
       Event.COLLECTOR_CRAFT,
       (data: { entityId: string; output: string }) => {
-        this.socketManager.emit(Event.COLLECTOR_CRAFT, data);
+        this.managers.socket.emit(Event.COLLECTOR_CRAFT, data);
       },
     );
 
     EventBus.on(Event.COLLECTOR_TIER_UPGRADE, () => {
-      this.socketManager.emit(Event.COLLECTOR_TIER_UPGRADE);
+      this.managers.socket.emit(Event.COLLECTOR_TIER_UPGRADE);
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.STORAGE_SYNC,
       (data: { entityId: string; slots: (Item | null)[] }) => {
         EventBus.emit(Event.STORAGE_SYNC, data);
@@ -519,11 +524,11 @@ export class MainScene extends Phaser.Scene {
     /**
      * Economy
      */
-    this.socketManager.on(Event.ECONOMY_UPDATE, (data: EconomySnapshot) => {
+    this.managers.socket.on(Event.ECONOMY_UPDATE, (data: EconomySnapshot) => {
       EventBus.emit(Event.ECONOMY_UPDATE, data);
     });
 
-    this.socketManager.on(Event.STORE_SYNC, (data: Record<string, number>) => {
+    this.managers.socket.on(Event.STORE_SYNC, (data: Record<string, number>) => {
       EventBus.emit(Event.STORE_SYNC, data);
     });
 
@@ -531,21 +536,21 @@ export class MainScene extends Phaser.Scene {
      * Shared
      */
     this.game.events.on(Event.HIT, (data: Hit) => {
-      this.socketManager.emit(Event.HIT, data);
+      this.managers.socket.emit(Event.HIT, data);
     });
 
     this.game.events.on(Event.PLAYER_CAST, (spell: string) => {
-      this.socketManager.emit(Event.PLAYER_CAST, spell);
+      this.managers.socket.emit(Event.PLAYER_CAST, spell);
     });
 
     /**
      * Party
      */
-    this.socketManager.on(Event.PARTY_START_LOADING, () => {
-      EventBus.emit(Event.LOADING_SHOW, { tips: true });
+    this.managers.socket.on(Event.PARTY_START_LOADING, () => {
+      handlers.ui.backdrop.show({ tips: true });
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.PARTY_START,
       (data: {
         tilemap: any;
@@ -556,12 +561,12 @@ export class MainScene extends Phaser.Scene {
         const realm = this.scene.get(MapName.REALM) as RealmScene;
 
         const onReady = () => {
-          if (this.ambienceManager.phase)
-            this.ambienceManager.setPhase(this.ambienceManager.phase, false);
+          if (this.managers.ambience.phase)
+            this.managers.ambience.setPhase(this.managers.ambience.phase, false);
 
-          this.entityManager.batch(data.entities);
+          this.managers.entities.batch(data.entities);
 
-          const localId = this.playerManager.player?.id;
+          const localId = this.managers.players.player?.id;
           const config = data.players.find((p) => p.id === localId);
 
           if (config) {
@@ -571,10 +576,10 @@ export class MainScene extends Phaser.Scene {
 
           data.players
             .filter((p) => p.id !== localId)
-            .forEach((config) => this.playerManager.add(config, false));
+            .forEach((config) => this.managers.players.add(config, false));
 
           EventBus.emit(Event.PARTY_START_READY);
-          EventBus.emit(Event.LOADING_HIDE);
+          handlers.ui.backdrop.hide(this, MapName.REALM);
         };
 
         if (realm.scene.isActive()) {
@@ -593,52 +598,52 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
-    this.socketManager.on(Event.PARTY_LIST, (data: Party[]) => {
+    this.managers.socket.on(Event.PARTY_LIST, (data: Party[]) => {
       EventBus.emit(Event.PARTY_LIST, data);
     });
 
-    this.socketManager.on(Event.PARTY_CREATE, (data: Party) => {
+    this.managers.socket.on(Event.PARTY_CREATE, (data: Party) => {
       EventBus.emit(Event.PARTY_CREATE, data);
     });
 
-    this.socketManager.on(Event.PARTY_UPDATE, (data: Party) => {
+    this.managers.socket.on(Event.PARTY_UPDATE, (data: Party) => {
       EventBus.emit(Event.PARTY_UPDATE, data);
     });
 
-    this.socketManager.on(Event.PARTY_LEAVE, () => {
+    this.managers.socket.on(Event.PARTY_LEAVE, () => {
       EventBus.emit(Event.PARTY_LEAVE);
     });
 
     EventBus.on(Event.PARTY_CREATE_REQUEST, () => {
-      this.socketManager.emit(Event.PARTY_CREATE);
+      this.managers.socket.emit(Event.PARTY_CREATE);
     });
 
     EventBus.on(Event.PARTY_JOIN_REQUEST, (id: string) => {
-      this.socketManager.emit(Event.PARTY_JOIN, id);
+      this.managers.socket.emit(Event.PARTY_JOIN, id);
     });
 
     EventBus.on(Event.PARTY_LEAVE_REQUEST, () => {
-      this.socketManager.emit(Event.PARTY_LEAVE);
+      this.managers.socket.emit(Event.PARTY_LEAVE);
     });
 
     EventBus.on(Event.PARTY_START_REQUEST, () => {
-      this.socketManager.emit(Event.PARTY_START);
+      this.managers.socket.emit(Event.PARTY_START);
     });
 
     /**
      * Death
      */
-    this.socketManager.on(Event.PLAYER_DEATH, (data: Death) => {
-      const isLocal = this.playerManager.player?.id === data.id;
+    this.managers.socket.on(Event.PLAYER_DEATH, (data: Death) => {
+      const isLocal = this.managers.players.player?.id === data.id;
       const player = isLocal
-        ? this.playerManager.player
-        : this.playerManager.others.get(data.id);
+        ? this.managers.players.player
+        : this.managers.players.others.get(data.id);
 
       if (player) player.transitionTo(StateName.DEAD);
 
-      if (isLocal && this.playerManager.player) {
+      if (isLocal && this.managers.players.player) {
         const inventory =
-          this.playerManager.player.getComponent<InventoryComponent>(
+          this.managers.players.player.getComponent<InventoryComponent>(
             ComponentName.INVENTORY,
           );
 
@@ -650,13 +655,13 @@ export class MainScene extends Phaser.Scene {
       EventBus.emit(Event.PLAYER_DEATH, data);
     });
 
-    this.socketManager.on(
+    this.managers.socket.on(
       Event.PLAYER_REVIVE,
       (data: { id: string; x: number; y: number; health: number }) => {
-        const isLocal = this.playerManager.player?.id === data.id;
+        const isLocal = this.managers.players.player?.id === data.id;
         const player = isLocal
-          ? this.playerManager.player
-          : this.playerManager.others.get(data.id);
+          ? this.managers.players.player
+          : this.managers.players.others.get(data.id);
 
         if (player) {
           player.setPosition(data.x, data.y);
@@ -670,8 +675,8 @@ export class MainScene extends Phaser.Scene {
           this.spectate = null;
 
           this.game.events.emit(Event.CAMERA_FOLLOW, {
-            key: this.playerManager.player!.map,
-            player: this.playerManager.player!,
+            key: this.managers.players.player!.map,
+            player: this.managers.players.player!,
           });
         }
 
@@ -679,24 +684,24 @@ export class MainScene extends Phaser.Scene {
       },
     );
 
-    this.socketManager.on(Event.PLAYER_HEALTH, (health: number) => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.PLAYER_HEALTH, (health: number) => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       player.health = health;
       EventBus.emit(Event.PLAYER_HEALTH, health);
     });
 
-    this.socketManager.on(Event.PLAYER_MANA, (mana: number) => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.PLAYER_MANA, (mana: number) => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       player.mana = mana;
       EventBus.emit(Event.PLAYER_MANA, mana);
     });
 
-    this.socketManager.on(Event.PLAYER_INVENTORY_WIPE, () => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.PLAYER_INVENTORY_WIPE, () => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       const inventory = player.getComponent<InventoryComponent>(
@@ -705,8 +710,8 @@ export class MainScene extends Phaser.Scene {
       inventory?.set(new Array(20).fill(null));
     });
 
-    this.socketManager.on(Event.PARTY_WIPE, () => {
-      const player = this.playerManager.player;
+    this.managers.socket.on(Event.PARTY_WIPE, () => {
+      const player = this.managers.players.player;
       if (!player) return;
 
       this.spectate = null;
@@ -720,11 +725,11 @@ export class MainScene extends Phaser.Scene {
     });
 
     EventBus.on(Event.PLAYER_REVIVE_REQUEST, (id: string) => {
-      this.socketManager.emit(Event.PLAYER_REVIVE, { id });
+      this.managers.socket.emit(Event.PLAYER_REVIVE, { id });
     });
 
     EventBus.on(Event.PLAYER_SPECTATE_REQUEST, (targetId: string) => {
-      const target = this.playerManager.others.get(targetId);
+      const target = this.managers.players.others.get(targetId);
       if (!target) return;
 
       this.spectate = target;
@@ -734,11 +739,11 @@ export class MainScene extends Phaser.Scene {
         player: target,
       });
 
-      this.socketManager.emit(Event.PLAYER_SPECTATE, { targetId });
+      this.managers.socket.emit(Event.PLAYER_SPECTATE, { targetId });
     });
   }
 
   shutdown(): void {
-    this.socketManager.disconnect();
+    this.managers.socket.disconnect();
   }
 }
