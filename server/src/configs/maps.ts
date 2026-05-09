@@ -263,13 +263,6 @@ const buildings: Spritesheet[] = [
     asTileset: true,
   },
   {
-    key: "village_tavern_house",
-    file: "village_tavern_house.png",
-    frameWidth: 16,
-    frameHeight: 16,
-    asTileset: true,
-  },
-  {
     key: "village_glassblower_house",
     file: "village_glassblower_house.png",
     frameWidth: 16,

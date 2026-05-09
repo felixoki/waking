@@ -5,6 +5,7 @@ import { Scene } from "../scenes/Scene";
 export class CameraManager {
   private camera: Phaser.Cameras.Scene2D.Camera;
   private scene: Scene;
+  private resize?: (size: Phaser.Structs.Size) => void;
 
   constructor(scene: Scene) {
     this.scene = scene;
@@ -25,9 +26,13 @@ export class CameraManager {
 
     this.setZoom(calc(this.scene.scale.width, this.scene.scale.height));
 
-    this.scene.scale.on("resize", (size: Phaser.Structs.Size) => {
+    if (this.resize) this.scene.scale.off("resize", this.resize);
+
+    this.resize = (size: Phaser.Structs.Size) => {
       this.setZoom(calc(size.width, size.height));
-    });
+    };
+
+    this.scene.scale.on("resize", this.resize);
   }
 
   getWorldPoint(x: number, y: number): Phaser.Math.Vector2 {

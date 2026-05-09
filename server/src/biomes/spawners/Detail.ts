@@ -2,6 +2,12 @@ import { handlers } from "../../handlers";
 import { TerrainName, DetailConfig } from "../../types/generation";
 
 export class DetailSpawner {
+  private seed: string;
+
+  constructor(seed: string) {
+    this.seed = seed;
+  }
+
   spawn(
     terrain: TerrainName[],
     width: number,
@@ -14,19 +20,23 @@ export class DetailSpawner {
 
     if (!config.stamps.length) return data;
 
+    const rng = handlers.generation.seededRandom(
+      handlers.generation.hash(`${this.seed}-detail-${config.terrains.join(",")}`),
+    );
+
     const indices: number[] = [];
     for (let i = 0; i < width * height; i++) indices.push(i);
-    this._shuffle(indices);
+    this._shuffle(indices, rng);
 
     for (const idx of indices) {
       const x = idx % width;
       const y = Math.floor(idx / width);
 
       if (!config.terrains.includes(terrain[idx])) continue;
-      if (Math.random() >= config.density) continue;
+      if (rng() >= config.density) continue;
 
       const stamp =
-        config.stamps[Math.floor(Math.random() * config.stamps.length)];
+        config.stamps[Math.floor(rng() * config.stamps.length)];
 
       let canPlace = true;
       for (const cell of stamp.tiles) {
@@ -65,9 +75,9 @@ export class DetailSpawner {
     return data;
   }
 
-  private _shuffle(arr: number[]): void {
+  private _shuffle(arr: number[], rng: () => number): void {
     for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(rng() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   }

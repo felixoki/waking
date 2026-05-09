@@ -460,11 +460,16 @@
 - Add grasp spell ✅
 - Add in game menu ✅
 
+#### 8.5.2026
+
+- Refactor scene transitions ✅
+
 ### In progress
 
 
 ### Bugs
 
+- Dialogue ui stays open when leaving a scene
 
 ### Backlog
 
@@ -485,10 +490,7 @@
 
 - Weather ⭐
 
-- Refactoring and ideas ⭐
-  - Add throttle network updates and change detection
-  - Update interpolation system
-  - Depth sorting for fences
+- Ideas ⭐
   - Add absorb life spell
   - Add reflect damage effect
 

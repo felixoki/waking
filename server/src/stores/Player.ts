@@ -2,9 +2,11 @@ import { MapName, PlayerConfig } from "../types/index.js";
 
 export class PlayerStore {
   private players: Map<string, PlayerConfig> = new Map();
+  private bySocketId: Map<string, string> = new Map();
 
   add(id: string, config: PlayerConfig): void {
     this.players.set(id, config);
+    if (config.socketId) this.bySocketId.set(config.socketId, id);
   }
 
   get(id: string): PlayerConfig | undefined {
@@ -12,6 +14,8 @@ export class PlayerStore {
   }
 
   remove(id: string): void {
+    const player = this.players.get(id);
+    if (player?.socketId) this.bySocketId.delete(player.socketId);
     this.players.delete(id);
   }
 
@@ -33,6 +37,7 @@ export class PlayerStore {
   }
 
   getBySocketId(id: string): PlayerConfig | undefined {
-    return [...this.players.values()].find((player) => player.socketId === id);
+    const playerId = this.bySocketId.get(id);
+    return playerId ? this.players.get(playerId) : undefined;
   }
 }

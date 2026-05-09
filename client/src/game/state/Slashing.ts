@@ -37,7 +37,7 @@ export class Slashing implements State {
         );
         const config = configs.weapons[WeaponName.SLASH];
 
-        handlers.weapons[WeaponName.SLASH](entity, config, offset);
+        this.hitbox = handlers.weapons[WeaponName.SLASH](entity, config, offset);
       }),
     };
   }

@@ -60,11 +60,6 @@ export class GlimmerComponent extends Component {
     this.smoke.setDepth(999999);
   }
 
-  setActive(active: boolean): void {
-    this.active = active;
-    this.light.intensity = active ? this.intensity : 0;
-  }
-
   update() {
     const { x, y } = this.entity;
     this.light.setPosition(x, y);

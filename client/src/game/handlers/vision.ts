@@ -130,17 +130,4 @@ export const vision = {
 
     return false;
   },
-
-  findInCone: (
-    scene: Scene,
-    from: Entity,
-    targets: Entity[],
-    distance: number,
-    angle: number = Math.PI / 2,
-    count: number = 5,
-  ): Entity[] => {
-    return targets.filter((target) =>
-      vision.canSee(scene, from, target, distance, angle, count),
-    );
-  },
 };

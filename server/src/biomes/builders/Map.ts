@@ -4,6 +4,7 @@ import { EntityName } from "../../types";
 import {
   BiomeConfig,
   GeneratedMap,
+  TERRAIN_ORDER,
   TerrainName,
   TileRole,
 } from "../../types/generation";
@@ -48,7 +49,8 @@ export class MapBuilder {
      */
     const tiledLayers: any[] = [];
     let layerId = 1;
-    const detailSpawner = new DetailSpawner();
+    const detailSeed = this.config.noise.seed ?? "default";
+    const detailSpawner = new DetailSpawner(detailSeed);
 
     for (let i = 0; i < layers.length; i++) {
       const layerConfig = layers[i];
@@ -130,7 +132,7 @@ export class MapBuilder {
     const borderGenerator = new BorderGenerator(this.config, this.loader);
 
     const elevate = (t: TerrainName): number =>
-      this.config.terrain.indexOf(t);
+      TERRAIN_ORDER.indexOf(t);
 
     const sorted = [...borders].sort(
       (a, b) => elevate(b.from) - elevate(a.from),

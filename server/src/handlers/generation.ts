@@ -9,7 +9,9 @@ import {
 } from "../types/generation";
 import { join, dirname } from "path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const __ext = __filename.endsWith(".ts") ? "ts" : "js";
 
 export const generation = {
   toIndex: (x: number, y: number, width: number): number => {
@@ -217,7 +219,7 @@ export const generation = {
 
   start: (biome: string, seed: string): Promise<GeneratedMap | null> => {
     return new Promise((resolve, reject) => {
-      const worker = fork(join(__dirname, "../workers/generate.ts"), [], {
+      const worker = fork(join(__dirname, `../workers/generate.${__ext}`), [], {
         stdio: ["inherit", "inherit", "inherit", "ipc"],
       });
 

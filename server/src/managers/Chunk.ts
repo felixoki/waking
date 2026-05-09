@@ -5,13 +5,9 @@ export class ChunkManager {
   private entitiesInChunk = new Map<ChunkKey, Set<string>>();
   private playersInChunk = new Map<string, Set<ChunkKey>>();
   private chunkByEntity = new Map<string, ChunkKey>();
+  private chunkRefCount = new Map<ChunkKey, number>();
 
-  toChunkKey(
-    map: MapName,
-    x: number,
-    y: number,
-    partyId?: string,
-  ): ChunkKey {
+  toChunkKey(map: MapName, x: number, y: number, partyId?: string): ChunkKey {
     const cx = Math.floor(x / CHUNK_PIXEL_SIZE);
     const cy = Math.floor(y / CHUNK_PIXEL_SIZE);
     const prefix = map === MapName.REALM && partyId ? `realm:${partyId}` : map;
@@ -104,6 +100,15 @@ export class ChunkManager {
     const activated = [...next].filter((key) => !prev.has(key));
     const deactivated = [...prev].filter((key) => !next.has(key));
 
+    for (const key of activated)
+      this.chunkRefCount.set(key, (this.chunkRefCount.get(key) ?? 0) + 1);
+
+    for (const key of deactivated) {
+      const count = (this.chunkRefCount.get(key) ?? 1) - 1;
+      if (count <= 0) this.chunkRefCount.delete(key);
+      else this.chunkRefCount.set(key, count);
+    }
+
     return { activated, deactivated };
   }
 
@@ -111,23 +116,18 @@ export class ChunkManager {
     const chunks = this.playersInChunk.get(id);
     this.playersInChunk.delete(id);
 
+    if (chunks)
+      for (const key of chunks) {
+        const count = (this.chunkRefCount.get(key) ?? 1) - 1;
+        if (count <= 0) this.chunkRefCount.delete(key);
+        else this.chunkRefCount.set(key, count);
+      }
+
     return chunks ? [...chunks] : [];
   }
 
   isChunkActive(key: ChunkKey): boolean {
-    for (const chunks of this.playersInChunk.values())
-      if (chunks.has(key)) return true;
-
-    return false;
-  }
-
-  getActiveChunks(): Set<ChunkKey> {
-    const all = new Set<ChunkKey>();
-
-    for (const chunks of this.playersInChunk.values())
-      for (const key of chunks) all.add(key);
-
-    return all;
+    return (this.chunkRefCount.get(key) ?? 0) > 0;
   }
 
   getEntitiesByPrefix(prefix: string): string[] {

@@ -18,16 +18,6 @@ export const save = {
   player: async (worldId: string, player: PlayerData) => {
     const key = `player:${worldId}:${player.playerId}`;
 
-    await redis.setex(
-      key,
-      300,
-      JSON.stringify({
-        position: player.position,
-        health: player.health,
-        data: player.data,
-      }),
-    );
-
     await pg.query(
       `INSERT INTO player_data (player_id, world_id, position_x, position_y, health, data, updated_at)
      VALUES ($1, $2, $3, $4, $5, $6, NOW())
@@ -42,12 +32,20 @@ export const save = {
         JSON.stringify(player.data),
       ],
     );
+
+    await redis.setex(
+      key,
+      300,
+      JSON.stringify({
+        position: player.position,
+        health: player.health,
+        data: player.data,
+      }),
+    );
   },
 
   world: async (worldId: string, state: WorldState) => {
     const key = `world:${worldId}`;
-
-    await redis.setex(key, 300, JSON.stringify(state));
 
     await pg.query(
       `INSERT INTO world_state (world_id, entities, chunks, time, updated_at)
@@ -61,5 +59,7 @@ export const save = {
         JSON.stringify(state.time),
       ],
     );
+
+    await redis.setex(key, 300, JSON.stringify(state));
   },
 };

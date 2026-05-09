@@ -6,8 +6,7 @@ export const GAME_HEIGHT = 352;
 
 /** Chunks */
 export const TILE_SIZE = 16;
-export const CHUNK_SIZE = 16;
-export const CHUNK_PIXEL_SIZE = CHUNK_SIZE * TILE_SIZE;
+export const CHUNK_PIXEL_SIZE = 16 * TILE_SIZE;
 export const CHUNK_ACTIVATION_RADIUS = 2;
 export const CHUNK_ACTIVATION_BUDGET = 4;
 
@@ -35,7 +34,6 @@ export const PHASE_STARTS = [
 ];
 
 /** Actions */
-export const DURATION_CASTING = 800;
 export const DURATION_JUMPING = 800;
 export const DURATION_ROLLING = 600;
 export const DURATION_DASHING = 50;
@@ -73,7 +71,6 @@ export const RESISTANCE_MULTIPLIER = 0.5;
 export const WEAKNESS_MULTIPLIER = 2;
 
 /** Fishing */
-export const DURATION_FISHING_CAST = 1500;
 export const DURATION_FISHING_WAIT_MIN = 3000;
 export const DURATION_FISHING_WAIT_MAX = 8000;
 export const DURATION_FISHING_WINDOW = 1500;
@@ -99,11 +96,10 @@ export const DIRECTIONS_CARDINAL = [
   { dx: -1, dy: 0 },
 ];
 
-export const DIRECTIONS_DIAGONAL = [
+export const DIRECTIONS = [
+  ...DIRECTIONS_CARDINAL,
   { dx: 1, dy: -1 },
   { dx: 1, dy: 1 },
   { dx: -1, dy: 1 },
   { dx: -1, dy: -1 },
 ];
-
-export const DIRECTIONS = [...DIRECTIONS_CARDINAL, ...DIRECTIONS_DIAGONAL];

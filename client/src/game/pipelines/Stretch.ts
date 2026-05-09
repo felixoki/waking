@@ -6,7 +6,6 @@ const MultiPipeline = Phaser.Renderer.WebGL.Pipelines.MultiPipeline;
 export class StretchPipeline extends MultiPipeline {
   private startTime: number = -999999;
   private amplitude: number = 0.15;
-  private damping: number = 4.0;
   private squeeze: number = 0.5;
 
   constructor(game: Phaser.Game, name: string = PipelineName.STRETCH) {
@@ -75,19 +74,16 @@ export class StretchPipeline extends MultiPipeline {
 
     this.set1f("stretch_start_time", this.startTime);
     this.set1f("stretch_amplitude", this.amplitude);
-    this.set1f("stretch_damping", this.damping);
     this.set1f("stretch_squeeze", this.squeeze);
     this.set1f("current_time", this.game.loop.time);
   }
 
   trigger(
     amplitude: number = 0.5,
-    damping: number = 4.0,
     squeeze: number = 0.5,
   ) {
     this.startTime = this.game.loop.time;
     this.amplitude = amplitude;
-    this.damping = damping;
     this.squeeze = squeeze;
   }
 }

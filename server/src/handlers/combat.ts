@@ -249,7 +249,7 @@ export const combat = {
     ) => {
       const store = isEntity ? world.entities : world.players;
       const target = store.get(targetId);
-      
+
       if (!target) return;
 
       const effects: [EffectName, number][] = [...(config.effects ?? [])];
@@ -286,32 +286,20 @@ export const combat = {
       }
 
       store.update(targetId, { effects: existing });
+      world.affected.add(targetId);
     },
 
     tick: (world: World, io: Server, now: number) => {
-      const targets: Array<{
-        id: string;
-        isEntity: boolean;
-        config:
-          | ReturnType<typeof world.entities.get>
-          | ReturnType<typeof world.players.get>;
-      }> = [
-        ...world.entities.all.map((e) => ({
-          id: e.id,
-          isEntity: true,
-          config: e,
-        })),
-        ...world.players.all.map((p) => ({
-          id: p.id,
-          isEntity: false,
-          config: p,
-        })),
-      ];
-
-      for (const { id, isEntity, config: target } of targets) {
-        if (!target?.effects?.length) continue;
-
+      for (const id of world.affected) {
+        const isEntity = !!world.entities.get(id);
         const store = isEntity ? world.entities : world.players;
+        const target = store.get(id);
+
+        if (!target?.effects?.length) {
+          world.affected.delete(id);
+          continue;
+        }
+
         const chunkKey = isEntity
           ? world.chunks.getChunkByEntity(id)
           : undefined;
@@ -356,6 +344,8 @@ export const combat = {
         }
 
         store.update(id, { effects: remaining });
+
+        if (!remaining.length) world.affected.delete(id);
       }
     },
   },

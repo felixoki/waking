@@ -6,7 +6,7 @@ type WeaponHandler = (
   entity: Entity,
   config: WeaponConfig,
   direction: { x: number; y: number },
-) => void;
+) => Hitbox;
 
 export const weapons: Record<WeaponName, WeaponHandler> = {
   [WeaponName.SLASH]: (
@@ -14,7 +14,7 @@ export const weapons: Record<WeaponName, WeaponHandler> = {
     config: WeaponConfig,
     direction: { x: number; y: number },
   ) => {
-    new Hitbox(
+    return new Hitbox(
       entity.scene,
       entity.x + direction.x,
       entity.y + direction.y,

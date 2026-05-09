@@ -1,11 +1,12 @@
 import { pg } from "./postgres.js";
 import { redis } from "./redis.js";
+import { tryCatch } from "../utils/tryCatch.js";
 
 export const load = {
   player: async (worldId: string, playerId: string) => {
     const key = `player:${worldId}:${playerId}`;
 
-    const cached = await redis.get(key);
+    const { data: cached } = await tryCatch(redis.get(key));
     if (cached) return JSON.parse(cached);
 
     const result = await pg.query(
@@ -19,17 +20,21 @@ export const load = {
 
     const row = result.rows[0];
 
-    return {
+    const data = {
       position: { x: row.position_x, y: row.position_y },
       health: row.health,
       data: row.data,
     };
+
+    await redis.setex(key, 300, JSON.stringify(data));
+
+    return data;
   },
 
   world: async (worldId: string) => {
     const key = `world:${worldId}`;
 
-    const cached = await redis.get(key);
+    const { data: cached } = await tryCatch(redis.get(key));
     if (cached) return JSON.parse(cached);
 
     const result = await pg.query(
@@ -39,6 +44,10 @@ export const load = {
 
     if (!result.rows.length) return null;
 
-    return result.rows[0];
+    const data = result.rows[0];
+
+    await redis.setex(key, 300, JSON.stringify(data));
+
+    return data;
   },
 };

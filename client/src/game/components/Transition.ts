@@ -70,8 +70,8 @@ export class TransitionComponent extends Component {
       y: this.config.y,
     });
 
-    setTimeout(() => {
+    this.entity.scene.time.delayedCall(1000, () => {
       this.fired = false;
-    }, 1000);
+    });
   }
 }

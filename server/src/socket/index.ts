@@ -212,12 +212,10 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
 
   events.forEach(({ event, handler }) => {
     socket.on(event, async (...args) => {
-      const { data, error } = await tryCatch(Promise.resolve(handler(...args)));
+      const { error } = await tryCatch(Promise.resolve(handler(...args)));
 
       if (error)
         throw new Error(`Error handling event "${event}": ${error.message}`);
-
-      return data;
     });
   });
 }

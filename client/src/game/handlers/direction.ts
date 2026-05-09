@@ -13,10 +13,6 @@ export const direction = {
     return offsets[direction] || { x: 0, y: 0 };
   },
 
-  getDirectionVector: (direction: Direction) => {
-    return DirectionVectors[direction] || { x: 0, y: 0 };
-  },
-
   getDiagonalDirectionVector: (directions: Direction[]) => {
     let vector = { x: 0, y: 0 };
 

@@ -20,6 +20,7 @@ const host = (req: express.Request) =>
   process.env.PUBLIC_HOST || req.hostname || "localhost";
 
 app.use(express.json());
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -44,11 +45,20 @@ const getEntryPath = () => {
 
 const start = (id: string) => {
   const existing = running.get(id);
-  if (existing) return existing;
+
+  if (existing) {
+    existing.lastActiveAt = Date.now();
+    return existing;
+  }
 
   const port = allocate();
   const entry = getEntryPath();
-  console.log("Starting world", { id, port, entry, execArgv: process.execArgv });
+  console.log("Starting world", {
+    id,
+    port,
+    entry,
+    execArgv: process.execArgv,
+  });
 
   const child = fork(entry, [], {
     env: {
@@ -95,6 +105,7 @@ app.post("/worlds", async (req, res) => {
   );
 
   const world = start(worldId);
+
   return res.json({ worldId, host: host(req), port: world.port });
 });
 
@@ -117,6 +128,7 @@ app.get("/worlds", async (req, res) => {
 app.post("/worlds/:id/start", async (req, res) => {
   const worldId = req.params.id;
   const world = start(worldId);
+
   res.json({ worldId, host: host(req), port: world.port });
 });
 
@@ -133,6 +145,7 @@ app.post("/worlds/:id/join", async (req, res) => {
   );
 
   const world = start(worldId);
+
   res.json({ worldId, host: host(req), port: world.port });
 });
 
@@ -140,11 +153,8 @@ setInterval(() => {
   const now = Date.now();
   const idle = 10 * 60 * 1000;
 
-  for (const [worldId, world] of running)
-    if (now - world.lastActiveAt > idle) {
-      world.child.kill("SIGTERM");
-      running.delete(worldId);
-    }
+  for (const [_, world] of running)
+    if (now - world.lastActiveAt > idle) world.child.kill("SIGTERM");
 }, 30_000);
 
 await migrate();

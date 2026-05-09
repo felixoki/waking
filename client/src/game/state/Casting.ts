@@ -7,7 +7,7 @@ import { DELAY_ATTACK, DURATION_COMBO_WINDOW } from "@server/globals";
 
 export class Casting implements State {
   private timer: {
-    delay: Phaser.Time.TimerEvent;
+    delay?: Phaser.Time.TimerEvent;
     duration: Phaser.Time.TimerEvent;
     combo?: Phaser.Time.TimerEvent;
   } | null = null;
@@ -45,16 +45,16 @@ export class Casting implements State {
       return;
     }
 
-    this.executeSpell(entity);
+    this._executeSpell(entity, config);
   }
 
   update(entity: Entity): void {
     if (!this.charging) return;
 
-    if (!entity.pointerdown) this.releaseCharge(entity);
+    if (!entity.pointerdown) this._releaseCharge(entity);
   }
 
-  private releaseCharge(entity: Entity): void {
+  private _releaseCharge(entity: Entity): void {
     if (!this.charging) return;
 
     this.charging = false;
@@ -81,7 +81,6 @@ export class Casting implements State {
     const { duration } = handlers.combat.combo(scaled, 0);
 
     this.timer = {
-      delay: entity.scene.time.delayedCall(0, () => {}),
       duration: entity.scene.time.delayedCall(duration, () => {
         this.exit(entity);
         this.timer = null;
@@ -89,8 +88,10 @@ export class Casting implements State {
     };
   }
 
-  private executeSpell(entity: Entity): void {
-    const config = handlers.combat.resolve(entity);
+  private _executeSpell(
+    entity: Entity,
+    config: ReturnType<typeof handlers.combat.resolve>,
+  ): void {
     if (!config) return;
 
     const direction = handlers.direction.getDirectionToPoint(
@@ -124,6 +125,7 @@ export class Casting implements State {
 
         if (config.combo && !isFinisher) {
           this.step = step + 1;
+
           this.timer!.combo = entity.scene.time.delayedCall(
             DURATION_COMBO_WINDOW,
             () => {

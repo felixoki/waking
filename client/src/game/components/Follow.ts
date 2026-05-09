@@ -29,10 +29,6 @@ export class FollowComponent extends Component {
 
     this.entity.setPosition(this.target.x + ox, this.target.y + oy);
     this.entity.setDepth(this.target.depth);
-
-    this.entity.components.forEach((c) => {
-      if (c !== this) c.update();
-    });
   }
 
   detach(): void {}

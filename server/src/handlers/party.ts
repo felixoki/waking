@@ -124,7 +124,7 @@ export const party = {
     const data = world.parties.get(id);
 
     if (!data || data.status !== PartyStatus.LOBBY) return;
-    data.members.push(player.id);
+    world.parties.addMember(id, player.id);
 
     socket.join(`party:${id}`);
     socket.to(`party:${id}`).emit(Event.PARTY_UPDATE, data);
@@ -140,7 +140,7 @@ export const party = {
     const data = world.parties.getByPlayerId(player.id);
     if (!data) return;
 
-    data.members = data.members.filter((id) => id !== player.id);
+    world.parties.removeMember(data.id, player.id);
 
     socket.leave(`party:${data.id}`);
     socket.emit(Event.PARTY_LEAVE);

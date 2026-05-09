@@ -11,6 +11,7 @@ export class AuraComponent extends Component {
   private tints: number[];
   private trailTimer: number = 0;
   private trailInterval: number = 80;
+  private trails: Set<Phaser.GameObjects.Particles.ParticleEmitter> = new Set();
 
   constructor(entity: Entity, config: AuraConfig) {
     super();
@@ -90,6 +91,7 @@ export class AuraComponent extends Component {
         });
         ember.setDepth(this.entity.depth - 1);
         ember.explode();
+        this.trails.add(ember);
 
         const whiteEmber = this.entity.scene.add.particles(
           x,
@@ -109,19 +111,22 @@ export class AuraComponent extends Component {
         );
         whiteEmber.setDepth(this.entity.depth - 1);
         whiteEmber.explode();
+        this.trails.add(whiteEmber);
 
         this.entity.scene.time.delayedCall(5000, () => {
           ember.destroy();
           whiteEmber.destroy();
+          this.trails.delete(ember);
+          this.trails.delete(whiteEmber);
         });
       }
-    } else {
-      this.trailTimer = 0;
-    }
+    } else this.trailTimer = 0;
   }
 
   detach(): void {
     this.ambient.destroy();
     this.ambientWhite.destroy();
+    this.trails.forEach((e) => e.destroy());
+    this.trails.clear();
   }
 }

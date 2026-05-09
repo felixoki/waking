@@ -30,6 +30,7 @@ export class World {
   public readonly parties: PartyStore;
   public readonly chunks: ChunkManager;
   public readonly authority: AuthorityManager;
+  public readonly affected: Set<string> = new Set();
 
   public economy: EconomyManager;
 
@@ -77,7 +78,7 @@ export class World {
       this.server.emit(Event.WORLD_PHASE, this.time.phase);
     }
 
-    this.economy.update();
+    this.economy.update(delta);
 
     this.regenAccumulator += delta;
 

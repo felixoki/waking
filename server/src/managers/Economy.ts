@@ -7,6 +7,7 @@ export class EconomyManager {
   private needs: Map<NeedName, NeedConfig> = new Map();
   private tier: number = 1;
   private updated: number = Date.now();
+  private accumulator: number = 0;
   public dirty: boolean = false;
 
   constructor(private supply: ItemsStore) {
@@ -19,7 +20,11 @@ export class EconomyManager {
     });
   }
 
-  update() {
+  update(delta: number) {
+    this.accumulator += delta;
+    if (this.accumulator < 1000) return;
+    this.accumulator -= 1000;
+
     const now = Date.now();
     const elapsed = now - this.updated;
     this.updated = now;

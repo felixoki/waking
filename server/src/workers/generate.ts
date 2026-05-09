@@ -1,6 +1,13 @@
 import { generateBiome } from "../biomes";
+import { tryCatchSync } from "../utils/tryCatch";
 
 process.on("message", ({ biome, seed }) => {
-  const res = generateBiome(biome, seed);
-  process.send?.(res ?? null, undefined, undefined, () => process.exit(0));
+  const { data, error } = tryCatchSync(() => generateBiome(biome, seed));
+
+  if (error) {
+    console.error("Worker generation failed:", error);
+    process.exit(1);
+  }
+
+  process.send?.(data ?? null, undefined, undefined, () => process.exit(0));
 });
