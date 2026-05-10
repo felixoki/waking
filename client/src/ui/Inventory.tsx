@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  Action,
   ComponentName,
   EntityName,
   Event,
   Item as ItemInterface,
+  SlotZone,
   SpellName,
 } from "@server/types";
 import EventBus from "../game/EventBus";
 import { configs } from "@server/configs";
 import { ContextMenu, ContextMenuAction } from "./ContextMenu";
 import { Item } from "./Item";
+import type { DragData } from "./Provider";
 
 export function Inventory() {
   const [items, setItems] = useState<(ItemInterface | null)[]>(
@@ -67,10 +70,10 @@ export function Inventory() {
     ? getActions(item.name, !!storageEntityId).map((action) => ({
         label: action,
         onClick: () => {
-          if (action === "consume")
+          if (action === Action.CONSUME)
             EventBus.emit(Event.ITEM_CONSUME, { name: item.name });
 
-          if (action === "learn") {
+          if (action === Action.LEARN) {
             const spell = getSpell(item.name);
 
             if (spell)
@@ -80,10 +83,14 @@ export function Inventory() {
               });
           }
 
-          if (action === "deposit" && storageEntityId)
-            EventBus.emit(Event.STORAGE_DEPOSIT, {
-              entityId: storageEntityId,
-              item,
+          if (action === Action.DEPOSIT && storageEntityId)
+            EventBus.emit(Event.SLOT_MOVE, {
+              source: { zone: SlotZone.INVENTORY, index: menu!.index },
+              target: {
+                zone: SlotZone.STORAGE,
+                index: -1,
+                entityId: storageEntityId,
+              },
             });
 
           setMenu(null);
@@ -94,21 +101,29 @@ export function Inventory() {
   return (
     <>
       <ul className="flex flex-wrap gap-1 mt-2 max-w-135">
-        {items.map((item, i) => (
-          <Item
-            key={i}
-            name={item?.name ?? null}
-            quantity={item?.quantity}
-            interactive
-            onContextMenu={(e) => {
-              e.preventDefault();
-              if (!item) return;
-              const actions = getActions(item.name, !!storageEntityId);
-              if (actions.length === 0) return;
-              setMenu({ index: i, x: e.clientX, y: e.clientY });
-            }}
-          />
-        ))}
+        {items.map((item, i) => {
+          const data: DragData | undefined = item
+            ? { zone: SlotZone.INVENTORY, index: i, name: item.name, item }
+            : undefined;
+          return (
+            <Item
+              key={i}
+              name={item?.name ?? null}
+              quantity={item?.quantity}
+              interactive
+              dragId={item ? `inventory-${i}` : undefined}
+              dropId={`inventory-${i}`}
+              dragData={data}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                if (!item) return;
+                const actions = getActions(item.name, !!storageEntityId);
+                if (actions.length === 0) return;
+                setMenu({ index: i, x: e.clientX, y: e.clientY });
+              }}
+            />
+          );
+        })}
       </ul>
 
       {menu && (
@@ -123,17 +138,19 @@ export function Inventory() {
   );
 }
 
-function getActions(name: EntityName, storageOpen = false): string[] {
+function getActions(name: EntityName, storageOpen = false): Action[] {
   const def = configs.entities[name];
   if (!def) return [];
 
-  const actions: string[] = [];
+  const actions: Action[] = [];
 
   if (def.components.some((c) => c.name === ComponentName.CONSUMABLE))
-    actions.push("consume");
+    actions.push(Action.CONSUME);
+  
   if (def.components.some((c) => c.name === ComponentName.LEARNABLE))
-    actions.push("learn");
-  if (storageOpen) actions.push("deposit");
+    actions.push(Action.LEARN);
+
+  if (storageOpen) actions.push(Action.DEPOSIT);
 
   return actions;
 }
@@ -146,5 +163,6 @@ function getSpell(name: EntityName): SpellName | null {
 
   if (learnable && learnable.name === ComponentName.LEARNABLE)
     return learnable.config.spell;
+
   return null;
 }

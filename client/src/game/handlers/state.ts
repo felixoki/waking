@@ -1,7 +1,7 @@
 import {
   Direction,
   EntityName,
-  HotbarSlotType,
+  SlotType,
   Input,
   StateName,
 } from "@server/types";
@@ -9,7 +9,7 @@ import {
 export const state = {
   resolve: (
     input: Partial<Input>,
-    prev: { state: StateName; facing: Direction; movingCount: number }
+    prev: { state: StateName; facing: Direction; movingCount: number },
   ) => {
     const selectors = [
       {
@@ -35,14 +35,14 @@ export const state = {
       {
         condition: () =>
           !!input.target &&
-          input.equipped?.type === HotbarSlotType.ENTITY &&
-          input.equipped?.name === EntityName.FISHING_ROD,
+          input.equipped?.type === SlotType.ENTITY &&
+          input.equipped?.item.name === EntityName.FISHING_ROD,
         state: () => StateName.FISHING,
         needsUpdate: false,
       },
       {
         condition: () =>
-          input.target && input.equipped?.type === HotbarSlotType.SPELL,
+          input.target && input.equipped?.type === SlotType.SPELL,
         state: () => StateName.CASTING,
         needsUpdate: false,
       },
@@ -77,8 +77,7 @@ export const state = {
 
     return {
       state: selector!.state(),
-      needsUpdate:
-        !changed.state && (changed.facing || changed.movingCount),
+      needsUpdate: !changed.state && (changed.facing || changed.movingCount),
     };
   },
 };

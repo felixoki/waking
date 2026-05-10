@@ -3,8 +3,8 @@ import {
   Direction,
   DirectionVectors,
   Event,
+  SlotType,
   SpellConfig,
-  SpellName,
   StateName,
 } from "@server/types";
 import { DamageableComponent } from "../components/Damageable";
@@ -24,8 +24,13 @@ export const combat = {
     if (player) {
       const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
       const equipped = hotbar?.get();
+
       if (!equipped) return null;
-      return configs.spells[equipped.name as SpellName] ?? null;
+
+      if (equipped.type === SlotType.SPELL)
+        return configs.spells[equipped.name] ?? null;
+
+      return null;
     }
 
     const definition = configs.entities[entity.name];
@@ -63,8 +68,10 @@ export const combat = {
     const isFinisher = step >= config.combo.length;
 
     let stepConfig: SpellConfig = config;
+
     if (step > 0 && step <= config.combo.length) {
       const comboStep = config.combo[step - 1];
+
       stepConfig = {
         ...config,
         damage: { ...config.damage, amount: comboStep.damage },
@@ -121,7 +128,7 @@ export const combat = {
 
       if (camera) {
         const pos = camera.getScreenPosition(entity.x, entity.y, player);
-        
+
         EventBus.emit(Event.DAMAGE_NUMBER, {
           x: pos.x,
           y: pos.y - 40,
@@ -215,8 +222,9 @@ export const combat = {
 
       if (handlers.path.isClear(entity, dx, dy, dashDistance)) {
         const moving = handlers.direction.fromVector(dx, dy);
-        if (moving.length === 0)
-          moving.push(handlers.direction.fromAngle(angle));
+
+        if (!moving.length) moving.push(handlers.direction.fromAngle(angle));
+
         return { moving, facing: handlers.direction.fromAngle(angle) };
       }
     }

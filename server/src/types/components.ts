@@ -159,3 +159,9 @@ export interface ConsumableConfig {
 export interface StorageConfig {
   slots: number;
 }
+
+export enum Action {
+  CONSUME = "consume",
+  LEARN = "learn",
+  DEPOSIT = "deposit",
+}

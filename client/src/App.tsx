@@ -12,12 +12,13 @@ import { Stats } from "./ui/Stats";
 import { Economy } from "./ui/Economy";
 import { Loading } from "./ui/Loading";
 import { Seeds } from "./ui/Seeds";
-import { Spells } from "./ui/Spells";
+import { SpellBook } from "./ui/SpellBook";
 import { Storage } from "./ui/Storage";
 import { Collector } from "./ui/Collector";
 import { Effects } from "./ui/Effects";
 import { DamageNumbers } from "./ui/DamageNumbers";
 import { Settings } from "./ui/Settings";
+import { Provider } from "./ui/Provider";
 
 function FPS({ game }: { game: React.RefObject<Phaser.Game | null> }) {
   const [fps, setFps] = useState(0);
@@ -71,17 +72,19 @@ function App() {
       <Effects />
       <Economy />
       <div className="fixed top-4 left-4 flex flex-row gap-4">
+        <Provider>
         <div className="flex flex-col gap-4">
           <div className="bg-black/25 rounded-lg p-4">
             <Hotbar />
             <Inventory />
           </div>
           <Dialogue />
-          <Spells />
+          <SpellBook />
           <Seeds />
         </div>
         <Storage />
         <Collector />
+        </Provider>
       </div>
       <Settings />
       <FPS game={game} />

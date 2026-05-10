@@ -1,19 +1,29 @@
-import { EntityName, Event, HotbarSlot, SpellName } from "@server/types";
+import {
+  EntityName,
+  Event,
+  Slot,
+  SlotType,
+  SlotZone,
+  SpellName,
+} from "@server/types";
 import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
 import { Item } from "./Item";
+import type { DragData } from "./Provider";
+
+function slotName(slot: Slot | null): EntityName | SpellName | null {
+  if (!slot) return null;
+  return slot.type === SlotType.SPELL ? slot.name : slot.item.name;
+}
 
 export function Hotbar() {
-  const [slots, setSlots] = useState<(HotbarSlot | null)[]>(() =>
+  const [slots, setSlots] = useState<(Slot | null)[]>(() =>
     Array(8).fill(null),
   );
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const handler = (state: {
-      slots: (HotbarSlot | null)[];
-      active: number;
-    }) => {
+    const handler = (state: { slots: (Slot | null)[]; active: number }) => {
       setSlots(state.slots);
       setActive(state.active);
     };
@@ -27,13 +37,26 @@ export function Hotbar() {
 
   return (
     <ul className="flex flex-wrap gap-1">
-      {slots.map((slot, i) => (
-        <Item
-          key={i}
-          name={(slot?.name as EntityName | SpellName) || null}
-          active={i === active}
-        />
-      ))}
+      {slots.map((slot, i) => {
+        const name = slotName(slot);
+        const data: DragData = {
+          zone: SlotZone.HOTBAR,
+          index: i,
+          name: name!,
+          hotbarSlot: slot,
+        };
+        return (
+          <Item
+            key={i}
+            name={name}
+            active={i === active}
+            dragId={name ? `hotbar-${i}` : undefined}
+            dropId={`hotbar-${i}`}
+            dragData={name ? data : undefined}
+            onClick={() => EventBus.emit(Event.HOTBAR_SELECT, i)}
+          />
+        );
+      })}
     </ul>
   );
 }

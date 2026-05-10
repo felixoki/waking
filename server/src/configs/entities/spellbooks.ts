@@ -6,7 +6,7 @@ import {
   SpellName,
 } from "../../types";
 
-const book = (
+const page = (
   spell: SpellName,
   displayName: string,
   description: string,
@@ -24,7 +24,7 @@ const book = (
           { row: 6, start: 2, end: 3 },
         ],
       },
-      key: "spellbook_texture",
+      key: "spell_page_texture",
     },
     { name: ComponentName.POINTABLE },
     { name: ComponentName.PICKABLE },
@@ -40,40 +40,40 @@ const book = (
   },
 });
 
-export const spellbooks: Partial<Record<EntityName, EntityDefinition>> = {
-  [EntityName.SPELL_BOOK_SHARD]: book(
+export const spellPages: Partial<Record<EntityName, EntityDefinition>> = {
+  [EntityName.SPELL_PAGE_SHARD]: page(
     SpellName.SHARD,
-    "Spell book: Shard",
-    "A weathered tome that unlocks the secrets of shard magic.",
+    "Spell page: Shard",
+    "A weathered page that unlocks the secrets of shard magic.",
   ),
-  [EntityName.SPELL_BOOK_SLASH]: book(
+  [EntityName.SPELL_PAGE_SLASH]: page(
     SpellName.SLASH,
-    "Spell book: Slash",
-    "A leather-bound grimoire on the art of arcane slashing.",
+    "Spell page: Slash",
+    "A loose page on the art of arcane slashing.",
   ),
-  [EntityName.SPELL_BOOK_ILLUMINATE]: book(
+  [EntityName.SPELL_PAGE_ILLUMINATE]: page(
     SpellName.ILLUMINATE,
-    "Spell book: Illuminate",
-    "A glowing manuscript that teaches one how to bend light.",
+    "Spell page: Illuminate",
+    "A glowing page that teaches one how to bend light.",
   ),
-  [EntityName.SPELL_BOOK_HURT_SHADOWS]: book(
+  [EntityName.SPELL_PAGE_HURT_SHADOWS]: page(
     SpellName.HURT_SHADOWS,
-    "Spell book: Hurt shadows",
-    "A dark folio dense with shadow-banishing incantations.",
+    "Spell page: Hurt shadows",
+    "A dark page dense with shadow-banishing incantations.",
   ),
-  [EntityName.SPELL_BOOK_METEOR_SHOWER]: book(
+  [EntityName.SPELL_PAGE_METEOR_SHOWER]: page(
     SpellName.METEOR_SHOWER,
-    "Spell book: Meteor shower",
-    "An ancient scroll that teaches how to call fire from the sky.",
+    "Spell page: Meteor shower",
+    "An ancient page that teaches how to call fire from the sky.",
   ),
-  [EntityName.SPELL_BOOK_BUTTERFLY_EFFIGY]: book(
+  [EntityName.SPELL_PAGE_BUTTERFLY_EFFIGY]: page(
     SpellName.BUTTERFLY_EFFIGY,
-    "Spell book: Butterfly effigy",
-    "A delicate journal containing the rites of the butterfly.",
+    "Spell page: Butterfly effigy",
+    "A delicate page containing the rites of the butterfly.",
   ),
-  [EntityName.SPELL_BOOK_LIGHTNING_STRIKE]: book(
+  [EntityName.SPELL_PAGE_LIGHTNING_STRIKE]: page(
     SpellName.LIGHTNING_STRIKE,
-    "Spell book: Lightning strike",
-    "A charred tome that crackles with residual static energy.",
+    "Spell page: Lightning strike",
+    "A charred page that crackles with residual static energy.",
   ),
 };

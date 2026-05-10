@@ -23,10 +23,14 @@ import {
   EffectName,
   Event,
   SpellName,
+  Slot,
+  SlotType,
+  SlotReference,
 } from "@server/types";
 import EventBus from "../EventBus";
 import { handlers } from "../handlers";
 import { InventoryComponent } from "../components/Inventory";
+import { HotbarComponent } from "../components/Hotbar";
 import { DialogueResponse, NodeId } from "@server/types/dialogue";
 import { DamageableComponent } from "../components/Damageable";
 import { vfx } from "../vfx";
@@ -161,6 +165,9 @@ export class MainScene extends Phaser.Scene {
       );
       if (inventory && data.inventory?.length) inventory.set(data.inventory);
 
+      const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+      if (hotbar && data.hotbar?.length) hotbar.setSlots(data.hotbar);
+
       handlers.ui.backdrop.hide(this, data.map);
     });
 
@@ -187,7 +194,8 @@ export class MainScene extends Phaser.Scene {
 
     this.managers.socket.on(Event.PLAYER_HURT, (data: Hurt) => {
       const player =
-        this.managers.players.others.get(data.id) || this.managers.players.player;
+        this.managers.players.others.get(data.id) ||
+        this.managers.players.player;
 
       if (!player) return;
 
@@ -211,7 +219,8 @@ export class MainScene extends Phaser.Scene {
 
     this.game.events.on(Event.PLAYER_INPUT, (data: Input) => {
       const player = this.managers.players.player;
-      if (!player?.isTransitioning) this.managers.socket.emit(Event.PLAYER_INPUT, data);
+      if (!player?.isTransitioning)
+        this.managers.socket.emit(Event.PLAYER_INPUT, data);
     });
 
     this.game.events.on(Event.PLAYER_TRANSITION, (data: Transition) => {
@@ -277,7 +286,7 @@ export class MainScene extends Phaser.Scene {
           (this.managers.players.player?.id === data.id
             ? this.managers.players.player
             : undefined);
-            
+
         if (!target) return;
 
         target.addEffect(
@@ -435,6 +444,18 @@ export class MainScene extends Phaser.Scene {
       inventory?.set(data);
     });
 
+    this.managers.socket.on(Event.HOTBAR_SYNC, (data: (Slot | null)[]) => {
+      const player = this.managers.players.player;
+      if (!player) return;
+
+      const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+      hotbar?.setSlots(data);
+    });
+
+    this.managers.socket.on(Event.SPELLBOOK_SYNC, (spells: SpellName[]) => {
+      EventBus.emit(Event.SPELLBOOK_SYNC, spells);
+    });
+
     EventBus.on(Event.ITEM_COLLECT, (data: Item) => {
       this.managers.socket.emit(Event.ITEM_COLLECT, data);
     });
@@ -442,6 +463,17 @@ export class MainScene extends Phaser.Scene {
     EventBus.on(Event.ITEM_CONSUME, (data: { name: string }) => {
       this.managers.socket.emit(Event.ITEM_CONSUME, data);
     });
+
+    EventBus.on(
+      Event.SLOT_MOVE,
+      (data: {
+        source: SlotReference;
+        target: SlotReference;
+        type: SlotType;
+      }) => {
+        this.managers.socket.emit(Event.SLOT_MOVE, data);
+      },
+    );
 
     /**
      * Spells
@@ -471,34 +503,16 @@ export class MainScene extends Phaser.Scene {
     /**
      * Storage
      */
-    this.game.events.on(
-      Event.STORAGE_OPEN,
-      (data: { entityId: string; slots: number }) => {
-        this.managers.socket.emit(Event.STORAGE_OPEN, {
-          entityId: data.entityId,
-        });
-        EventBus.emit(Event.STORAGE_OPEN, data);
-      },
-    );
+    this.game.events.on(Event.STORAGE_OPEN, (data: { entityId: string }) => {
+      this.managers.socket.emit(Event.STORAGE_OPEN, {
+        entityId: data.entityId,
+      });
+    });
 
     EventBus.on(Event.STORAGE_CLOSE, (data: string) => {
       this.managers.socket.emit(Event.STORAGE_CLOSE, { entityId: data });
       this.game.events.emit(Event.STORAGE_CLOSE, data);
     });
-
-    EventBus.on(
-      Event.STORAGE_DEPOSIT,
-      (data: { entityId: string; item: Item }) => {
-        this.managers.socket.emit(Event.STORAGE_DEPOSIT, data);
-      },
-    );
-
-    EventBus.on(
-      Event.STORAGE_WITHDRAW,
-      (data: { entityId: string; item: Item }) => {
-        this.managers.socket.emit(Event.STORAGE_WITHDRAW, data);
-      },
-    );
 
     /**
      * Collector
@@ -517,6 +531,11 @@ export class MainScene extends Phaser.Scene {
     this.managers.socket.on(
       Event.STORAGE_SYNC,
       (data: { entityId: string; slots: (Item | null)[] }) => {
+        this.game.events.emit(Event.STORAGE_CONFIRM, data.entityId);
+        EventBus.emit(Event.STORAGE_OPEN, {
+          entityId: data.entityId,
+          slots: data.slots.length,
+        });
         EventBus.emit(Event.STORAGE_SYNC, data);
       },
     );
@@ -528,9 +547,12 @@ export class MainScene extends Phaser.Scene {
       EventBus.emit(Event.ECONOMY_UPDATE, data);
     });
 
-    this.managers.socket.on(Event.STORE_SYNC, (data: Record<string, number>) => {
-      EventBus.emit(Event.STORE_SYNC, data);
-    });
+    this.managers.socket.on(
+      Event.STORE_SYNC,
+      (data: Record<string, number>) => {
+        EventBus.emit(Event.STORE_SYNC, data);
+      },
+    );
 
     /**
      * Shared
@@ -562,7 +584,10 @@ export class MainScene extends Phaser.Scene {
 
         const onReady = () => {
           if (this.managers.ambience.phase)
-            this.managers.ambience.setPhase(this.managers.ambience.phase, false);
+            this.managers.ambience.setPhase(
+              this.managers.ambience.phase,
+              false,
+            );
 
           this.managers.entities.batch(data.entities);
 

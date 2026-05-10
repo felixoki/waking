@@ -126,6 +126,7 @@ export const entity = {
       const item: Item = { name: entity.name, quantity: 1, stackable };
 
       player.inventory = handlers.storage.add(player.inventory, item);
+      socket.emit(Event.INVENTORY_SYNC, player.inventory);
     }
 
     handlers.entity.remove(

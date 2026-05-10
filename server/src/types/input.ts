@@ -1,6 +1,6 @@
 import { Direction } from './directions';
 import { StateName } from './states';
-import { HotbarSlot } from './hotbar';
+import { Slot } from './hotbar';
 
 export interface Input {
   id: string;
@@ -14,5 +14,5 @@ export interface Input {
   pointerdown: boolean;
   target?: { x: number; y: number };
   state: StateName;
-  equipped: HotbarSlot | null | undefined;
+  equipped: Slot | null | undefined;
 }

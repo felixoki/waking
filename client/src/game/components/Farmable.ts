@@ -2,7 +2,7 @@ import {
   ComponentName,
   EntityName,
   Event,
-  HotbarSlotType,
+  SlotType,
 } from "@server/types";
 import { Component } from "./Component";
 import { Entity } from "../Entity";
@@ -44,8 +44,8 @@ export class FarmableComponent extends Component {
 
     if (
       !slot ||
-      slot.type !== HotbarSlotType.ENTITY ||
-      slot.name !== EntityName.HOE
+      slot.type !== SlotType.ENTITY ||
+      slot.item.name !== EntityName.HOE
     )
       return;
 

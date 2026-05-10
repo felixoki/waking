@@ -2,8 +2,8 @@ import {
   ComponentName,
   EntityName,
   Event,
-  HotbarSlot,
-  HotbarSlotType,
+  Slot,
+  SlotType,
   MapName,
   PlayerConfig,
   StateName,
@@ -52,6 +52,7 @@ export const player = {
         continue;
 
       const dist = Phaser.Math.Distance.Between(entity.x, entity.y, p.x, p.y);
+
       if (dist < nearestDist) {
         nearestDist = dist;
         nearest = p;
@@ -72,7 +73,7 @@ export const player = {
         ?.get(),
       hotbar: current
         .getComponent<HotbarComponent>(ComponentName.HOTBAR)
-        ?.get(),
+        ?.getSlots(),
       map: current.map,
       scene: current.scene,
     };
@@ -88,12 +89,13 @@ export const player = {
       ?.set(prev.inventory!);
     updated
       .getComponent<HotbarComponent>(ComponentName.HOTBAR)
-      ?.set(prev.hotbar);
+      ?.setSlots(prev.hotbar!);
 
     const scene = main.scene.get(data.map);
 
     prev.scene.scene.setVisible(false);
     prev.scene.input.enabled = false;
+    
     scene.scene.setVisible(true);
     scene.input.enabled = true;
 
@@ -114,15 +116,13 @@ export const player = {
   },
 
   lantern: {
-    sync: (
-      p: Player,
-      equipped: HotbarSlot | null | undefined,
-    ): void => {
+    sync: (p: Player, equipped: Slot | null | undefined): void => {
       const id = `lantern-${p.id}`;
       const exists = !!p.scene.managers.entities.get(id);
       const isLantern =
-        equipped?.type === HotbarSlotType.ENTITY &&
-        equipped?.name === EntityName.LANTERN;
+        equipped?.type === SlotType.ENTITY &&
+        equipped?.item.name === EntityName.LANTERN;
+
       if (isLantern && !exists) player.lantern.equip(p);
       else if (!isLantern && exists) player.lantern.unequip(p);
 
@@ -158,9 +158,7 @@ export const player = {
       entity.map = p.map;
       p.scene.managers.entities.entities.set(id, entity);
 
-      entity
-        .getComponent<FollowComponent>(ComponentName.FOLLOW)
-        ?.setTarget(p);
+      entity.getComponent<FollowComponent>(ComponentName.FOLLOW)?.setTarget(p);
 
       const anim = p.getComponent<AnimationComponent>(ComponentName.ANIMATION);
       anim?.setVariant("lantern");
@@ -181,6 +179,7 @@ export const player = {
 
     main.managers.players.player.isLocked = true;
     main.managers.players.player.isTransitioning = true;
+
     handlers.ui.backdrop.show();
 
     setTimeout(() => {

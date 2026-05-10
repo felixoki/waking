@@ -53,6 +53,11 @@ export enum Event {
   /** Inventory & Hotbar */
   INVENTORY_UPDATE = "inventory_update",
   HOTBAR_UPDATE = "hotbar_update",
+  HOTBAR_SELECT = "hotbar_select",
+  SLOT_MOVE = "slot:move",
+  INVENTORY_SYNC = "inventory:sync",
+  HOTBAR_SYNC = "hotbar:sync",
+  SPELLBOOK_SYNC = "spellbook:sync",
   SEEDS_SELECT = "seeds_select",
 
   /** Economy */
@@ -104,12 +109,10 @@ export enum Event {
   SPELL_EQUIP = "spell_equip",
 
   /** Storage */
-  INVENTORY_SYNC = "inventory:sync",
   STORAGE_OPEN = "storage:open",
   STORAGE_CLOSE = "storage:close",
-  STORAGE_DEPOSIT = "storage:deposit",
-  STORAGE_WITHDRAW = "storage:withdraw",
   STORAGE_SYNC = "storage:sync",
+  STORAGE_CONFIRM = "storage:confirm",
   STORAGE_UPDATE = "storage:update",
 
   /** UI */

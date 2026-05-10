@@ -20,6 +20,11 @@ export class StorageComponent extends Component {
   attach(): void {
     this.entity.on("pointed", this._open, this);
     this.entity.scene.game.events.on(Event.STORAGE_CLOSE, this._close, this);
+    this.entity.scene.game.events.on(
+      Event.STORAGE_CONFIRM,
+      this._confirm,
+      this,
+    );
   }
 
   update(): void {}
@@ -27,6 +32,11 @@ export class StorageComponent extends Component {
   detach(): void {
     this.entity.off("pointed", this._open, this);
     this.entity.scene.game.events.off(Event.STORAGE_CLOSE, this._close, this);
+    this.entity.scene.game.events.off(
+      Event.STORAGE_CONFIRM,
+      this._confirm,
+      this,
+    );
   }
 
   private _open(): void {
@@ -44,16 +54,19 @@ export class StorageComponent extends Component {
 
     if (distance > this.range) return;
 
-    const animKey = `${this.entity.name}_tex_anim`;
-
-    if (this.entity.scene.anims.exists(animKey)) this.entity.play(animKey);
-
-    this.isOpen = true;
-    
     this.entity.scene.game.events.emit(Event.STORAGE_OPEN, {
       entityId: this.entity.id,
       slots: this.slots,
     });
+  }
+
+  private _confirm(entityId: string): void {
+    if (entityId !== this.entity.id) return;
+
+    this.isOpen = true;
+
+    const animKey = `${this.entity.name}_tex_anim`;
+    if (this.entity.scene.anims.exists(animKey)) this.entity.play(animKey);
   }
 
   private _close(entityId: string): void {

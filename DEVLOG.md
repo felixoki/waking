@@ -470,6 +470,7 @@
 ### Bugs
 
 - Dialogue ui stays open when leaving a scene
+- Spell pages stay in inventory after learning
 
 ### Backlog
 

@@ -137,11 +137,11 @@ export const forest: BiomeConfig = {
       group: { min: 0, max: 2, radius: 3 },
     },
     {
-      entities: [EntityName.ORC1, EntityName.GOBLIN1],
+      entities: [EntityName.GOBLIN1, EntityName.ORC1],
       terrain: [TerrainName.GRASS, TerrainName.GROUND],
-      count: { min: 8, max: 15 },
+      count: { min: 7, max: 15 },
       spacing: 5,
-      group: { min: 0, max: 1, radius: 3 },
+      group: { min: 1, max: 3, radius: 3 },
     },
     {
       entities: [EntityName.TROLL],

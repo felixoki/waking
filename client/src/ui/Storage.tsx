@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Event, Item as ItemType } from "@server/types";
+import { Event, Item as ItemType, SlotZone } from "@server/types";
 import EventBus from "../game/EventBus";
 import { Item } from "./Item";
+import type { DragData } from "./Provider";
 
 export function Storage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,25 +44,34 @@ export function Storage() {
     };
   }, []);
 
-  const withdraw = (item: ItemType) => {
-    if (!id) return;
-    EventBus.emit(Event.STORAGE_WITHDRAW, { entityId: id, item });
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="bg-black/25 rounded-lg p-4 self-start">
       <h3 className="text-white mb-2">Chest</h3>
       <ul className="flex flex-wrap gap-1 max-w-135">
-        {slots.map((item, i) => (
-          <Item
-            key={i}
-            name={item?.name ?? null}
-            quantity={item?.quantity}
-            onClick={() => item && withdraw(item)}
-          />
-        ))}
+        {slots.map((item, i) => {
+          const data: DragData | undefined =
+            item && id
+              ? {
+                  zone: SlotZone.STORAGE,
+                  index: i,
+                  name: item.name,
+                  item,
+                  entityId: id,
+                }
+              : undefined;
+          return (
+            <Item
+              key={i}
+              name={item?.name ?? null}
+              quantity={item?.quantity}
+              dragId={item && id ? `storage-${i}` : undefined}
+              dropId={id ? `storage-${i}` : undefined}
+              dragData={data}
+            />
+          );
+        })}
       </ul>
     </div>
   );

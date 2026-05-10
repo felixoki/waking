@@ -217,7 +217,7 @@ export const creatures: Partial<Record<EntityName, EntityDefinition>> = {
         config: {
           loot: [
             {
-              name: EntityName.SPELL_BOOK_HURT_SHADOWS,
+              name: EntityName.SPELL_PAGE_HURT_SHADOWS,
               quantity: 1,
               stackable: false,
               chance: 0.25,

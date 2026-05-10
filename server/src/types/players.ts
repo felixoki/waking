@@ -1,5 +1,6 @@
 import { Item } from './components';
 import { Direction } from './directions';
+import { Slot } from './hotbar';
 import { MapName } from './maps';
 import { SpellName } from './spells';
 import { Effect } from './effects.js';
@@ -19,5 +20,6 @@ export interface PlayerConfig {
   locked?: string;
   spells: SpellName[];
   inventory: (Item | null)[];
+  hotbar: (Slot | null)[];
   effects?: Effect[];
 }

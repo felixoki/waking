@@ -12,6 +12,8 @@ import {
   EntityConfig,
   SpellName,
   Revive,
+  SlotReference,
+  SlotType,
 } from "../types/index.js";
 import { World } from "../World.js";
 import { NodeId } from "../types/dialogue.js";
@@ -187,14 +189,9 @@ export function registerHandlers(io: Server, socket: Socket, world: World) {
         handlers.storage.close(data, socket, world),
     },
     {
-      event: Event.STORAGE_DEPOSIT,
-      handler: (data: { entityId: string; item: Item }) =>
-        handlers.storage.deposit(data, socket, world),
-    },
-    {
-      event: Event.STORAGE_WITHDRAW,
-      handler: (data: { entityId: string; item: Item }) =>
-        handlers.storage.withdraw(data, socket, world),
+      event: Event.SLOT_MOVE,
+      handler: (data: { source: SlotReference; target: SlotReference; type: SlotType }) =>
+        handlers.storage.move(data, socket, world),
     },
     /**
      * Collector

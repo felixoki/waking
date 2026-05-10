@@ -1,4 +1,4 @@
-import { ComponentName, EntityName, Event, HotbarSlotType } from "@server/types";
+import { ComponentName, EntityName, Event, SlotType } from "@server/types";
 import { Component } from "./Component";
 import { Entity } from "../Entity";
 import { HotbarComponent } from "./Hotbar";
@@ -57,8 +57,8 @@ export class FellableComponent extends Component {
 
     return (
       !!slot &&
-      slot.type === HotbarSlotType.ENTITY &&
-      slot.name === EntityName.AXE
+      slot.type === SlotType.ENTITY &&
+      slot.item.name === EntityName.AXE
     );
   }
 

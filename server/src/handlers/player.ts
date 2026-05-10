@@ -2,7 +2,10 @@ import { Server, Socket } from "socket.io";
 import { randomUUID } from "crypto";
 import {
   Direction,
+  EntityName,
   Event,
+  Slot,
+  SlotType,
   Input,
   MapName,
   PlayerConfig,
@@ -45,8 +48,38 @@ export const player = {
         mana: saved?.mana || 100,
         isAuthority,
         isDead: false,
-        spells: (saved?.data?.spells as SpellName[]) || [],
+        spells: (saved?.data?.spells as SpellName[]) || [
+          SpellName.SHARD,
+          SpellName.SLASH,
+          SpellName.LIGHTNING_STRIKE,
+        ],
         inventory: saved?.data?.inventory ?? new Array(20).fill(null),
+        hotbar: (saved?.data?.hotbar as (Slot | null)[]) ?? [
+          {
+            type: SlotType.ENTITY,
+            item: { name: EntityName.AXE, quantity: 1, stackable: false },
+          },
+          {
+            type: SlotType.ENTITY,
+            item: { name: EntityName.LANTERN, quantity: 1, stackable: false },
+          },
+          {
+            type: SlotType.ENTITY,
+            item: { name: EntityName.HOE, quantity: 1, stackable: false },
+          },
+          {
+            type: SlotType.ENTITY,
+            item: {
+              name: EntityName.FISHING_ROD,
+              quantity: 1,
+              stackable: false,
+            },
+          },
+          null,
+          null,
+          null,
+          null,
+        ],
       };
 
       world.players.add(player.id, player);
@@ -92,6 +125,7 @@ export const player = {
           facing: player.facing,
           spells: player.spells,
           inventory: player.inventory,
+          hotbar: player.hotbar,
         },
       });
 
