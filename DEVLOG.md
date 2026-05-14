@@ -466,13 +466,26 @@
 
 #### 10.5.2026
 
-- Add item drag and drop
+- Add item drag and drop ✅
+
+#### 12.5.2026
+
+- Play testing ✅
+
+#### 14.5.2026
+
+- Lobby killed after 10 minutes ✅
+- Casting lightning strike breaks the game ✅
+- Entities drop items only for the authority ✅
+- Item swapping in hotbar deletes the other item ✅
 
 ### In progress
 
 
 ### Bugs
 
+- Health bars of other clients don't reset
+- Collectors crash when receiving too many different items
 - Dialogue ui stays open when leaving a scene
 - Spell pages stay in inventory after learning
 - There is no collector for raspberries
@@ -499,6 +512,7 @@
 - Ideas ⭐
   - Add absorb life spell
   - Add reflect damage effect
+  - Remove among player collisions
 
 ## Economy
 

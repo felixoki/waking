@@ -226,26 +226,27 @@ export const storage = {
     if (value.target !== null) {
       const displaced = storage.unwrap(target.zone, value.target);
 
-      if (zone.source.readonly || zone.target.readonly)
+      if (zone.source.readonly || zone.target.readonly) {
         if (displaced.type === SlotType.ENTITY) return;
-        else {
-          const withinHotbar =
-            source.zone === SlotZone.HOTBAR && target.zone === SlotZone.HOTBAR;
 
-          if (!withinHotbar && displaced.type !== type) return;
+        const withinHotbar =
+          source.zone === SlotZone.HOTBAR && target.zone === SlotZone.HOTBAR;
 
-          swapped = storage.wrap(source.zone, displaced.core, displaced.type);
-          if (swapped === undefined) return;
-        }
+        if (!withinHotbar && displaced.type !== type) return;
+      }
+
+      swapped = storage.wrap(source.zone, displaced.core, displaced.type);
+      if (swapped === undefined) return;
     }
 
     if (!zone.source.readonly) src.slots[src.index] = swapped;
     if (!zone.target.readonly) tgt.slots[tgt.index] = wrapped;
-
     if (!zone.source.readonly) zone.source.sync(socket, player, source, world);
+
     if (!zone.target.readonly) {
       const same =
         source.zone === target.zone && source.entityId === target.entityId;
+        
       if (!same) zone.target.sync(socket, player, target, world);
     }
   },

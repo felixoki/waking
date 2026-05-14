@@ -133,6 +133,10 @@ export const combat = {
         world,
       );
 
+      const player = world.players.getBySocketId(socket.id);
+      const party = player && world.parties.getByPlayerId(player.id);
+      const partyId = target.map === MapName.REALM ? party?.id : undefined;
+
       const definition = configs.entities[target.name];
       const damagable = definition?.components.find(
         (c: ComponentConfig) => c.name === ComponentName.DAMAGEABLE,
@@ -157,6 +161,7 @@ export const combat = {
             socket,
             io,
             world,
+            partyId,
           );
         });
       }

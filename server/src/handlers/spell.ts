@@ -18,8 +18,8 @@ export const spell = {
     const config = configs.spells[name];
     if (!config) return;
 
-    const newMana = Math.max(player.mana - config.mana, 0);
-    world.players.update(player.id, { mana: newMana });
-    socket.emit(Event.PLAYER_MANA, newMana);
+    const mana = Math.max(player.mana - config.mana, 0);
+    world.players.update(player.id, { mana });
+    socket.emit(Event.PLAYER_MANA, mana);
   },
 };

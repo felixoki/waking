@@ -1,6 +1,7 @@
-import { PlayerConfig, Input, StateName } from "@server/types";
+import { PlayerConfig, Input, StateName, ComponentName } from "@server/types";
 import { Player } from "../Player";
 import { EntityName } from "@server/types";
+import { HotbarComponent } from "../components/Hotbar";
 import { Idle } from "../state/Idle";
 import { Walking } from "../state/Walking";
 import { Running } from "../state/Running";
@@ -81,6 +82,9 @@ export class PlayerManager {
       this.player = player;
       return;
     }
+
+    const hotbar = player.getComponent<HotbarComponent>(ComponentName.HOTBAR);
+    if (hotbar && config.hotbar?.length) hotbar.setSlots(config.hotbar);
 
     this.others.set(config.id, player);
   }

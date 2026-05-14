@@ -88,6 +88,7 @@ export class HotbarComponent extends Component {
     );
 
     if (i !== -1) this.active = i;
+    else this.slots[this.active] = slot;
 
     this.emit();
   }

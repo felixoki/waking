@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { EntityName, Event, Item, seeds } from "../types";
+import { EntityName, Event, Item, MapName, seeds } from "../types";
 import { World } from "../World";
 import { handlers } from ".";
 
@@ -16,6 +16,9 @@ export const farming = {
     const crop = seeds[data.seed];
     if (!crop) return;
 
+    const party = world.parties.getByPlayerId(player.id);
+    const partyId = player.map === MapName.REALM ? party?.id : undefined;
+
     handlers.entity.create(
       {
         name: crop,
@@ -29,6 +32,7 @@ export const farming = {
       socket,
       io,
       world,
+      partyId,
     );
   },
 

@@ -92,12 +92,10 @@ export class Casting implements State {
     entity: Entity,
     config: ReturnType<typeof handlers.combat.resolve>,
   ): void {
-    if (!config) return;
+    if (!config || !entity.target) return;
 
-    const direction = handlers.direction.getDirectionToPoint(
-      entity,
-      entity.target!,
-    );
+    const target = entity.target;
+    const direction = handlers.direction.getDirectionToPoint(entity, target);
 
     const step = config.combo ? this.step : 0;
     const { stepConfig, isFinisher, duration } = handlers.combat.combo(
@@ -114,7 +112,7 @@ export class Casting implements State {
         handlers.spells[config.name](
           entity,
           stepConfig,
-          entity.target!,
+          target,
           direction,
           step,
         );

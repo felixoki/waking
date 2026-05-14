@@ -1,5 +1,9 @@
 import { TimePhase } from "./types/index.js";
 
+/** Server */
+export const HEARTBEAT_INTERVAL = 30_000;
+export const WORLD_INACTIVITY_TIMEOUT = 5 * 60 * 1000;
+
 /** World */
 export const GAME_WIDTH = 640;
 export const GAME_HEIGHT = 352;

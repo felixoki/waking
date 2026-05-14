@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { EntityName, FishName } from "../types";
+import { EntityName, FishName, MapName } from "../types";
 import { FISHING_LANDING_DISTANCE } from "../globals.js";
 import { World } from "../World";
 import { handlers } from ".";
@@ -21,6 +21,9 @@ export const fishing = {
 
     if (Math.sqrt(dx * dx + dy * dy) > FISHING_LANDING_DISTANCE) return;
 
+    const party = world.parties.getByPlayerId(player.id);
+    const partyId = player.map === MapName.REALM ? party?.id : undefined;
+
     handlers.entity.create(
       {
         name: data.name,
@@ -34,6 +37,7 @@ export const fishing = {
       socket,
       io,
       world,
+      partyId,
     );
   },
 };

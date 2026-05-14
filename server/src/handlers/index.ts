@@ -13,6 +13,7 @@ import { party } from "./party.js";
 import { player } from "./player.js";
 import { spell } from "./spell.js";
 import { storage } from "./storage.js";
+import { world } from "./world.js";
 
 export const handlers = {
   authority,
@@ -30,4 +31,5 @@ export const handlers = {
   party,
   spell,
   storage,
+  world,
 };

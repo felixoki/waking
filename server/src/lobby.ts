@@ -7,6 +7,7 @@ import { LOBBY_PORT, DATABASE_URL, REDIS_URL } from "./server.js";
 import { randomUUID } from "crypto";
 import { pg } from "./db/postgres.js";
 import { migrate } from "./db/migrate.js";
+import { HEARTBEAT_INTERVAL, WORLD_INACTIVITY_TIMEOUT } from "./globals.js";
 
 type World = {
   child: ChildProcess;
@@ -73,6 +74,10 @@ const start = (id: string) => {
 
   const info: World = { child, port, lastActiveAt: Date.now() };
   running.set(id, info);
+
+  child.on("message", (msg: any) => {
+    if (msg?.type === "heartbeat") info.lastActiveAt = Date.now();
+  });
 
   child.on("exit", () => {
     running.delete(id);
@@ -151,11 +156,11 @@ app.post("/worlds/:id/join", async (req, res) => {
 
 setInterval(() => {
   const now = Date.now();
-  const idle = 10 * 60 * 1000;
 
   for (const [_, world] of running)
-    if (now - world.lastActiveAt > idle) world.child.kill("SIGTERM");
-}, 30_000);
+    if (now - world.lastActiveAt > WORLD_INACTIVITY_TIMEOUT)
+      world.child.kill("SIGTERM");
+}, HEARTBEAT_INTERVAL);
 
 await migrate();
 
