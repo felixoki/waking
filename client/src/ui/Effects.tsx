@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import EventBus from "../game/EventBus";
 import { Effect, EffectName, Event } from "@server/types";
 
-function useNow(interval = 100) {
+function useNow(active: boolean, interval = 100) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
+    if (!active) return;
     const id = setInterval(() => setNow(Date.now()), interval);
     return () => clearInterval(id);
-  }, [interval]);
+  }, [active, interval]);
   return now;
 }
 
 export function Effects() {
   const [effects, setEffects] = useState<Map<EffectName, Effect>>(new Map());
-  const now = useNow();
+  const now = useNow(effects.size > 0);
 
   useEffect(() => {
     const onApply = (effect: Effect) => {

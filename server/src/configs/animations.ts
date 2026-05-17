@@ -260,7 +260,7 @@ export const animations: Partial<
     [StateName.SLASHING]: {
       frameCount: 5,
       frameRate: 5,
-      repeat: -1,
+      repeat: 0,
     },
   },
   [EntityName.CITIZEN1]: {

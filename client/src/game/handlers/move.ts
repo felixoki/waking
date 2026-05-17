@@ -1,12 +1,14 @@
 import { DirectionVectors } from "@server/types";
 import { Entity } from "../Entity";
 
+const vector = new Phaser.Math.Vector2(0, 0);
+
 export const move = {
   getVelocity: (entity: Entity, speed: number) => {
     if (!entity.body) return;
 
     const moving = entity.moving;
-    const vector = new Phaser.Math.Vector2(0, 0);
+    vector.set(0, 0);
 
     moving.forEach((direction) => {
       const dv = DirectionVectors[direction];

@@ -153,6 +153,7 @@ export interface GrowableConfig {
 
 export interface ConsumableConfig {
   effect: EffectName;
+  duration: number;
   restore: { health?: number; mana?: number };
 }
 

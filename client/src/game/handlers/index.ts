@@ -1,6 +1,7 @@
 import { combat } from "./combat";
 import { direction } from "./direction";
 import { dialogue } from "./dialogue";
+import { interpolation } from "./interpolation";
 import { move } from "./move";
 import { path } from "./path";
 import { physics } from "./physics";
@@ -17,6 +18,7 @@ export const handlers = {
   state,
   move,
   direction,
+  interpolation,
   physics,
   charge,
   combat,

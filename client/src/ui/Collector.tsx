@@ -73,10 +73,10 @@ export function Collector() {
   const maxTier = Math.max(
     1,
     ...recipes.map((r) => r.tier),
-    ...((configs as any).tiers?.map((t: TierUpgrade) => t.tier) ?? []),
+    ...configs.tiers.map((t) => t.tier),
   );
-  const upgradeConfig: TierUpgrade | undefined = (configs as any).tiers?.find(
-    (t: TierUpgrade) => t.tier === tier + 1,
+  const upgradeConfig: TierUpgrade | undefined = configs.tiers.find(
+    (t) => t.tier === tier + 1,
   );
 
   const canAffordIngredients = (ingredients: Recipe["ingredients"]): boolean =>

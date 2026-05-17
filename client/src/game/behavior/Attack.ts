@@ -240,5 +240,7 @@ export class AttackBehavior extends Behavior {
     this.target.lastPosition = null;
     this.lostSightTime = 0;
     this.recalculation.last = 0;
+    this.lastAttackTime = 0;
+    this.cooldowns.clear();
   }
 }

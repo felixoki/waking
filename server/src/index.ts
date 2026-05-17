@@ -59,7 +59,8 @@ if (WORLD_ID)
 
 const shutdown = () => {
   intervals.forEach((id) => clearInterval(id));
-  server.close();
+  io.close();
+  server.close(() => process.exit(0));
 };
 
 process.on("SIGTERM", shutdown);

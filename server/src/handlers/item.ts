@@ -51,7 +51,7 @@ export const item = {
 
     const effect = {
       name: config.effect,
-      expiresAt: Date.now() + 1000,
+      expiresAt: Date.now() + config.duration,
       lastTickAt: Date.now(),
     };
 

@@ -12,6 +12,7 @@ interface Animation {
 
 export class TileManager {
   private animations = new Map<number, Animation>();
+  private grid?: number[][];
 
   constructor(private tilemap: Phaser.Tilemaps.Tilemap) {
     this._getAnimations();
@@ -95,9 +96,11 @@ export class TileManager {
   }
 
   getCollisionGrid(): number[][] {
+    if (this.grid) return this.grid;
+
     const { width, height } = this.tilemap;
 
-    return Array.from({ length: height }, (_, y) =>
+    this.grid = Array.from({ length: height }, (_, y) =>
       Array.from({ length: width }, (_, x) => {
         const collides = this.tilemap.layers.some((layer) => {
           const tile = this.tilemap.getTileAt(x, y, true, layer.name);
@@ -107,5 +110,7 @@ export class TileManager {
         return collides ? 1 : 0;
       }),
     );
+
+    return this.grid;
   }
 }

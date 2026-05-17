@@ -181,13 +181,22 @@ app.post("/worlds/:id/join", async (req, res) => {
   res.json({ worldId, host: host(req), port: world.port });
 });
 
-setInterval(() => {
+const reaper = setInterval(() => {
   const now = Date.now();
 
   for (const [_, world] of running)
     if (now - world.lastActiveAt > WORLD_INACTIVITY_TIMEOUT)
       world.child.kill("SIGTERM");
 }, HEARTBEAT_INTERVAL);
+
+const shutdown = () => {
+  clearInterval(reaper);
+  for (const [_, world] of running) world.child.kill("SIGTERM");
+  process.exit(0);
+};
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
 
 await migrate();
 

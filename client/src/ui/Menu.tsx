@@ -7,6 +7,8 @@ const LOBBY_URL = (
   import.meta.env.VITE_LOBBY_URL || "http://localhost:3100"
 ).replace(/\/$/, "");
 
+const PROTOCOL = LOBBY_URL.startsWith("https") ? "https" : "http";
+
 const getPlayerId = (): string => {
   let playerId = localStorage.getItem("playerId");
 
@@ -200,10 +202,18 @@ export function Menu({ ready }: { ready: () => void }) {
   };
 
   const connect = (host: string, port: number) => {
-    const worldUrl = `http://${host}:${port}`;
+    const worldUrl = `${PROTOCOL}://${host}:${port}`;
     SocketManager.init(worldUrl);
 
+    const timeout = setTimeout(() => {
+      SocketManager.off("connect");
+      SocketManager.disconnect();
+      setError("Connection timed out");
+      setLoading(false);
+    }, 10000);
+
     SocketManager.on("connect", () => {
+      clearTimeout(timeout);
       ready();
     });
   };

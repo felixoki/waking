@@ -124,8 +124,9 @@ export class Player extends Entity {
     handlers.player.lantern.sync(this, input.equipped);
 
     if (remoteInput) {
-      const x = Phaser.Math.Linear(this.x, input.x, 0.2);
-      const y = Phaser.Math.Linear(this.y, input.y, 0.2);
+      const delta = this.scene.game.loop.delta;
+      const x = handlers.interpolation.lerp(this.x, input.x, delta);
+      const y = handlers.interpolation.lerp(this.y, input.y, delta);
 
       this.setPosition(x, y);
     }

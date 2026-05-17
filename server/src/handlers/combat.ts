@@ -268,13 +268,15 @@ export const combat = {
 
       if (attackerId) {
         const inventory = world.players.get(attackerId)?.inventory ?? [];
+        const isSpell = "mana" in config;
+
         for (const slot of inventory) {
           if (!slot) continue;
 
           for (const bonus of configs.entities[slot.name]?.bonuses ?? [])
             if (
-              bonus.spell === (config as SpellConfig).name ||
-              bonus.weapon === (config as WeaponConfig).name
+              (isSpell && bonus.spell === config.name) ||
+              (!isSpell && bonus.weapon === config.name)
             )
               effects.push(...bonus.effects);
         }

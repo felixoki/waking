@@ -26,6 +26,7 @@ export const HEIGHT_JUMPING = 40;
 /** Time */
 export const DAY = 30 * 60 * 1000;
 export const TICK_RATE = 1000 / 60;
+export const INTERPOLATION_SPEED = 10;
 
 export const AUTOSAVE_INTERVAL = 30 * 1000;
 

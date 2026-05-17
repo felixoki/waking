@@ -484,23 +484,28 @@
 - Add sound loader and manager ✅
 - Fix bugs, improve performance ✅
 
+#### 17.5.2026
+
+- Fix bugs, improve performance ✅
+- Record forest ambience ✅
+
 ### In progress
 
 
 ### Bugs
 
 - Health bars of other clients don't reset
-- Collectors crash when receiving too many different items
 - Dialogue ui stays open when leaving a scene
 - Spell pages stay in inventory after learning
 - There is no collector for raspberries
+- Shadow wanderer does not attack consistently
+- Shadow wanderer needs multiplayer handling
 
 ### Backlog
 
-- Game sounds ⭐
-  - Add music, sound effects and ambience
-
 - Animal taming ⭐
+
+- Weather ⭐
 
 - Mining ⭐
 
@@ -511,8 +516,6 @@
 - Relationships ⭐
 
 - Character customization ⭐
-
-- Weather ⭐
 
 - Ideas ⭐
   - Add absorb life spell

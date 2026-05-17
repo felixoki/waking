@@ -8,6 +8,7 @@ import { handlers } from "../handlers";
 export class InteractableComponent extends Component {
   private entity: Entity;
   private range = RANGE_INTERACTING;
+  private active = false;
 
   public name = ComponentName.INTERACTABLE;
 
@@ -21,6 +22,8 @@ export class InteractableComponent extends Component {
   }
 
   update(): void {
+    if (!this.active) return;
+
     const player = this.entity.scene.managers.players.player;
     if (!player) return;
 
@@ -31,8 +34,10 @@ export class InteractableComponent extends Component {
       player.y,
     );
 
-    if (distance > this.range)
+    if (distance > this.range) {
+      this.active = false;
       EventBus.emit(Event.ENTITY_DIALOGUE_END, this.entity.id);
+    }
   }
 
   detach(): void {
@@ -57,6 +62,7 @@ export class InteractableComponent extends Component {
       const dy = player.y - this.entity.y;
       const facing = handlers.direction.fromAngle(Math.atan2(dy, dx));
 
+      this.active = true;
       this.entity.scene.game.events.emit(Event.ENTITY_DIALOGUE_START, {
         entityId: this.entity.id,
         facing,

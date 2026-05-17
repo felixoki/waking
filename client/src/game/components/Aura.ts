@@ -8,17 +8,19 @@ export class AuraComponent extends Component {
   private entity: Entity;
   private ambient: Phaser.GameObjects.Particles.ParticleEmitter;
   private ambientWhite: Phaser.GameObjects.Particles.ParticleEmitter;
+  private black: Phaser.GameObjects.Particles.ParticleEmitter;
+  private white: Phaser.GameObjects.Particles.ParticleEmitter;
   private tints: number[];
   private trailTimer: number = 0;
   private trailInterval: number = 80;
-  private trails: Set<Phaser.GameObjects.Particles.ParticleEmitter> = new Set();
-  private timers: Set<Phaser.Time.TimerEvent> = new Set();
+  private lastDepth: number = 0;
 
   constructor(entity: Entity, config: AuraConfig) {
     super();
 
     this.entity = entity;
     this.tints = config.tints;
+    this.lastDepth = entity.depth - 1;
 
     this.ambient = entity.scene.add.particles(
       entity.x,
@@ -36,7 +38,7 @@ export class AuraComponent extends Component {
         blendMode: "NORMAL",
       },
     );
-    this.ambient.setDepth(entity.depth - 1);
+    this.ambient.setDepth(this.lastDepth);
 
     this.ambientWhite = entity.scene.add.particles(
       entity.x,
@@ -54,17 +56,50 @@ export class AuraComponent extends Component {
         blendMode: "ADD",
       },
     );
-    this.ambientWhite.setDepth(entity.depth - 1);
+    this.ambientWhite.setDepth(this.lastDepth);
+
+    this.black = entity.scene.add.particles(0, 0, "particle_square", {
+      tint: this.tints,
+      alpha: { start: 0.6, end: 0 },
+      scale: { start: 0.12, end: 0.01 },
+      speed: { min: 3, max: 12 },
+      angle: { min: 0, max: 360 },
+      lifespan: 5000,
+      quantity: 3,
+      frequency: -1,
+      blendMode: "NORMAL",
+    });
+    this.black.setDepth(this.lastDepth);
+
+    this.white = entity.scene.add.particles(0, 0, "particle_square", {
+      tint: [0xccccff, 0xddddff, 0xffffff],
+      alpha: { start: 0.4, end: 0 },
+      scale: { start: 0.08, end: 0.01 },
+      speed: { min: 3, max: 10 },
+      angle: { min: 0, max: 360 },
+      lifespan: 4000,
+      quantity: 2,
+      frequency: -1,
+      blendMode: "ADD",
+    });
+    this.white.setDepth(this.lastDepth);
   }
 
   update(): void {
     const { x, y } = this.entity;
     const body = this.entity.body as Phaser.Physics.Arcade.Body;
+    const depth = this.entity.depth - 1;
 
     this.ambient.setPosition(x, y);
-    this.ambient.setDepth(this.entity.depth - 1);
     this.ambientWhite.setPosition(x, y);
-    this.ambientWhite.setDepth(this.entity.depth - 1);
+
+    if (depth !== this.lastDepth) {
+      this.lastDepth = depth;
+      this.ambient.setDepth(depth);
+      this.ambientWhite.setDepth(depth);
+      this.black.setDepth(depth);
+      this.white.setDepth(depth);
+    }
 
     const isMoving =
       body && (Math.abs(body.velocity.x) > 1 || Math.abs(body.velocity.y) > 1);
@@ -78,61 +113,16 @@ export class AuraComponent extends Component {
 
       if (this.trailTimer >= interval) {
         this.trailTimer = 0;
-
-        const ember = this.entity.scene.add.particles(x, y, "particle_square", {
-          tint: this.tints,
-          alpha: { start: 0.6, end: 0 },
-          scale: { start: 0.12, end: 0.01 },
-          speed: { min: 3, max: 12 },
-          angle: { min: 0, max: 360 },
-          lifespan: 5000,
-          quantity: 3,
-          frequency: -1,
-          blendMode: "NORMAL",
-        });
-        ember.setDepth(this.entity.depth - 1);
-        ember.explode();
-        this.trails.add(ember);
-
-        const whiteEmber = this.entity.scene.add.particles(
-          x,
-          y,
-          "particle_square",
-          {
-            tint: [0xccccff, 0xddddff, 0xffffff],
-            alpha: { start: 0.4, end: 0 },
-            scale: { start: 0.08, end: 0.01 },
-            speed: { min: 3, max: 10 },
-            angle: { min: 0, max: 360 },
-            lifespan: 4000,
-            quantity: 2,
-            frequency: -1,
-            blendMode: "ADD",
-          },
-        );
-        whiteEmber.setDepth(this.entity.depth - 1);
-        whiteEmber.explode();
-        this.trails.add(whiteEmber);
-
-        const timer = this.entity.scene.time.delayedCall(5000, () => {
-          ember.destroy();
-          whiteEmber.destroy();
-          this.trails.delete(ember);
-          this.trails.delete(whiteEmber);
-          this.timers.delete(timer);
-        });
-
-        this.timers.add(timer);
+        this.black.emitParticleAt(x, y);
+        this.white.emitParticleAt(x, y);
       }
     } else this.trailTimer = 0;
   }
 
   detach(): void {
-    this.timers.forEach((t) => t.destroy());
-    this.timers.clear();
     this.ambient.destroy();
     this.ambientWhite.destroy();
-    this.trails.forEach((e) => e.destroy());
-    this.trails.clear();
+    this.black.destroy();
+    this.white.destroy();
   }
 }

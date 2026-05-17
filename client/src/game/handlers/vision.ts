@@ -9,6 +9,9 @@ interface RayHit {
   hit: boolean;
 }
 
+const ray = new Phaser.Geom.Line();
+const circle = new Phaser.Geom.Circle();
+
 export const vision = {
   raycast: (
     scene: Scene,
@@ -83,8 +86,8 @@ export const vision = {
     end: { x: number; y: number },
     target: Entity,
   ): boolean => {
-    const ray = new Phaser.Geom.Line(start.x, start.y, end.x, end.y);
-    const circle = new Phaser.Geom.Circle(target.x, target.y, 16);
+    ray.setTo(start.x, start.y, end.x, end.y);
+    circle.setTo(target.x, target.y, 16);
 
     return Phaser.Geom.Intersects.LineToCircle(ray, circle);
   },

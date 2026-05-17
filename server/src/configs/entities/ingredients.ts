@@ -428,7 +428,7 @@ export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
       { name: ComponentName.HOVERABLE },
       {
         name: ComponentName.CONSUMABLE,
-        config: { effect: EffectName.REGAIN, restore: { mana: 60 } },
+        config: { effect: EffectName.REGAIN, duration: 5000, restore: { mana: 60 } },
       },
     ],
     states: [],
@@ -450,7 +450,7 @@ export const ingredients: Partial<Record<EntityName, EntityDefinition>> = {
       { name: ComponentName.HOVERABLE },
       {
         name: ComponentName.CONSUMABLE,
-        config: { effect: EffectName.REGAIN, restore: { health: 60 } },
+        config: { effect: EffectName.REGAIN, duration: 5000, restore: { health: 60 } },
       },
     ],
     states: [],

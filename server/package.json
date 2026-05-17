@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/lobby.ts",
-    "dev:world": "tsx watch src/index.ts",
+    "dev": "tsx watch --clear-screen=false src/lobby.ts",
+    "dev:world": "tsx watch --clear-screen=false src/index.ts",
     "build": "tsc",
     "start": "node dist/lobby.js"
   },

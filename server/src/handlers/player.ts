@@ -134,6 +134,8 @@ export const player = {
 
       if (entity) {
         entity.isLocked = false;
+        entity.facing = undefined;
+        
         handlers.broadcast.toChunk(
           socket,
           world,

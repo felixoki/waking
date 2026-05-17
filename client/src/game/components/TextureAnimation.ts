@@ -97,5 +97,10 @@ export class TextureAnimationComponent extends Component {
 
   update(): void {}
 
-  detach(): void {}
+  detach(): void {
+    if (this.config.offset) {
+      this.entity.setX(this.entity.x - this.config.offset.x);
+      this.entity.setY(this.entity.y - this.config.offset.y);
+    }
+  }
 }

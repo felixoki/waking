@@ -22,7 +22,7 @@ export class CameraManager {
 
   fitZoom(): void {
     const calc = (w: number, h: number) =>
-      Math.min(w / GAME_WIDTH, h / GAME_HEIGHT);
+      Math.max(1, Math.round(Math.min(w / GAME_WIDTH, h / GAME_HEIGHT)));
 
     this.setZoom(calc(this.scene.scale.width, this.scene.scale.height));
 

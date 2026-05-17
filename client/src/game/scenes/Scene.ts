@@ -63,6 +63,7 @@ export class Scene extends Phaser.Scene {
   }
 
   shutdown(): void {
+    this.physicsManager.destroy();
     this.tileManager?.destroy();
   }
 }

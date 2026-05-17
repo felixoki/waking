@@ -5,12 +5,14 @@ import { ComponentName, Event } from "@server/types";
 
 export class InterfaceManager {
   private scene: Scene;
+  private last: string = "";
 
   constructor(scene: Scene) {
     this.scene = scene;
   }
 
   update(): void {
+
     const player = this.scene.managers.players.player;
     if (!player || player.map !== this.scene.scene.key) return;
 
@@ -28,6 +30,9 @@ export class InterfaceManager {
     });
 
     const data = this._getScreenData(entities, player);
+    const key2 = JSON.stringify(data);
+    if (key2 === this.last) return;
+    this.last = key2;
     EventBus.emit(Event.ENTITIES_UPDATE, data);
   }
 

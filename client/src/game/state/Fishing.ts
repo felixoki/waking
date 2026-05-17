@@ -37,7 +37,9 @@ export class Fishing implements State {
   private prevPointerdown = false;
   private bobberX = 0;
   private bobberY = 0;
-  private onThrowComplete: ((anim: Phaser.Animations.Animation) => void) | null = null;
+  private onThrowComplete:
+    | ((anim: Phaser.Animations.Animation) => void)
+    | null = null;
   private waitTimer: Phaser.Time.TimerEvent | null = null;
   private biteTimer: Phaser.Time.TimerEvent | null = null;
   private catchTimer: Phaser.Time.TimerEvent | null = null;
@@ -205,9 +207,10 @@ export class Fishing implements State {
         fish.setDepth(1000 + fish.y);
       },
       onComplete: () => {
-        if (!this.arcFish) return;
+        if (!this.arcFish || !entity.active) return;
         this.arcFish = null;
         fish.destroy();
+
         entity.scene.game.events.emit(Event.ENTITY_FISH, {
           name: fishName,
           x: endX,

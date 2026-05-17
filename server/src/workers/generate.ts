@@ -9,5 +9,12 @@ process.on("message", ({ biome, seed }) => {
     process.exit(1);
   }
 
-  process.send?.(data ?? null, undefined, undefined, () => process.exit(0));
+  process.send?.(data ?? null, undefined, undefined, (err) => {
+    if (err) {
+      console.error("Worker send failed:", err);
+      process.exit(1);
+    }
+
+    process.exit(0);
+  });
 });
