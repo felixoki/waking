@@ -155,6 +155,7 @@ export interface SpawnRule {
   density?: number;
   count?: { min: number; max: number };
   spacing: number;
+  margin?: number;
   cluster?: boolean;
   group?: GroupConfig;
 }

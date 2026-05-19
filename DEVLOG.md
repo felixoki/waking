@@ -489,8 +489,15 @@
 - Fix bugs, improve performance ✅
 - Record forest ambience ✅
 
+#### 19.5.2026
+
+- Refactor terrain generation ✅
+- Fix damage numbers animation ✅
+- Cannot remove spells from hotbar ✅
+
 ### In progress
 
+- Refactor troll throwing animation
 
 ### Bugs
 

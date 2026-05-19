@@ -31,7 +31,21 @@ export class MapBuilder {
     const rawTerrain = terrainGenerator.generate();
 
     const smoother = new TerrainSmoother(this.config);
-    const terrain = smoother.smooth(rawTerrain, 2, 4, "all");
+    const smoothed = smoother.smooth(rawTerrain, 2, 4, "all");
+
+    const enforced = handlers.generation.enforceMinimumWater(
+      smoothed,
+      width,
+      height,
+    );
+    const unified = handlers.generation.unifyShores(enforced, width, height);
+    const terrain = handlers.generation.enforceMinimumBlock(
+      unified,
+      width,
+      height,
+      TerrainName.GROUND,
+      TerrainName.GRASS,
+    );
 
     const tilesetOrder = this.collectTilesets();
     const firstgids = new Map<string, number>();
@@ -131,11 +145,10 @@ export class MapBuilder {
      */
     const borderGenerator = new BorderGenerator(this.config, this.loader);
 
-    const elevate = (t: TerrainName): number =>
-      TERRAIN_ORDER.indexOf(t);
+    const elevate = (t: TerrainName): number => TERRAIN_ORDER.indexOf(t);
 
     const sorted = [...borders].sort(
-      (a, b) => elevate(b.from) - elevate(a.from),
+      (a, b) => elevate(a.from) - elevate(b.from),
     );
 
     for (const border of sorted) {

@@ -60,6 +60,7 @@ export const forest: BiomeConfig = {
       terrain: [TerrainName.GRASS],
       density: 0.5,
       spacing: 2,
+      margin: 2,
       cluster: true,
     },
     {
@@ -75,20 +76,11 @@ export const forest: BiomeConfig = {
         EntityName.ROCK2,
         EntityName.ROCK3,
         EntityName.ROCK8,
-        EntityName.ROCKS1,
-        EntityName.ROCKS3,
-        EntityName.ROCKS5,
-        EntityName.ROCKS6,
       ],
       terrain: [TerrainName.GRASS],
       density: 0.1,
       spacing: 3,
-    },
-    {
-      entities: [EntityName.ROCK4],
-      terrain: [TerrainName.GROUND],
-      density: 0.1,
-      spacing: 3,
+      margin: 2,
     },
     {
       entities: [

@@ -52,6 +52,19 @@ export class EntitySpawner {
 
           if (occupied.has(index)) continue;
           if (!rule.terrain.includes(terrain[index])) continue;
+          if (
+            rule.margin &&
+            !gen.hasTerrainMargin(
+              x,
+              y,
+              rule.margin,
+              terrain,
+              rule.terrain,
+              width,
+              height,
+            )
+          )
+            continue;
           if (!this._shouldSpawn(x, y, r, rule, noise)) continue;
 
           const hash = gen.spatialHash(x, y, r);
@@ -132,6 +145,19 @@ export class EntitySpawner {
         const index = gen.toIndex(x, y, width);
         if (occupied.has(index)) continue;
         if (!rule.terrain.includes(terrain[index])) continue;
+        if (
+          rule.margin &&
+          !gen.hasTerrainMargin(
+            x,
+            y,
+            rule.margin,
+            terrain,
+            rule.terrain,
+            width,
+            height,
+          )
+        )
+          continue;
         candidates.push({ x, y });
       }
 

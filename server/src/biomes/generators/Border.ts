@@ -66,7 +66,7 @@ export class BorderGenerator {
   private matchPosition(
     neighbors: Neighbors<TerrainName>,
     to: TerrainName,
-  ): { role: TileRole; position: BorderPosition } | null {
+  ): { role: TileRole; position?: BorderPosition } | null {
     const has = {
       north: neighbors.north === to,
       south: neighbors.south === to,
@@ -77,6 +77,10 @@ export class BorderGenerator {
       southwest: neighbors.southwest === to,
       southeast: neighbors.southeast === to,
     };
+
+    /** Fully surrounded — all cardinals match */
+    if (has.north && has.south && has.east && has.west)
+      return { role: TileRole.FILL };
 
     /** Inner corners */
     if (has.north && has.west && !has.east && !has.south)

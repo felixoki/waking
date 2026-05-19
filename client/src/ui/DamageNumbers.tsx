@@ -43,7 +43,7 @@ export function DamageNumbers() {
       {numbers.map((n) => (
         <span
           key={n.id}
-          className={`absolute font-bold animate-damage-float ${
+          className={`absolute font-bold animate-[damage-float_0.8s_ease-out_forwards] ${
             n.isCritical
               ? "text-yellow-400 text-xl"
               : "text-white text-base"

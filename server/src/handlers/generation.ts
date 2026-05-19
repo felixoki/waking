@@ -196,6 +196,232 @@ export const generation = {
     return result;
   },
 
+  hasTerrainMargin: (
+    x: number,
+    y: number,
+    margin: number,
+    terrain: TerrainName[],
+    allowed: TerrainName[],
+    width: number,
+    height: number,
+  ): boolean => {
+    for (let dy = -margin; dy <= margin; dy++)
+      for (let dx = -margin; dx <= margin; dx++) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (!generation.inBounds(nx, ny, width, height)) return false;
+        if (!allowed.includes(terrain[generation.toIndex(nx, ny, width)]))
+          return false;
+      }
+
+    return true;
+  },
+
+  enforceMinimumWater: (
+    terrain: TerrainName[],
+    width: number,
+    height: number,
+  ): TerrainName[] => {
+    const result = [...terrain];
+
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const idx = generation.toIndex(x, y, width);
+        if (result[idx] !== TerrainName.WATER) continue;
+
+        const inBlock =
+          (x + 1 < width &&
+            y + 1 < height &&
+            result[generation.toIndex(x + 1, y, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x, y + 1, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x + 1, y + 1, width)] ===
+              TerrainName.WATER) ||
+          (x - 1 >= 0 &&
+            y + 1 < height &&
+            result[generation.toIndex(x - 1, y, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x, y + 1, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x - 1, y + 1, width)] ===
+              TerrainName.WATER) ||
+          (x + 1 < width &&
+            y - 1 >= 0 &&
+            result[generation.toIndex(x + 1, y, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x, y - 1, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x + 1, y - 1, width)] ===
+              TerrainName.WATER) ||
+          (x - 1 >= 0 &&
+            y - 1 >= 0 &&
+            result[generation.toIndex(x - 1, y, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x, y - 1, width)] === TerrainName.WATER &&
+            result[generation.toIndex(x - 1, y - 1, width)] ===
+              TerrainName.WATER);
+
+        if (!inBlock) {
+          const neighbors: TerrainName[] = [];
+
+          for (const [dx, dy] of [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+          ]) {
+            const nx = x + dx;
+            const ny = y + dy;
+
+            if (generation.inBounds(nx, ny, width, height)) {
+              const t = result[generation.toIndex(nx, ny, width)];
+              if (t !== TerrainName.WATER) neighbors.push(t);
+            }
+          }
+
+          result[idx] = neighbors.length ? neighbors[0] : TerrainName.GRASS;
+        }
+      }
+
+    return result;
+  },
+
+  enforceMinimumBlock: (
+    terrain: TerrainName[],
+    width: number,
+    height: number,
+    target: TerrainName,
+    replacement: TerrainName,
+  ): TerrainName[] => {
+    const result = [...terrain];
+
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const idx = generation.toIndex(x, y, width);
+        if (result[idx] !== target) continue;
+
+        const inBlock =
+          (x + 1 < width &&
+            y + 1 < height &&
+            result[generation.toIndex(x + 1, y, width)] === target &&
+            result[generation.toIndex(x, y + 1, width)] === target &&
+            result[generation.toIndex(x + 1, y + 1, width)] === target) ||
+          (x - 1 >= 0 &&
+            y + 1 < height &&
+            result[generation.toIndex(x - 1, y, width)] === target &&
+            result[generation.toIndex(x, y + 1, width)] === target &&
+            result[generation.toIndex(x - 1, y + 1, width)] === target) ||
+          (x + 1 < width &&
+            y - 1 >= 0 &&
+            result[generation.toIndex(x + 1, y, width)] === target &&
+            result[generation.toIndex(x, y - 1, width)] === target &&
+            result[generation.toIndex(x + 1, y - 1, width)] === target) ||
+          (x - 1 >= 0 &&
+            y - 1 >= 0 &&
+            result[generation.toIndex(x - 1, y, width)] === target &&
+            result[generation.toIndex(x, y - 1, width)] === target &&
+            result[generation.toIndex(x - 1, y - 1, width)] === target);
+
+        if (!inBlock) result[idx] = replacement;
+      }
+
+    return result;
+  },
+
+  unifyShores: (
+    terrain: TerrainName[],
+    width: number,
+    height: number,
+  ): TerrainName[] => {
+    const result = [...terrain];
+    const visited = new Set<number>();
+
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const start = generation.toIndex(x, y, width);
+        if (result[start] !== TerrainName.WATER || visited.has(start)) continue;
+
+        const region: number[] = [];
+        const stack = [start];
+
+        while (stack.length) {
+          const idx = stack.pop()!;
+
+          if (visited.has(idx)) continue;
+          if (result[idx] !== TerrainName.WATER) continue;
+
+          visited.add(idx);
+          region.push(idx);
+
+          const rx = idx % width;
+          const ry = Math.floor(idx / width);
+
+          if (rx > 0) stack.push(idx - 1);
+          if (rx < width - 1) stack.push(idx + 1);
+          if (ry > 0) stack.push(idx - width);
+          if (ry < height - 1) stack.push(idx + width);
+        }
+
+        const counts = new Map<TerrainName, number>();
+        const adjacent = new Set<number>();
+
+        for (const idx of region) {
+          const rx = idx % width;
+          const ry = Math.floor(idx / width);
+
+          for (const [dx, dy] of [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
+            [1, 1],
+          ]) {
+            const nx = rx + dx;
+            const ny = ry + dy;
+            if (!generation.inBounds(nx, ny, width, height)) continue;
+            const nIdx = generation.toIndex(nx, ny, width);
+            const t = result[nIdx];
+            if (t === TerrainName.WATER) continue;
+            adjacent.add(nIdx);
+            counts.set(t, (counts.get(t) ?? 0) + 1);
+          }
+        }
+
+        if (!counts.size) continue;
+
+        let dominant = TerrainName.GRASS;
+        let maxCount = 0;
+
+        for (const [t, c] of counts)
+          if (c > maxCount) {
+            maxCount = c;
+            dominant = t;
+          }
+
+        /** Convert all non-water tiles within 3 of the water body to dominant */
+        const buffer = 3;
+        const converted = new Set<number>();
+
+        for (const idx of region) {
+          const rx = idx % width;
+          const ry = Math.floor(idx / width);
+
+          for (let dy = -buffer; dy <= buffer; dy++)
+            for (let dx = -buffer; dx <= buffer; dx++) {
+              const nx = rx + dx;
+              const ny = ry + dy;
+              if (!generation.inBounds(nx, ny, width, height)) continue;
+              const nIdx = generation.toIndex(nx, ny, width);
+              if (result[nIdx] === TerrainName.WATER) continue;
+              if (result[nIdx] === dominant) continue;
+              converted.add(nIdx);
+            }
+        }
+
+        for (const nIdx of converted) result[nIdx] = dominant;
+      }
+
+    return result;
+  },
+
   createLayer: (
     id: number,
     name: string,

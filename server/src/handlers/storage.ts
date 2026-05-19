@@ -218,15 +218,38 @@ export const storage = {
     )
       return;
 
+    if (zone.target.readonly) {
+      if (!zone.source.readonly) {
+        src.slots[src.index] = null;
+        zone.source.sync(socket, player, source, world);
+      }
+
+      return;
+    }
+
     const core = storage.unwrap(source.zone, value.source).core;
     const wrapped = storage.wrap(target.zone, core, type);
+
+    if (
+      target.zone === SlotZone.HOTBAR &&
+      source.zone !== SlotZone.HOTBAR &&
+      type === SlotType.SPELL
+    ) {
+      const name = (wrapped as Slot & { type: SlotType.SPELL }).name;
+      const existing = (tgt.slots as (Slot | null)[]).findIndex(
+        (s, i) =>
+          i !== tgt.index && s?.type === SlotType.SPELL && s.name === name,
+      );
+
+      if (existing !== -1) return;
+    }
 
     let swapped: Item | Slot | SpellName | null | undefined = null;
 
     if (value.target !== null) {
       const displaced = storage.unwrap(target.zone, value.target);
 
-      if (zone.source.readonly || zone.target.readonly) {
+      if (zone.source.readonly) {
         if (displaced.type === SlotType.ENTITY) return;
 
         const withinHotbar =
@@ -240,13 +263,15 @@ export const storage = {
     }
 
     if (!zone.source.readonly) src.slots[src.index] = swapped;
-    if (!zone.target.readonly) tgt.slots[tgt.index] = wrapped;
+
+    tgt.slots[tgt.index] = wrapped;
+
     if (!zone.source.readonly) zone.source.sync(socket, player, source, world);
 
     if (!zone.target.readonly) {
       const same =
         source.zone === target.zone && source.entityId === target.entityId;
-        
+
       if (!same) zone.target.sync(socket, player, target, world);
     }
   },
