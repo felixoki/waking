@@ -495,20 +495,29 @@
 - Fix damage numbers animation ✅
 - Cannot remove spells from hotbar ✅
 
+#### 20.5.2026
+
+- Health bars of other clients don't reset ✅
+- Refactor troll throwing animation ✅
+- There is no collector for raspberries ✅
+
+#### 21.5.2026
+
+- Dialogue ui stays open when leaving a scene ✅
+- Spell pages stay in inventory after learning ✅
+- Shadow wanderer should attack consistently ✅
+- Fishing distance to water is too far ✅
+
+
 ### In progress
 
-- Refactor troll throwing animation
 
 ### Bugs
 
-- Health bars of other clients don't reset
-- Dialogue ui stays open when leaving a scene
-- Spell pages stay in inventory after learning
-- There is no collector for raspberries
-- Shadow wanderer does not attack consistently
-- Shadow wanderer needs multiplayer handling
 
 ### Backlog
+
+- Procedural dungeon generation ⭐
 
 - Animal taming ⭐
 

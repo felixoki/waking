@@ -20,10 +20,10 @@ import { handlers } from "../handlers";
 import { vfx } from "../vfx";
 
 const ROCK_SPAWN_OFFSET: Record<Direction, { x: number; y: number }> = {
-  [Direction.DOWN]: { x: 0, y: 16 },
+  [Direction.DOWN]: { x: 0, y: -16 },
   [Direction.UP]: { x: 0, y: 32 },
-  [Direction.LEFT]: { x: -32, y: 0 },
-  [Direction.RIGHT]: { x: 32, y: 0 },
+  [Direction.LEFT]: { x: 0, y: -16 },
+  [Direction.RIGHT]: { x: 0, y: -16 },
 };
 
 export class Throwing implements State {
@@ -67,12 +67,14 @@ export class Throwing implements State {
     if (player?.moving?.length) {
       const anticipation = 1 - distance / ROCK_MAX_THROW_RANGE;
       const vel = handlers.direction.getDiagonalDirectionVector(player.moving);
+
       targetX += vel.x * SPEED_RUNNING * flightSeconds * anticipation;
       targetY += vel.y * SPEED_RUNNING * flightSeconds * anticipation;
     }
 
     const scatter = distance * ROCK_INACCURACY_SCALE;
     const scatterAngle = Math.random() * Math.PI * 2;
+
     targetX += Math.cos(scatterAngle) * scatter * Math.random();
     targetY += Math.sin(scatterAngle) * scatter * Math.random();
 
@@ -88,17 +90,18 @@ export class Throwing implements State {
       x: targetX,
       duration: ROCK_FLIGHT_DURATION,
       ease: "Linear",
+
       onUpdate: (tween) => {
         const progress = tween.progress;
         const arc = Math.sin(progress * Math.PI) * ROCK_ARC_HEIGHT;
+
         rock.y = Phaser.Math.Linear(startY, targetY, progress) - arc;
         rock.setDepth(1000 + rock.y);
       },
+
       onComplete: () => {
         rock.destroy();
-
         if (!entity.scene) return;
-
         vfx.emitters.dust(entity.scene, targetX, targetY);
 
         new Hitbox(

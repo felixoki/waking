@@ -41,7 +41,7 @@ export class DefendBehavior extends Behavior {
 
       const result = handlers.player.nearest(entity);
 
-      if (result && result.distance >= 50) {
+      if (result) {
         entity.target = { x: result.player.x, y: result.player.y };
 
         const facing = handlers.direction.fromAngle(

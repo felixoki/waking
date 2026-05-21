@@ -268,6 +268,7 @@ export const people: Partial<Record<EntityName, EntityDefinition>> = {
         name: ComponentName.COLLECTOR,
         config: {
           accepts: [
+            EntityName.RASPBERRY,
             EntityName.VENISON_MEAT,
             EntityName.BOAR_MEAT,
             EntityName.CABBAGE,

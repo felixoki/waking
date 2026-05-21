@@ -10,7 +10,7 @@ import { interior } from "./interior";
 import { people } from "./people";
 import { resources } from "./resources";
 import { rocks } from "./rocks";
-import { spellPages } from "./spellbooks";
+import { spellPages } from "./spellpages";
 import { transitions } from "./transitions";
 
 export const entities = {

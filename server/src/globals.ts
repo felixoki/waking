@@ -45,7 +45,7 @@ export const DURATION_DASHING = 50;
 export const DURATION_SLASHING = 800;
 export const DURATION_THROWING = 1000;
 
-export const THROW_FRAME = 7;
+export const THROW_FRAME = 5;
 export const THROW_FRAMES_TOTAL = 10;
 export const ROCK_ARC_HEIGHT = 60;
 export const ROCK_FLIGHT_DURATION = 500;
@@ -82,8 +82,8 @@ export const DURATION_FISHING_WINDOW = 1500;
 export const DURATION_FISHING_CATCH = 750;
 export const FISHING_ARC_HEIGHT = 48;
 export const FISHING_ARC_DURATION = 600;
-export const FISHING_SCAN_TILES = 6;
-export const FISHING_LANDING_DISTANCE = 100;
+export const FISHING_SCAN_TILES = 1;
+export const FISHING_LANDING_DISTANCE = 16;
 
 /** Sounds */
 
@@ -94,6 +94,7 @@ export const MAX_HEALTH = 100;
 export const MAX_MANA = 100;
 export const REGEN_HEALTH_PER_SECOND = 1;
 export const REGEN_MANA_PER_SECOND = 2;
+export const REGEN_INTERVAL = 1000;
 
 export const MAX_STACK = 50;
 

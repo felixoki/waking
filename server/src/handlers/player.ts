@@ -18,7 +18,13 @@ import { handlers } from "./index.js";
 import { WORLD_ID } from "../server.js";
 import { save } from "../db/save.js";
 import { load } from "../db/load.js";
-import { MAX_HEALTH } from "../globals.js";
+import {
+  MAX_HEALTH,
+  MAX_MANA,
+  REGEN_HEALTH_PER_SECOND,
+  REGEN_INTERVAL,
+  REGEN_MANA_PER_SECOND,
+} from "../globals.js";
 
 export const player = {
   create: async (socket: Socket, world: World, playerId?: string) => {
@@ -135,7 +141,7 @@ export const player = {
       if (entity) {
         entity.isLocked = false;
         entity.facing = undefined;
-        
+
         handlers.broadcast.toChunk(
           socket,
           world,
@@ -320,5 +326,35 @@ export const player = {
       target.x,
       target.y,
     );
+  },
+
+  regen: (delta: number, world: World) => {
+    world.players.regen += delta;
+    if (world.players.regen < REGEN_INTERVAL) return;
+    world.players.regen -= REGEN_INTERVAL;
+
+    for (const player of world.players.all) {
+      if (player.isDead) continue;
+
+      const health = Math.min(
+        player.health + REGEN_HEALTH_PER_SECOND,
+        player.maxHealth || MAX_HEALTH,
+      );
+      const mana = Math.min(player.mana + REGEN_MANA_PER_SECOND, MAX_MANA);
+
+      if (health !== player.health) {
+        world.players.update(player.id, { health });
+        world.server.to(player.socketId).emit(Event.PLAYER_HEALTH, health);
+        world.server
+          .to(`map:${player.map}`)
+          .except(player.socketId)
+          .emit(Event.PLAYER_HEALTH_SYNC, { id: player.id, health });
+      }
+
+      if (mana !== player.mana) {
+        world.players.update(player.id, { mana });
+        world.server.to(player.socketId).emit(Event.PLAYER_MANA, mana);
+      }
+    }
   },
 };

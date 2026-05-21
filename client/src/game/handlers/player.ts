@@ -95,7 +95,7 @@ export const player = {
 
     prev.scene.scene.setVisible(false);
     prev.scene.input.enabled = false;
-    
+
     scene.scene.setVisible(true);
     scene.input.enabled = true;
 
@@ -110,9 +110,9 @@ export const player = {
     main.managers.entities.removeByMap(prev.map as MapName);
 
     if (prev.map === MapName.REALM && data.map !== MapName.REALM)
-      setTimeout(() => {
+      main.time.delayedCall(0, () => {
         (main.scene.get(MapName.REALM) as RealmScene).teardown();
-      }, 0);
+      });
   },
 
   lantern: {
@@ -177,15 +177,17 @@ export const player = {
   transition: (data: PlayerConfig, main: MainScene): void => {
     if (!main.managers.players.player) return;
 
+    EventBus.emit(Event.ENTITY_DIALOGUE_END);
+
     main.managers.players.player.isLocked = true;
     main.managers.players.player.isTransitioning = true;
 
     handlers.ui.backdrop.show();
 
-    setTimeout(() => {
+    main.time.delayedCall(300, () => {
       main.managers.players.player!.isTransitioning = false;
       player.swap(data, main);
       handlers.ui.backdrop.hide(main, data.map);
-    }, 300);
+    });
   },
 };

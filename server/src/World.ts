@@ -7,23 +7,18 @@ import { Event, MapName, TimePhase, TimeState } from "./types/index.js";
 import { EconomyManager } from "./managers/Economy";
 import {
   DAY,
-  MAX_HEALTH,
-  MAX_MANA,
   PHASE_STARTS,
-  REGEN_HEALTH_PER_SECOND,
-  REGEN_MANA_PER_SECOND,
 } from "./globals";
 import { PartyStore } from "./stores/Party";
 import { Server } from "socket.io";
 import { ChunkManager } from "./managers/Chunk";
 import { AuthorityManager } from "./managers/Authority";
 import { combat } from "./handlers/combat.js";
+import { handlers } from "./handlers/index.js";
 
 export class World {
   private time: TimeState = { current: 0, days: 0, phase: TimePhase.DAWN };
-  private regenAccumulator = 0;
-  private server: Server;
-
+  
   public readonly players: PlayerStore;
   public readonly entities: EntityStore;
   public readonly items: ItemsStore;
@@ -31,7 +26,8 @@ export class World {
   public readonly chunks: ChunkManager;
   public readonly authority: AuthorityManager;
   public readonly affected: Set<string> = new Set();
-
+  
+  public server: Server;
   public economy: EconomyManager;
 
   constructor(server: Server) {
@@ -78,33 +74,9 @@ export class World {
       this.server.emit(Event.WORLD_PHASE, this.time.phase);
     }
 
+    handlers.player.regen(delta, this);
+    
     this.economy.update(delta);
-
-    this.regenAccumulator += delta;
-
-    if (this.regenAccumulator >= 1000) {
-      this.regenAccumulator -= 1000;
-
-      for (const player of this.players.all) {
-        if (player.isDead) continue;
-
-        const health = Math.min(
-          player.health + REGEN_HEALTH_PER_SECOND,
-          player.maxHealth ?? MAX_HEALTH,
-        );
-        const mana = Math.min(player.mana + REGEN_MANA_PER_SECOND, MAX_MANA);
-
-        if (health !== player.health) {
-          this.players.update(player.id, { health });
-          this.server.to(player.socketId).emit(Event.PLAYER_HEALTH, health);
-        }
-
-        if (mana !== player.mana) {
-          this.players.update(player.id, { mana });
-          this.server.to(player.socketId).emit(Event.PLAYER_MANA, mana);
-        }
-      }
-    }
 
     if (this.economy.dirty) {
       this.economy.dirty = false;

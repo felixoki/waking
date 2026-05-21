@@ -3,6 +3,8 @@ import { MapName, PlayerConfig } from "../types/index.js";
 export class PlayerStore {
   private players: Map<string, PlayerConfig> = new Map();
   private bySocketId: Map<string, string> = new Map();
+  
+  public regen: number = 0;
 
   add(id: string, config: PlayerConfig): void {
     this.players.set(id, config);

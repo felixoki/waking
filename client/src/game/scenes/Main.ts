@@ -216,6 +216,15 @@ export class MainScene extends Phaser.Scene {
       if (player === local) EventBus.emit(Event.PLAYER_HEALTH, player.health);
     });
 
+    this.managers.socket.on(
+      Event.PLAYER_HEALTH_SYNC,
+      (data: { id: string; health: number }) => {
+        const player = this.managers.players.others.get(data.id);
+        if (!player) return;
+        player.health = data.health;
+      },
+    );
+
     this.managers.socket.on(Event.PLAYER_TRANSITION, (data: PlayerConfig) => {
       handlers.player.transition(data, this);
     });
@@ -491,7 +500,10 @@ export class MainScene extends Phaser.Scene {
     EventBus.on(
       Event.SPELL_LEARN,
       (data: { entityName: EntityName; spell: SpellName }) => {
-        this.managers.socket.emit(Event.SPELL_LEARN, { spell: data.spell });
+        this.managers.socket.emit(Event.SPELL_LEARN, {
+          spell: data.spell,
+          entity: data.entityName,
+        });
 
         const player = this.managers.players.player;
 
