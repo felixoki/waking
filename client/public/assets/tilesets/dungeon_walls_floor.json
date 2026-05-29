@@ -1,0 +1,32 @@
+{
+  "columns": 17,
+  "image": "../sprites/dungeon_walls_floor.png",
+  "imageheight": 464,
+  "imagewidth": 272,
+  "margin": 0,
+  "name": "dungeon_walls_floor",
+  "spacing": 0,
+  "tilecount": 493,
+  "tileheight": 16,
+  "tilewidth": 16,
+  "tiles": [
+    { "id": 18, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "top_left" }] },
+    { "id": 19, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "top" }] },
+    { "id": 20, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "top_right" }] },
+    { "id": 35, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "right" }] },
+    { "id": 36, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "void" }] },
+    { "id": 37, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "left" }] },
+    { "id": 56, "properties": [{ "name": "role", "value": "wall_inner" }, { "name": "position", "value": "top_left" }] },
+    { "id": 58, "properties": [{ "name": "role", "value": "wall_inner" }, { "name": "position", "value": "top_right" }] },
+    { "id": 73, "properties": [{ "name": "role", "value": "wall_inner" }, { "name": "position", "value": "bottom_left" }] },
+    { "id": 75, "properties": [{ "name": "role", "value": "wall_inner" }, { "name": "position", "value": "bottom_right" }] },
+    { "id": 86, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "bottom_left" }] },
+    { "id": 87, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "bottom" }] },
+    { "id": 88, "properties": [{ "name": "role", "value": "wall_outer" }, { "name": "position", "value": "bottom_right" }] },
+    { "id": 138, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "floor" }] },
+    { "id": 228, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "floor" }] },
+    { "id": 229, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "floor" }] },
+    { "id": 245, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "floor" }] },
+    { "id": 246, "properties": [{ "name": "role", "value": "fill" }, { "name": "terrain", "value": "floor" }] }
+  ]
+}

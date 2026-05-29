@@ -3,13 +3,16 @@ import { TilesetLoader } from "../../loaders/Tileset";
 import { EntityName } from "../../types";
 import {
   BiomeConfig,
+  Entity,
   GeneratedMap,
   TERRAIN_ORDER,
   TerrainName,
   TileRole,
 } from "../../types/generation";
 import { BorderGenerator } from "../generators/Border";
+import { RoomGenerator } from "../generators/Room";
 import { TerrainGenerator } from "../generators/Terrain";
+import { WallGenerator } from "../generators/Wall";
 import { TerrainSmoother } from "../smoothers/Terrain";
 import { DetailSpawner } from "../spawners/Detail";
 import { EntitySpawner } from "../spawners/Entity";
@@ -17,38 +20,49 @@ import { EntitySpawner } from "../spawners/Entity";
 export class MapBuilder {
   private config: BiomeConfig;
   private loader: TilesetLoader;
+  private seed: string;
 
-  constructor(config: BiomeConfig, loader: TilesetLoader) {
+  constructor(config: BiomeConfig, loader: TilesetLoader, seed: string) {
     this.config = config;
     this.loader = loader;
+    this.seed = seed;
   }
 
   build(): GeneratedMap {
     const { width, height, tileWidth, tileHeight, layers, borders } =
       this.config;
 
-    const terrainGenerator = new TerrainGenerator(this.config);
-    const rawTerrain = terrainGenerator.generate();
-
-    const smoother = new TerrainSmoother(this.config);
-    const smoothed = smoother.smooth(rawTerrain, 2, 4, "all");
-
-    const enforced = handlers.generation.enforceMinimumWater(
-      smoothed,
-      width,
-      height,
+    const generators = { terrain: TerrainGenerator, room: RoomGenerator };
+    const generator = new generators[this.config.generator](
+      this.config,
+      this.seed,
     );
-    const unified = handlers.generation.unifyShores(enforced, width, height);
-    const terrain = handlers.generation.enforceMinimumBlock(
-      unified,
-      width,
-      height,
-      TerrainName.GROUND,
-      TerrainName.GRASS,
-    );
+    const { terrain: genTerrain, entities: roomEntities, spawn: roomSpawn } =
+      generator.generate() as { terrain: TerrainName[]; entities: Entity[]; spawn?: { x: number; y: number } };
+    let terrain = genTerrain;
+
+    if (this.config.smoothing) {
+      const smoother = new TerrainSmoother(this.config);
+      terrain = smoother.smooth(
+        terrain,
+        this.config.smoothing.iterations,
+        this.config.smoothing.threshold,
+        "all",
+      );
+      terrain = handlers.generation.enforceMinimumWater(terrain, width, height);
+      terrain = handlers.generation.unifyShores(terrain, width, height);
+      terrain = handlers.generation.enforceMinimumBlock(
+        terrain,
+        width,
+        height,
+        TerrainName.GROUND,
+        TerrainName.GRASS,
+      );
+    }
 
     const tilesetOrder = this.collectTilesets();
     const firstgids = new Map<string, number>();
+
     let nextGid = 1;
 
     for (const name of tilesetOrder) {
@@ -61,9 +75,9 @@ export class MapBuilder {
      * Build fill layers, interleaving per-terrain detail layers immediately after
      * each fill so ground details render beneath the grass fill layer.
      */
-    const tiledLayers: any[] = [];
     let layerId = 1;
-    const detailSeed = this.config.noise.seed ?? "default";
+    const tiledLayers: any[] = [];
+    const detailSeed = this.seed;
     const detailSpawner = new DetailSpawner(detailSeed);
 
     for (let i = 0; i < layers.length; i++) {
@@ -80,7 +94,7 @@ export class MapBuilder {
       const data = new Array(width * height).fill(0);
       const isBaseLayer = i === 0;
 
-      for (let y = 0; y < height; y++) {
+      for (let y = 0; y < height; y++)
         for (let x = 0; x < width; x++) {
           const idx = handlers.generation.toIndex(x, y, width);
 
@@ -92,11 +106,13 @@ export class MapBuilder {
             )
           ) {
             const hash = handlers.generation.spatialHash(x, y, 0);
-            const tile = fills[hash % fills.length];
+            const tile =
+              fills.length > 1 && hash % 16 < 2
+                ? fills[1 + (hash % (fills.length - 1))]
+                : fills[0];
             data[idx] = gid + tile.id;
           }
         }
-      }
 
       tiledLayers.push(
         handlers.generation.createLayer(
@@ -110,11 +126,13 @@ export class MapBuilder {
 
       for (const detailConfig of this.config.details ?? []) {
         if (!detailConfig.terrains.includes(layerConfig.terrain)) continue;
+
         const highestTerrain = detailConfig.terrains.reduce((best, t) => {
           const bestIdx = layers.findIndex((l) => l.terrain === best);
           const tIdx = layers.findIndex((l) => l.terrain === t);
           return tIdx > bestIdx ? t : best;
         });
+
         if (highestTerrain !== layerConfig.terrain) continue;
 
         const detailGid = firstgids.get(detailConfig.tileset);
@@ -138,6 +156,32 @@ export class MapBuilder {
           ),
         );
       }
+    }
+
+    /**
+     * Build wall layer
+     */
+    if (this.config.walls) {
+      const gid = firstgids.get(this.config.walls)!;
+      const generator = new WallGenerator(
+        { width: this.config.width, height: this.config.height },
+        this.loader,
+      );
+      const walls = generator.generate(terrain, this.config.walls, gid);
+
+      for (let i = 0; i < walls.length; i++)
+        if (walls[i] !== 0) for (const layer of tiledLayers) layer.data[i] = 0;
+
+      tiledLayers.push(
+        handlers.generation.createLayer(
+          layerId++,
+          "walls",
+          width,
+          height,
+          walls,
+          [{ name: "collides", type: "bool", value: true }],
+        ),
+      );
     }
 
     /**
@@ -173,10 +217,9 @@ export class MapBuilder {
     /**
      * Spawn entities
      */
-    const seed = this.config.noise.seed ?? "default";
-    const spawner = new EntitySpawner(this.config, seed);
-    const spawn = this._findSpawn(terrain);
-    const entities = spawner.spawn(terrain, spawn);
+    const spawner = new EntitySpawner(this.config, this.seed);
+    const spawn = roomSpawn ?? this._findSpawn(terrain);
+    const entities = [...spawner.spawn(terrain, spawn), ...roomEntities];
 
     /**
      * Wells
@@ -241,6 +284,7 @@ export class MapBuilder {
     for (const layer of this.config.layers) names.add(layer.tileset);
     for (const border of this.config.borders) names.add(border.tileset);
     for (const detail of this.config.details ?? []) names.add(detail.tileset);
+    if (this.config.walls) names.add(this.config.walls);
 
     return Array.from(names);
   }
@@ -286,7 +330,7 @@ export class MapBuilder {
     const min = 40;
     const candidates: { x: number; y: number }[] = [];
 
-    for (let y = 0; y < height; y++) {
+    for (let y = 0; y < height; y++)
       for (let x = 0; x < width; x++) {
         const index = gen.toIndex(x, y, width);
         if (!this.config.terrain.includes(terrain[index])) continue;
@@ -296,18 +340,19 @@ export class MapBuilder {
 
         candidates.push({ x, y });
       }
-    }
 
-    const seed = this.config.noise.seed ?? "default";
+    const seed = this.seed;
     const fallback = { x: tile.x + min, y: tile.y + min };
     const positions: { x: number; y: number }[] = [];
 
     for (let i = 0; i < count; i++) {
       const start = Math.floor((i * candidates.length) / count);
       const end = Math.floor(((i + 1) * candidates.length) / count);
+
       const slice = candidates.slice(start, end);
       const hash = gen.spatialHash(slice.length, i, seed.length);
       const pick = slice.length ? slice[hash % slice.length] : fallback;
+
       positions.push(gen.tileToWorld(pick.x, pick.y, tileWidth, tileHeight));
     }
 

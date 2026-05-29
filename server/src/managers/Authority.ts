@@ -4,7 +4,7 @@ export class AuthorityManager {
   private authorities = new Map<string, string>();
 
   private key(map: MapName, partyId?: string): string {
-    return partyId ? `realm:${partyId}` : map;
+    return partyId ? `forest:${partyId}` : map;
   }
 
   get(map: MapName, partyId?: string): string | undefined {
@@ -19,7 +19,12 @@ export class AuthorityManager {
     this.authorities.delete(this.key(map, partyId));
   }
 
-  transfer(map: MapName, from: string, candidates: PlayerConfig[], partyId?: string): string | undefined {
+  transfer(
+    map: MapName,
+    from: string,
+    candidates: PlayerConfig[],
+    partyId?: string,
+  ): string | undefined {
     const k = this.key(map, partyId);
     if (this.authorities.get(k) !== from) return undefined;
 

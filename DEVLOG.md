@@ -508,16 +508,33 @@
 - Shadow wanderer should attack consistently ✅
 - Fishing distance to water is too far ✅
 
+#### 24.5.2026
+
+- Add room and wall generators ✅
+
+#### 25.5.2026
+
+- Add dungeon tileset ✅
+- Add cavern tileset ✅
+
+#### 27.5.2026
+
+- Add room configs ✅
+- Add room templates ✅
+
+#### 29.5.2026
+
+- Add room size system ✅
 
 ### In progress
 
+- Add room setpieces
+- Add rat entity
 
 ### Bugs
 
 
 ### Backlog
-
-- Procedural dungeon generation ⭐
 
 - Animal taming ⭐
 

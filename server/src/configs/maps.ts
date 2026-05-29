@@ -497,11 +497,36 @@ const creatures: Spritesheet[] = [
     key: "shadow_wanderer-casting",
     file: "shadow_wanderer_casting_with_shadow.png",
   },
-  { key: "troll-idle", file: "troll_idle_with_shadow.png", frameWidth: 80, frameHeight: 80 },
-  { key: "troll-walking", file: "troll_walking_with_shadow.png", frameWidth: 80, frameHeight: 80 },
-  { key: "troll-running", file: "troll_running_with_shadow.png", frameWidth: 80, frameHeight: 80 },
-  { key: "troll-slashing", file: "troll_slashing_with_shadow.png", frameWidth: 80, frameHeight: 80 },
-  { key: "troll-throwing", file: "troll_throwing_with_shadow.png", frameWidth: 112, frameHeight: 112 },
+  {
+    key: "troll-idle",
+    file: "troll_idle_with_shadow.png",
+    frameWidth: 80,
+    frameHeight: 80,
+  },
+  {
+    key: "troll-walking",
+    file: "troll_walking_with_shadow.png",
+    frameWidth: 80,
+    frameHeight: 80,
+  },
+  {
+    key: "troll-running",
+    file: "troll_running_with_shadow.png",
+    frameWidth: 80,
+    frameHeight: 80,
+  },
+  {
+    key: "troll-slashing",
+    file: "troll_slashing_with_shadow.png",
+    frameWidth: 80,
+    frameHeight: 80,
+  },
+  {
+    key: "troll-throwing",
+    file: "troll_throwing_with_shadow.png",
+    frameWidth: 112,
+    frameHeight: 112,
+  },
   { key: "troll_throwing_rock", file: "troll_throwing_rock.png" },
 ];
 
@@ -511,6 +536,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 434, y: 608 },
     json: "village.json",
     isIndoor: false,
+    isInstanced: false,
     spritesheets: [
       ...player,
       ...animals,
@@ -632,6 +658,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 128, y: 168 },
     json: "herbalist_house.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       {
@@ -674,6 +701,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 128, y: 168 },
     json: "blacksmith_house.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       {
@@ -723,6 +751,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 144, y: 272 },
     json: "glassblower_house.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       {
@@ -766,6 +795,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 144, y: 272 },
     json: "fishing_hut.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       {
@@ -789,6 +819,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 128, y: 168 },
     json: "farm_house.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       {
@@ -819,6 +850,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 184, y: 168 },
     json: "home.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       ...interior,
@@ -835,7 +867,7 @@ export const maps: Record<MapName, MapConfig> = {
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,
-      }
+      },
     ],
   },
   [MapName.TAVERN]: {
@@ -843,6 +875,7 @@ export const maps: Record<MapName, MapConfig> = {
     spawn: { x: 128, y: 168 },
     json: "tavern.json",
     isIndoor: true,
+    isInstanced: false,
     spritesheets: [
       ...player,
       ...citizens,
@@ -862,11 +895,12 @@ export const maps: Record<MapName, MapConfig> = {
       },
     ],
   },
-  [MapName.REALM]: {
-    id: MapName.REALM,
+  [MapName.FOREST]: {
+    id: MapName.FOREST,
     spawn: { x: 434, y: 608 },
     json: "",
     isIndoor: false,
+    isInstanced: true,
     spritesheets: [
       ...player,
       ...animals,
@@ -904,6 +938,27 @@ export const maps: Record<MapName, MapConfig> = {
       {
         key: "water_coasts",
         file: "water_coasts.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "dungeon_walls_floor",
+        file: "dungeon_walls_floor.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "cavern_walls_floor",
+        file: "cavern_walls_floor.png",
+        frameWidth: 16,
+        frameHeight: 16,
+        asTileset: true,
+      },
+      {
+        key: "dungeon_coasts",
+        file: "dungeon_coasts.png",
         frameWidth: 16,
         frameHeight: 16,
         asTileset: true,

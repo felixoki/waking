@@ -6,7 +6,6 @@ import {
   Event,
   Hit,
   Item,
-  MapName,
   PlayerConfig,
   Revive,
   SpellConfig,
@@ -101,7 +100,9 @@ export const combat = {
       };
 
       const party = world.parties.getByPlayerId(player.id);
-      const partyId = player.map === MapName.REALM ? party?.id : undefined;
+      const partyId = configs.maps[player.map].isInstanced
+        ? party?.id
+        : undefined;
 
       const key = world.chunks.toChunkKey(
         player.map,
@@ -135,7 +136,9 @@ export const combat = {
 
       const player = world.players.getBySocketId(socket.id);
       const party = player && world.parties.getByPlayerId(player.id);
-      const partyId = target.map === MapName.REALM ? party?.id : undefined;
+      const partyId = configs.maps[target.map].isInstanced
+        ? party?.id
+        : undefined;
 
       const definition = configs.entities[target.name];
       const damagable = definition?.components.find(
@@ -215,9 +218,12 @@ export const combat = {
       ? world.chunks.getChunkByEntity(target.id)
       : (() => {
           const map = player?.map;
+
           if (!map) return undefined;
+
           const party = world.parties.getByPlayerId(player!.id);
-          const partyId = map === MapName.REALM ? party?.id : undefined;
+          const partyId = configs.maps[map].isInstanced ? party?.id : undefined;
+
           return world.chunks.toChunkKey(map, target.x, target.y, partyId);
         })();
 

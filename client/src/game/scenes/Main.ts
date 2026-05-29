@@ -38,9 +38,9 @@ import { AmbienceManager } from "../managers/Ambience";
 import { ChunkManager } from "../managers/Chunk";
 import { EffectFactory } from "../factory/Effect";
 import { Player } from "../Player";
-import type RealmScene from "./Realm";
 import { SoundManager } from "../managers/Sound";
 import { Sound } from "../loaders/Sound";
+import ForestScene from "./Forest";
 
 export class MainScene extends Phaser.Scene {
   public playerManager!: PlayerManager;
@@ -602,7 +602,7 @@ export class MainScene extends Phaser.Scene {
         entities: EntityConfig[];
         players: PlayerConfig[];
       }) => {
-        const realm = this.scene.get(MapName.REALM) as RealmScene;
+        const forest = this.scene.get(MapName.FOREST) as ForestScene;
 
         const onReady = () => {
           if (this.managers.ambience.phase)
@@ -615,31 +615,31 @@ export class MainScene extends Phaser.Scene {
           const config = data.players.find((p) => p.id === localId);
 
           if (config) {
-            this.scene.bringToTop(MapName.REALM);
+            this.scene.bringToTop(MapName.FOREST);
             handlers.player.swap(config, this);
-          } else realm.scene.setVisible(false);
+          } else forest.scene.setVisible(false);
 
           data.players
             .filter((p) => p.id !== localId)
             .forEach((config) => this.managers.players.add(config, false));
 
           EventBus.emit(Event.PARTY_START_READY);
-          handlers.ui.backdrop.hide(this, MapName.REALM);
+          handlers.ui.backdrop.hide(this, MapName.FOREST);
         };
 
-        if (realm.scene.isActive()) {
-          realm.rebuild(data.tilemap);
+        if (forest.scene.isActive()) {
+          forest.rebuild(data.tilemap);
           onReady();
           return;
         }
 
-        this.cache.tilemap.add(MapName.REALM, {
+        this.cache.tilemap.add(MapName.FOREST, {
           format: Phaser.Tilemaps.Formats.TILED_JSON,
           data: data.tilemap,
         });
 
-        this.scene.launch(MapName.REALM);
-        realm.events.once(Phaser.Scenes.Events.CREATE, onReady);
+        this.scene.launch(MapName.FOREST);
+        forest.events.once(Phaser.Scenes.Events.CREATE, onReady);
       },
     );
 

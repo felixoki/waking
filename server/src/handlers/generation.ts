@@ -2,12 +2,19 @@ import { fork } from "child_process";
 import { fileURLToPath } from "url";
 import { TiledProperty } from "../types";
 import {
+  BiomeConfig,
   GeneratedMap,
   Neighbors,
+  Range,
+  Room,
+  RoomConfig,
+  RoomDifficulty,
+  RoomPattern,
   TERRAIN_ORDER,
   TerrainName,
 } from "../types/generation";
 import { join, dirname } from "path";
+import { CORNERS } from "../globals";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -75,8 +82,8 @@ export const generation = {
     height: number,
     predicate: (x: number, y: number) => boolean,
   ): { x: number; y: number } | null => {
-    for (let radius = 0; radius < Math.max(width, height); radius++) {
-      for (let dy = -radius; dy <= radius; dy++) {
+    for (let radius = 0; radius < Math.max(width, height); radius++)
+      for (let dy = -radius; dy <= radius; dy++)
         for (let dx = -radius; dx <= radius; dx++) {
           if (Math.abs(dx) !== radius && Math.abs(dy) !== radius) continue;
 
@@ -86,8 +93,6 @@ export const generation = {
           if (generation.inBounds(x, y, width, height) && predicate(x, y))
             return { x, y };
         }
-      }
-    }
 
     return null;
   },
@@ -160,18 +165,18 @@ export const generation = {
         const index = generation.toIndex(x, y, width);
         const current = result[index];
 
-        const n = y > 0 ? terrain[index - width] : null;
-        const s = y < height - 1 ? terrain[index + width] : null;
-        const w = x > 0 ? terrain[index - 1] : null;
-        const e = x < width - 1 ? terrain[index + 1] : null;
+        const north = y > 0 ? terrain[index - width] : null;
+        const south = y < height - 1 ? terrain[index + width] : null;
+        const west = x > 0 ? terrain[index - 1] : null;
+        const east = x < width - 1 ? terrain[index + 1] : null;
 
         const con = {
-          h: w === current || e === current,
-          v: n === current || s === current,
+          h: west === current || east === current,
+          v: north === current || south === current,
         };
 
         if (!con.h && !con.v) {
-          const neighbors = [n, s, w, e].filter(
+          const neighbors = [north, south, west, east].filter(
             (t): t is TerrainName => t !== null && t !== current,
           );
 
@@ -179,14 +184,14 @@ export const generation = {
         }
 
         if (con.v && !con.h) {
-          const replacement = w ?? e;
+          const replacement = west ?? east;
 
           if (replacement && replacement !== current)
             result[index] = replacement;
         }
 
         if (con.h && !con.v) {
-          const replacement = n ?? s;
+          const replacement = north ?? south;
 
           if (replacement && replacement !== current)
             result[index] = replacement;
@@ -218,6 +223,27 @@ export const generation = {
     return true;
   },
 
+  isInBlock: (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    grid: TerrainName[],
+    target: TerrainName,
+  ) => {
+    return CORNERS.some((corners) =>
+      corners.every(([dx, dy]) => {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        return (
+          generation.inBounds(nx, ny, width, height) &&
+          grid[generation.toIndex(nx, ny, width)] === target
+        );
+      }),
+    );
+  },
+
   enforceMinimumWater: (
     terrain: TerrainName[],
     width: number,
@@ -230,31 +256,14 @@ export const generation = {
         const idx = generation.toIndex(x, y, width);
         if (result[idx] !== TerrainName.WATER) continue;
 
-        const inBlock =
-          (x + 1 < width &&
-            y + 1 < height &&
-            result[generation.toIndex(x + 1, y, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x, y + 1, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x + 1, y + 1, width)] ===
-              TerrainName.WATER) ||
-          (x - 1 >= 0 &&
-            y + 1 < height &&
-            result[generation.toIndex(x - 1, y, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x, y + 1, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x - 1, y + 1, width)] ===
-              TerrainName.WATER) ||
-          (x + 1 < width &&
-            y - 1 >= 0 &&
-            result[generation.toIndex(x + 1, y, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x, y - 1, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x + 1, y - 1, width)] ===
-              TerrainName.WATER) ||
-          (x - 1 >= 0 &&
-            y - 1 >= 0 &&
-            result[generation.toIndex(x - 1, y, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x, y - 1, width)] === TerrainName.WATER &&
-            result[generation.toIndex(x - 1, y - 1, width)] ===
-              TerrainName.WATER);
+        const inBlock = generation.isInBlock(
+          x,
+          y,
+          width,
+          height,
+          terrain,
+          TerrainName.WATER,
+        );
 
         if (!inBlock) {
           const neighbors: TerrainName[] = [];
@@ -295,27 +304,14 @@ export const generation = {
         const idx = generation.toIndex(x, y, width);
         if (result[idx] !== target) continue;
 
-        const inBlock =
-          (x + 1 < width &&
-            y + 1 < height &&
-            result[generation.toIndex(x + 1, y, width)] === target &&
-            result[generation.toIndex(x, y + 1, width)] === target &&
-            result[generation.toIndex(x + 1, y + 1, width)] === target) ||
-          (x - 1 >= 0 &&
-            y + 1 < height &&
-            result[generation.toIndex(x - 1, y, width)] === target &&
-            result[generation.toIndex(x, y + 1, width)] === target &&
-            result[generation.toIndex(x - 1, y + 1, width)] === target) ||
-          (x + 1 < width &&
-            y - 1 >= 0 &&
-            result[generation.toIndex(x + 1, y, width)] === target &&
-            result[generation.toIndex(x, y - 1, width)] === target &&
-            result[generation.toIndex(x + 1, y - 1, width)] === target) ||
-          (x - 1 >= 0 &&
-            y - 1 >= 0 &&
-            result[generation.toIndex(x - 1, y, width)] === target &&
-            result[generation.toIndex(x, y - 1, width)] === target &&
-            result[generation.toIndex(x - 1, y - 1, width)] === target);
+        const inBlock = generation.isInBlock(
+          x,
+          y,
+          width,
+          height,
+          terrain,
+          target,
+        );
 
         if (!inBlock) result[idx] = replacement;
       }
@@ -376,10 +372,14 @@ export const generation = {
           ]) {
             const nx = rx + dx;
             const ny = ry + dy;
+
             if (!generation.inBounds(nx, ny, width, height)) continue;
+
             const nIdx = generation.toIndex(nx, ny, width);
             const t = result[nIdx];
+
             if (t === TerrainName.WATER) continue;
+
             adjacent.add(nIdx);
             counts.set(t, (counts.get(t) ?? 0) + 1);
           }
@@ -396,7 +396,6 @@ export const generation = {
             dominant = t;
           }
 
-        /** Convert all non-water tiles within 3 of the water body to dominant */
         const buffer = 3;
         const converted = new Set<number>();
 
@@ -408,10 +407,13 @@ export const generation = {
             for (let dx = -buffer; dx <= buffer; dx++) {
               const nx = rx + dx;
               const ny = ry + dy;
+
               if (!generation.inBounds(nx, ny, width, height)) continue;
               const nIdx = generation.toIndex(nx, ny, width);
+
               if (result[nIdx] === TerrainName.WATER) continue;
               if (result[nIdx] === dominant) continue;
+
               converted.add(nIdx);
             }
         }
@@ -460,10 +462,12 @@ export const generation = {
         cleanup();
         resolve(result);
       });
+
       worker.on("error", (err) => {
         cleanup();
         reject(err);
       });
+
       worker.on("exit", (code) => {
         cleanup();
         if (code !== 0) reject(new Error(`Worker exited with code ${code}`));
@@ -471,5 +475,152 @@ export const generation = {
 
       worker.send({ biome, seed });
     });
+  },
+
+  rooms: {
+    assign: (
+      rooms: Room[],
+      depths: number[],
+      config: RoomConfig,
+      rng: () => number,
+    ) => {
+      const { assignment, templates } = config;
+
+      return rooms.map((_, i) => {
+        const depth = depths[i];
+
+        const eligible = templates.filter((t) => {
+          if (
+            depth <= assignment.easyDepth &&
+            t.difficulty !== RoomDifficulty.EASY
+          )
+            return false;
+
+          if (t.depth?.min !== undefined && depth < t.depth.min) return false;
+          if (t.depth?.max !== undefined && depth > t.depth.max) return false;
+
+          return true;
+        });
+
+        const weight = eligible.reduce((sum, t) => sum + (t.weight ?? 1), 0);
+        let roll = rng() * weight;
+
+        for (const t of eligible) {
+          roll -= t.weight ?? 1;
+          if (roll <= 0) return t;
+        }
+
+        return eligible[eligible.length - 1];
+      });
+    },
+
+    place: (
+      width: number,
+      height: number,
+      size: { width: Range; height: Range },
+      count: number,
+      padding: number,
+      rooms: Room[],
+      rng: () => number,
+      range?: Range,
+    ) => {
+      for (let i = 0; i < count; i++) {
+        const w = size.width.min + Math.floor(rng() * (size.width.max - size.width.min));
+        const h = size.height.min + Math.floor(rng() * (size.height.max - size.height.min));
+        const x = 1 + Math.floor(rng() * (width - w - 2));
+
+        const yMin = range?.min ?? 1;
+        const yMax = range?.max ?? height - h - 2;
+
+        const y = yMin + Math.floor(rng() * (yMax - yMin + 1));
+
+        const candidate: Room = { x, y, width: w, height: h };
+        const overlaps = rooms.some(
+          (r) =>
+            candidate.x - padding < r.x + r.width &&
+            candidate.x + candidate.width + padding > r.x &&
+            candidate.y - padding < r.y + r.height &&
+            candidate.y + candidate.height + padding > r.y,
+        );
+
+        if (!overlaps) rooms.push(candidate);
+      }
+    },
+
+    patterns: {
+      [RoomPattern.CLUSTER]: (
+        room: Room,
+        rng: () => number,
+        config: BiomeConfig,
+      ) => {
+        const cx = room.x + Math.floor(room.width / 2);
+        const cy = room.y + Math.floor(room.height / 2);
+
+        const ox = Math.floor((rng() - 0.5) * room.width * 0.6);
+        const oy = Math.floor((rng() - 0.5) * room.height * 0.6);
+
+        return {
+          x: (cx + ox) * config.tileWidth,
+          y: (cy + oy) * config.tileHeight,
+        };
+      },
+
+      [RoomPattern.WALL]: (
+        room: Room,
+        rng: () => number,
+        config: BiomeConfig,
+      ) => {
+        const side = Math.floor(rng() * 4);
+        const along = rng();
+
+        const tx =
+          side < 2
+            ? room.x + Math.floor(along * room.width)
+            : side === 2
+              ? room.x
+              : room.x + room.width - 1;
+
+        const ty =
+          side >= 2
+            ? room.y + Math.floor(along * room.height)
+            : side === 0
+              ? room.y
+              : room.y + room.height - 1;
+
+        return { x: tx * config.tileWidth, y: ty * config.tileHeight };
+      },
+
+      [RoomPattern.LINE]: (
+        room: Room,
+        rng: () => number,
+        config: BiomeConfig,
+      ) => {
+        const startX = room.x + 1;
+        const y = room.y + Math.floor(rng() * room.height);
+        const offset = Math.floor(rng() * (room.width - 2));
+
+        return {
+          x: (startX + offset) * config.tileWidth,
+          y: y * config.tileHeight,
+        };
+      },
+
+      [RoomPattern.RING]: (
+        room: Room,
+        rng: () => number,
+        config: BiomeConfig,
+      ) => {
+        const cx = room.x + Math.floor(room.width / 2);
+        const cy = room.y + Math.floor(room.height / 2);
+
+        const angle = rng() * Math.PI * 2;
+        const radius = Math.min(room.width, room.height) * 0.35;
+
+        const tx = cx + Math.round(Math.cos(angle) * radius);
+        const ty = cy + Math.round(Math.sin(angle) * radius);
+
+        return { x: tx * config.tileWidth, y: ty * config.tileHeight };
+      },
+    },
   },
 };

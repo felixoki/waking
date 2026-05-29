@@ -113,3 +113,34 @@ export const DIRECTIONS = [
   { dx: -1, dy: 1 },
   { dx: -1, dy: -1 },
 ];
+
+/** Corners */
+export const CORNERS: [number, number][][] = [
+  [
+    [1, 0],
+    [0, 1],
+    [1, 1],
+  ],
+  [
+    [-1, 0],
+    [0, 1],
+    [-1, 1],
+  ],
+  [
+    [1, 0],
+    [0, -1],
+    [1, -1],
+  ],
+  [
+    [-1, 0],
+    [0, -1],
+    [-1, -1],
+  ],
+];
+
+/** Dungeon */
+export const DUNGEON_ROOM_ATTEMPTS = 200;
+export const DUNGEON_ROOM_PADDING = 4;
+export const DUNGEON_ROOM_MIN = 12;
+export const DUNGEON_ROOM_MAX = 24;
+export const DUNGEON_LOOP_CHANCE = 0.01;

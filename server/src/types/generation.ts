@@ -1,25 +1,48 @@
 import { EntityName } from "./entities";
 
+export interface Range {
+  min: number;
+  max: number;
+}
+
 export enum BiomeName {
   FOREST = "forest",
+  DUNGEON = "dungeon",
 }
 
 export enum TerrainName {
   WATER = "water",
   GROUND = "ground",
   GRASS = "grass",
+  WALL_BASE = "wall_base",
+  WALL_MID = "wall_mid",
+  WALL_TOP = "wall_top",
+  FLOOR = "floor",
+  VOID = "void",
+}
+
+export enum GeneratorName {
+  TERRAIN = "terrain",
+  ROOM = "room",
 }
 
 export const TERRAIN_ORDER = [
+  TerrainName.VOID,
   TerrainName.WATER,
   TerrainName.GROUND,
   TerrainName.GRASS,
+  TerrainName.FLOOR,
+  TerrainName.WALL_BASE,
+  TerrainName.WALL_MID,
+  TerrainName.WALL_TOP,
 ];
 
 export enum TileRole {
   FILL = "fill",
   BORDER_OUTER = "border_outer",
   BORDER_INNER = "border_inner",
+  WALL_OUTER = "wall_outer",
+  WALL_INNER = "wall_inner",
 }
 
 export enum BorderPosition {
@@ -31,6 +54,36 @@ export enum BorderPosition {
   BOTTOM_LEFT = "bottom_left",
   BOTTOM = "bottom",
   BOTTOM_RIGHT = "bottom_right",
+}
+
+export enum RoomName {
+  SEWER1 = "sewer1",
+  FEAST1 = "feast1",
+}
+
+export enum RoomType {
+  SEWER = "sewer",
+  FEAST = "feast",
+}
+
+export enum RoomPattern {
+  CLUSTER = "cluster",
+  LINE = "line",
+  WALL = "wall",
+  RING = "ring",
+}
+
+export enum RoomDifficulty {
+  EASY = "easy",
+  HARD = "hard",
+}
+
+export enum TrapName {
+  SPIKE1 = "spike1",
+}
+
+export enum TrapTrigger {
+  STEP = "step",
 }
 
 export interface Neighbors<T> {
@@ -48,7 +101,6 @@ export interface TileQuery {
   role: TileRole;
   position?: BorderPosition;
   terrain?: TerrainName;
-  from?: TerrainName;
 }
 
 export interface TileEntry {
@@ -103,7 +155,6 @@ export interface BorderConfig {
   to: TerrainName;
   tileset: string;
   collides?: boolean;
-  queryProperty?: "from" | "terrain";
 }
 
 export interface BiomeConfig {
@@ -112,13 +163,17 @@ export interface BiomeConfig {
   height: number;
   tileWidth: number;
   tileHeight: number;
+  generator: GeneratorName;
   noise: NoiseConfig;
   layers: LayerConfig[];
   borders: BorderConfig[];
   terrain: TerrainName[];
   objects: SpawnRule[];
   exclusion: number;
+  smoothing: { iterations: number; threshold: number } | null;
   details?: DetailConfig[];
+  walls?: string;
+  rooms?: RoomConfig;
 }
 
 export interface GeneratedMap {
@@ -153,7 +208,7 @@ export interface SpawnRule {
   entities: EntityName[];
   terrain: TerrainName[];
   density?: number;
-  count?: { min: number; max: number };
+  count?: Range;
   spacing: number;
   margin?: number;
   cluster?: boolean;
@@ -164,4 +219,72 @@ export interface Entity {
   name: EntityName;
   x: number;
   y: number;
+}
+
+export interface Room {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface WallMatch {
+  role: TileRole;
+  position: BorderPosition;
+  placement: {
+    width: number;
+    height: number;
+    anchor: { x: number; y: number };
+  };
+}
+
+export interface SetPiece {
+  pattern: RoomPattern;
+  entities: EntityName[];
+  count: Range;
+  spacing?: number;
+}
+
+export interface TrapConfig {
+  name: TrapName;
+  density: number;
+  trigger: TrapTrigger;
+}
+
+export interface RoomTemplate {
+  id: RoomName;
+  type: RoomType;
+  difficulty: RoomDifficulty;
+  weight: number;
+  depth?: { min?: number; max?: number };
+  setpieces: SetPiece[];
+  traps: TrapConfig[];
+  loot?: {
+    entities: EntityName[];
+    count: Range;
+    density: number;
+  };
+  water?: {
+    coverage: number;
+  };
+}
+
+export interface RoomAssignment {
+  easyDepth: number;
+  chance: { hidden: number; puzzle: number };
+}
+
+export interface RoomDistribution {
+  size: { width: Range; height: Range };
+  count: Range;
+  yRange?: Range;
+}
+
+export interface RoomConfig {
+  assignment: RoomAssignment;
+  templates: RoomTemplate[];
+  distribution: {
+    large: RoomDistribution;
+    small: RoomDistribution;
+  };
 }

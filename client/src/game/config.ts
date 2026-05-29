@@ -7,12 +7,12 @@ import { IlluminatePipeline } from "./pipelines/Illuminate";
 import { AmbiencePipeline } from "./pipelines/Ambience";
 import { PipelineName } from "@server/types";
 import { HomeScene } from "./scenes/Home";
-import RealmScene from "./scenes/Realm";
 import { BlacksmithScene } from "./scenes/Blacksmith";
 import { TavernScene } from "./scenes/Tavern";
 import { GlassblowerScene } from "./scenes/Glassblower";
 import { FishingHutScene } from "./scenes/FishingHut";
 import { FarmScene } from "./scenes/Farm";
+import ForestScene from "./scenes/Forest";
 
 export const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -28,7 +28,7 @@ export const config: Phaser.Types.Core.GameConfig = {
     VillageScene,
     HerbalistScene,
     HomeScene,
-    RealmScene,
+    ForestScene,
     BlacksmithScene,
     TavernScene,
     GlassblowerScene,

@@ -1,6 +1,21 @@
-import { EntityName } from "../types";
-import { BiomeConfig, BiomeName, TerrainName } from "../types/generation";
+import { EntityName, MapName } from "../types";
+import {
+  BiomeConfig,
+  BiomeName,
+  GeneratorName,
+  RoomDifficulty,
+  RoomName,
+  RoomPattern,
+  RoomType,
+  TerrainName,
+  TrapName,
+  TrapTrigger,
+} from "../types/generation";
 import { groundStamps, grassStamps, flowerStamps } from "./details";
+
+export const levels = [
+  { depth: 0, map: MapName.FOREST, biome: BiomeName.FOREST },
+];
 
 export const forest: BiomeConfig = {
   id: BiomeName.FOREST,
@@ -43,7 +58,6 @@ export const forest: BiomeConfig = {
       from: TerrainName.GRASS,
       to: TerrainName.GROUND,
       tileset: "village_home",
-      queryProperty: "terrain",
     },
   ],
 
@@ -149,7 +163,9 @@ export const forest: BiomeConfig = {
     },
   ],
 
+  generator: GeneratorName.TERRAIN,
   exclusion: 0,
+  smoothing: { iterations: 2, threshold: 4 },
 
   details: [
     {
@@ -171,4 +187,125 @@ export const forest: BiomeConfig = {
       stamps: flowerStamps,
     },
   ],
+};
+
+export const dungeon: BiomeConfig = {
+  id: BiomeName.DUNGEON,
+  width: 128,
+  height: 128,
+  tileWidth: 16,
+  tileHeight: 16,
+
+  noise: {
+    octaves: 4,
+    persistence: 0.5,
+    lacunarity: 2.0,
+    scale: 0.05,
+  },
+
+  layers: [
+    {
+      terrain: TerrainName.VOID,
+      tileset: "dungeon_walls_floor",
+      threshold: null,
+    },
+    {
+      terrain: TerrainName.FLOOR,
+      tileset: "dungeon_walls_floor",
+      threshold: null,
+    },
+  ],
+
+  borders: [],
+  walls: "dungeon_walls_floor",
+  terrain: [TerrainName.FLOOR],
+  objects: [],
+  generator: GeneratorName.ROOM,
+  exclusion: 0,
+  smoothing: null,
+
+  rooms: {
+    assignment: {
+      easyDepth: 2,
+      chance: { hidden: 0.1, puzzle: 0.12 },
+    },
+    distribution: {
+      large: {
+        count: { min: 1, max: 2 },
+        size: { width: { min: 80, max: 100 }, height: { min: 32, max: 40 } },
+        yRange: { min: 0.7, max: 1.0 },
+      },
+      small: {
+        count: { min: 8, max: 15 },
+        size: { width: { min: 10, max: 12 }, height: { min: 10, max: 12 } },
+      },
+    },
+    templates: [
+      {
+        id: RoomName.SEWER1,
+        type: RoomType.SEWER,
+        difficulty: RoomDifficulty.EASY,
+        weight: 10,
+        depth: { min: 0, max: 4 },
+        water: { coverage: 0.15 },
+        setpieces: [
+          {
+            pattern: RoomPattern.CLUSTER,
+            entities: [EntityName.BOAR],
+            count: { min: 3, max: 6 },
+          },
+          {
+            pattern: RoomPattern.WALL,
+            entities: [EntityName.TORCH1],
+            count: { min: 2, max: 4 },
+          },
+          {
+            pattern: RoomPattern.LINE,
+            entities: [EntityName.BARREL1],
+            count: { min: 1, max: 3 },
+          },
+        ],
+        traps: [
+          { name: TrapName.SPIKE1, density: 0.05, trigger: TrapTrigger.STEP },
+        ],
+        loot: {
+          entities: [],
+          count: { min: 0, max: 0 },
+          density: 0,
+        },
+      },
+      {
+        id: RoomName.FEAST1,
+        type: RoomType.FEAST,
+        difficulty: RoomDifficulty.HARD,
+        weight: 6,
+        depth: { min: 3, max: undefined },
+        setpieces: [
+          {
+            pattern: RoomPattern.CLUSTER,
+            entities: [EntityName.FISH_STAND1],
+            count: { min: 1, max: 2 },
+          },
+          {
+            pattern: RoomPattern.RING,
+            entities: [EntityName.ORC1, EntityName.GOBLIN1],
+            count: { min: 4, max: 7 },
+          },
+          {
+            pattern: RoomPattern.WALL,
+            entities: [EntityName.TORCH1],
+            count: { min: 3, max: 6 },
+          },
+        ],
+        traps: [
+          { name: TrapName.SPIKE1, density: 0.15, trigger: TrapTrigger.STEP },
+        ],
+        loot: {
+          entities: [EntityName.CHEST1],
+          count: { min: 1, max: 3 },
+          density: 0.2,
+        },
+      },
+    ],
+  },
 };

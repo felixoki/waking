@@ -40,14 +40,14 @@ export const player = {
       if (WORLD_ID && playerId) saved = await load.player(WORLD_ID, playerId);
 
       const savedMap = saved?.data?.map as MapName | undefined;
-      const isRealmSave = savedMap === MapName.REALM;
+      const isInstanced = savedMap && configs.maps[savedMap].isInstanced;
 
       player = {
         id,
         socketId: socket.id,
-        map: isRealmSave ? map.id : savedMap || map.id,
-        x: isRealmSave ? map.spawn.x : saved?.position?.x || map.spawn.x,
-        y: isRealmSave ? map.spawn.y : saved?.position?.y || map.spawn.y,
+        map: isInstanced ? map.id : savedMap || map.id,
+        x: isInstanced ? map.spawn.x : saved?.position?.x || map.spawn.x,
+        y: isInstanced ? map.spawn.y : saved?.position?.y || map.spawn.y,
         facing: (saved?.data?.facing as Direction) || Direction.DOWN,
         health: saved?.health || MAX_HEALTH,
         maxHealth: MAX_HEALTH,
@@ -121,7 +121,7 @@ export const player = {
     const player = world.players.getBySocketId(socket.id);
     if (!player) return;
 
-    if (WORLD_ID && player.map !== MapName.REALM)
+    if (WORLD_ID && configs.maps[player.map].isInstanced)
       await save.player(WORLD_ID, {
         playerId: player.id,
         position: { x: player.x, y: player.y },
@@ -192,14 +192,11 @@ export const player = {
     });
 
     const party = world.parties.getByPlayerId(player.id);
-    const realmPartyId = player.map === MapName.REALM ? party?.id : undefined;
+    const partyId = configs.maps[player.map].isInstanced
+      ? party?.id
+      : undefined;
 
-    const key = world.chunks.toChunkKey(
-      player.map,
-      data.x,
-      data.y,
-      realmPartyId,
-    );
+    const key = world.chunks.toChunkKey(player.map, data.x, data.y, partyId);
     socket.to(`chunk:${key}`).emit(Event.PLAYER_INPUT, data);
 
     if (party) socket.to(`party:${party.id}`).emit(Event.PLAYER_INPUT, data);
@@ -212,7 +209,7 @@ export const player = {
       data.x,
       data.y,
       io,
-      realmPartyId,
+      partyId,
     );
   },
 
@@ -235,13 +232,15 @@ export const player = {
 
     handlers.chunks.clear(socket, world, playerId);
 
-    const fromPartyId = from === MapName.REALM ? partyId : undefined;
+    const fromPartyId = configs.maps[from].isInstanced ? partyId : undefined;
     const candidates = fromPartyId
       ? (world.parties.get(fromPartyId)?.members ?? [])
           .map((id) => world.players.get(id))
           .filter(
             (p): p is PlayerConfig =>
-              !!p && p.map === MapName.REALM && !(exclude ?? []).includes(p.id),
+              !!p &&
+              configs.maps[p.map].isInstanced &&
+              !(exclude ?? []).includes(p.id),
           )
       : world.players
           .getByMap(from)
@@ -289,7 +288,7 @@ export const player = {
 
     const prev = p.map;
     const partyData = world.parties.getByPlayerId(p.id);
-    const partyId = prev === MapName.REALM ? partyData?.id : undefined;
+    const partyId = configs.maps[prev].isInstanced ? partyData?.id : undefined;
 
     player.transfer(
       socket,
@@ -304,7 +303,7 @@ export const player = {
       partyId,
     );
 
-    if (partyData && prev === MapName.REALM)
+    if (partyData && configs.maps[prev].isInstanced)
       handlers.party.cleanup(socket, io, world, partyData.id);
   },
 

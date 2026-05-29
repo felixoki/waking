@@ -66,11 +66,13 @@ export const party = {
 
     const remaining = data.members.some((memberId) => {
       const member = world.players.get(memberId);
-      return member?.map === MapName.REALM;
+      return member && configs.maps[member.map].isInstanced;
     });
 
     if (!remaining) {
-      const entityIds = world.chunks.getEntitiesByPrefix(`realm:${data.id}`);
+      const entityIds = world.chunks.getEntitiesByPrefix(
+        `${MapName.FOREST}:${data.id}`,
+      );
 
       for (const entityId of entityIds)
         handlers.entity.remove(
@@ -82,7 +84,7 @@ export const party = {
         );
 
       data.status = PartyStatus.LOBBY;
-      world.authority.clear(MapName.REALM, data.id);
+      world.authority.clear(MapName.FOREST, data.id);
 
       io.to(`party:${data.id}`).emit(Event.PARTY_UPDATE, data);
       party.broadcast(socket, world);
@@ -91,7 +93,9 @@ export const party = {
 
   broadcast: (socket: Socket, world: World) => {
     const list = world.parties.getLobbies();
-    const maps = Object.values(MapName).filter((m) => m !== MapName.REALM);
+    const maps = Object.values(MapName).filter(
+      (m) => !configs.maps[m].isInstanced,
+    );
 
     socket.emit(Event.PARTY_LIST, list);
     for (const map of maps)
@@ -108,6 +112,7 @@ export const party = {
       leader: player.id,
       members: [player.id],
       status: PartyStatus.LOBBY,
+      depth: 0,
     };
 
     world.parties.add(id, data);
@@ -148,7 +153,10 @@ export const party = {
     socket.leave(`party:${data.id}`);
     socket.emit(Event.PARTY_LEAVE);
 
-    if (data.status === PartyStatus.IN_GAME && player.map === MapName.REALM) {
+    if (
+      data.status === PartyStatus.IN_GAME &&
+      configs.maps[player.map].isInstanced
+    ) {
       const village = configs.maps[MapName.VILLAGE];
 
       handlers.player.transfer(
@@ -199,7 +207,7 @@ export const party = {
     socket.to(`party:${data.id}`).emit(Event.PARTY_START_LOADING);
 
     const { data: biome, error } = await tryCatch(
-      handlers.generation.start(BiomeName.FOREST, seed),
+      handlers.generation.start(BiomeName.DUNGEON, seed),
     );
 
     if (error) {
@@ -217,7 +225,7 @@ export const party = {
         configs.entities[biomeEntity.name]?.maxHealth ?? MAX_HEALTH;
       const config: EntityConfig = {
         id,
-        map: MapName.REALM,
+        map: MapName.FOREST,
         name: biomeEntity.name,
         x: biomeEntity.x,
         y: biomeEntity.y,
@@ -247,21 +255,21 @@ export const party = {
       handlers.authority.transfer(io, world, prev, id, candidates);
 
       world.players.update(id, {
-        map: MapName.REALM,
+        map: MapName.FOREST,
         x: biome.spawn.x,
         y: biome.spawn.y,
         isAuthority: false,
       });
 
       memberSocket.leave(`map:${prev}`);
-      memberSocket.join(`map:${MapName.REALM}`);
+      memberSocket.join(`map:${MapName.FOREST}`);
       memberSocket.to(`map:${prev}`).emit(Event.PLAYER_LEAVE, member.id);
 
       handlers.chunks.sync.player(
         memberSocket,
         world,
         id,
-        MapName.REALM,
+        MapName.FOREST,
         biome.spawn.x,
         biome.spawn.y,
         io,
@@ -269,7 +277,7 @@ export const party = {
       );
     }
 
-    world.authority.set(MapName.REALM, data.members[0], data.id);
+    world.authority.set(MapName.FOREST, data.members[0], data.id);
     world.players.update(data.members[0], { isAuthority: true });
 
     const players = data.members
